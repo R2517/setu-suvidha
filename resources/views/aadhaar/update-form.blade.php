@@ -133,18 +133,18 @@
         .sig-box-label { font-size: 5.5pt; color: #333; text-align: center; margin-top: 1px; line-height: 1.3; width: 210px; }
 
         /* Certifier bottom section */
-        .cert-bottom { display: flex; gap: 6px; margin-top: 4px; }
-        .cert-left { flex: 1; font-size: 6.5pt; line-height: 1.5; }
-        .cert-left .cert-heading { font-size: 7pt; margin-bottom: 3px; }
-        .cert-left label { display: block; margin-bottom: 1px; }
-        .cert-right { width: 260px; flex-shrink: 0; }
-        .checklist-box { border: 1px solid #555; padding: 4px 6px; font-size: 6.5pt; margin-bottom: 0; }
-        .checklist-box .ck-title { font-weight: bold; font-size: 7.5pt; text-align: center; margin-bottom: 3px; }
-        .checklist-box .ck-row { display: flex; flex-wrap: wrap; gap: 1px 8px; margin-bottom: 2px; }
+        .cert-bottom { display: flex; gap: 4px; margin-top: 4px; }
+        .cert-left { flex: 1; font-size: 6pt; line-height: 1.35; }
+        .cert-left .cert-heading { font-size: 6.5pt; margin-bottom: 2px; }
+        .cert-left label { display: block; margin-bottom: 0; }
+        .cert-right { width: 300px; flex-shrink: 0; display: flex; flex-direction: column; }
+        .checklist-box { border: 1px solid #555; padding: 5px 8px; font-size: 6.5pt; margin-bottom: 0; }
+        .checklist-box .ck-title { font-weight: bold; font-size: 8pt; text-align: center; margin-bottom: 4px; }
+        .checklist-box .ck-row { display: flex; flex-wrap: wrap; gap: 1px 10px; margin-bottom: 2px; }
         .checklist-box .ck-row label { display: inline-flex; align-items: center; gap: 2px; white-space: nowrap; }
-        .checklist-box .ck-photo-line { margin-top: 1px; }
+        .checklist-box .ck-photo-line { margin-top: 2px; }
         .checklist-box .ck-photo-line label { display: inline-flex; align-items: flex-start; gap: 2px; }
-        .stamp-box { border: 1.5px solid #555; border-top: none; min-height: 70px; text-align: center; font-size: 6.5pt; color: #555; padding: 4px; display: flex; align-items: flex-end; justify-content: center; }
+        .stamp-box { border: 1.5px solid #555; border-top: none; flex: 1; min-height: 85px; text-align: center; font-size: 7pt; color: #555; padding: 4px; display: flex; align-items: flex-end; justify-content: center; }
 
         /* Footer */
         .footer-note { font-size: 5.5pt; color: #555; margin-top: 4px; text-align: center; font-style: italic; }
