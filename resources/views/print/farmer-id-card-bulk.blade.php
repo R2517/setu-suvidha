@@ -46,6 +46,10 @@
             grid-template-rows: 74.25mm 74.25mm 74.25mm 74.25mm;
             width: 210mm; height: 297mm;
         }
+        /* Back page: shift down 1.80mm to compensate for duplex printer offset */
+        .back-page .card-grid {
+            padding-top: 1.80mm;
+        }
 
         /* ── Cell: card centered perfectly ── */
         .card-cell {
@@ -381,7 +385,7 @@
                 $reordered[] = $left;
             }
         @endphp
-        <div class="print-sheet">
+        <div class="print-sheet back-page">
             <div class="cut-v cv1"></div><div class="cut-v cv2"></div>
             <div class="cut-h ch1"></div><div class="cut-h ch2"></div><div class="cut-h ch3"></div>
             <div class="cut-h ch4"></div><div class="cut-h ch5"></div><div class="cut-h ch6"></div>

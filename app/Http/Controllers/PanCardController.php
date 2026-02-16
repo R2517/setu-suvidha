@@ -7,52 +7,17 @@ use Illuminate\Http\Request;
 
 class PanCardController extends Controller
 {
+    use Traits\CrmControllerTrait;
     public function index(Request $request)
     {
         $userId = $request->user()->id;
-        $base = PanCardApplication::where('user_id', $userId);
-
-        // Status counts
-        $allCount = (clone $base)->count();
-        $pendingCount = (clone $base)->where('status', 'pending')->count();
-        $processingCount = (clone $base)->where('status', 'processing')->count();
-        $completedCount = (clone $base)->where('status', 'completed')->count();
-        $rejectedCount = (clone $base)->where('status', 'rejected')->count();
+        $counts = $this->getStatusCounts(PanCardApplication::class, $userId);
 
         $query = PanCardApplication::where('user_id', $userId)->orderBy('created_at', 'desc');
-
-        // Status card filter
-        if ($request->status_filter) {
-            $query->where('status', $request->status_filter);
-        }
-
-        // Search
-        if ($request->search) {
-            $s = $request->search;
-            $query->where(function ($q) use ($s) {
-                $q->where('applicant_name', 'like', "%$s%")
-                  ->orWhere('mobile_number', 'like', "%$s%")
-                  ->orWhere('application_number', 'like', "%$s%")
-                  ->orWhere('aadhar_number', 'like', "%$s%");
-            });
-        }
-
-        // Advanced filters
-        if ($request->app_type) {
-            $query->whereIn('application_type', (array) $request->app_type);
-        }
-        if ($request->pay_status) {
-            $query->whereIn('payment_status', (array) $request->pay_status);
-        }
-        if ($request->pay_mode) {
-            $query->whereIn('payment_mode', (array) $request->pay_mode);
-        }
-
+        $this->applyCrmFilters($query, $request);
         $applications = $query->paginate(25)->withQueryString();
 
-        return view('crm.pan-card', compact(
-            'applications', 'allCount', 'pendingCount', 'processingCount', 'completedCount', 'rejectedCount'
-        ));
+        return view('crm.pan-card', compact('applications') + $counts);
     }
 
     public function store(Request $request)
@@ -70,9 +35,6 @@ class PanCardController extends Controller
 
         $amt = (float) ($request->amount ?? 0);
         $rcv = (float) ($request->received_amount ?? 0);
-        $payStatus = 'unpaid';
-        if ($rcv > 0 && $rcv >= $amt) $payStatus = 'paid';
-        elseif ($rcv > 0) $payStatus = 'partial';
 
         PanCardApplication::create([
             'user_id' => $request->user()->id,
@@ -85,7 +47,7 @@ class PanCardController extends Controller
             'amount' => $amt,
             'received_amount' => $rcv,
             'payment_mode' => $request->payment_mode ?? 'cash',
-            'payment_status' => $payStatus,
+            'payment_status' => $this->calculatePaymentStatus($amt, $rcv),
             'status' => 'pending',
         ]);
 
@@ -116,9 +78,7 @@ class PanCardController extends Controller
         // Auto-calculate payment status
         $amt = (float) ($data['amount'] ?? $app->amount);
         $rcv = (float) ($data['received_amount'] ?? $app->received_amount);
-        if ($rcv > 0 && $rcv >= $amt) $data['payment_status'] = 'paid';
-        elseif ($rcv > 0) $data['payment_status'] = 'partial';
-        else $data['payment_status'] = 'unpaid';
+        $data['payment_status'] = $this->calculatePaymentStatus($amt, $rcv);
 
         $app->update(array_filter($data, fn($v) => $v !== null));
 

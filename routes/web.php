@@ -16,6 +16,7 @@ use App\Http\Controllers\VoterIdController;
 use App\Http\Controllers\BandkamController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\PassportPhotoMakerController;
 use Illuminate\Support\Facades\Route;
 
 // ─── Public Pages ───
@@ -50,29 +51,37 @@ Route::middleware(['auth'])->group(function () {
     // Billing
     Route::get('/billing', [PageController::class, 'billing'])->name('billing');
 
-    // Forms — Generic Engine
-    Route::get('/hamipatra', fn(\Illuminate\Http\Request $r) => app(FormController::class)->show($r, 'hamipatra'))->name('hamipatra');
-    Route::post('/hamipatra', fn(\Illuminate\Http\Request $r) => app(FormController::class)->store($r, 'hamipatra'));
-    Route::get('/self-declaration', fn(\Illuminate\Http\Request $r) => app(FormController::class)->show($r, 'self_declaration'))->name('self-declaration');
-    Route::post('/self-declaration', fn(\Illuminate\Http\Request $r) => app(FormController::class)->store($r, 'self_declaration'));
-    Route::get('/grievance', fn(\Illuminate\Http\Request $r) => app(FormController::class)->show($r, 'grievance'))->name('grievance');
-    Route::post('/grievance', fn(\Illuminate\Http\Request $r) => app(FormController::class)->store($r, 'grievance'));
-    Route::get('/new-application', fn(\Illuminate\Http\Request $r) => app(FormController::class)->show($r, 'new_application'))->name('new-application');
-    Route::post('/new-application', fn(\Illuminate\Http\Request $r) => app(FormController::class)->store($r, 'new_application'));
-    Route::get('/caste-validity', fn(\Illuminate\Http\Request $r) => app(FormController::class)->show($r, 'caste_validity'))->name('caste-validity');
-    Route::post('/caste-validity', fn(\Illuminate\Http\Request $r) => app(FormController::class)->store($r, 'caste_validity'));
-    Route::get('/income-cert', fn(\Illuminate\Http\Request $r) => app(FormController::class)->show($r, 'income_cert'))->name('income-cert');
-    Route::post('/income-cert', fn(\Illuminate\Http\Request $r) => app(FormController::class)->store($r, 'income_cert'));
+    // Forms — Generic Engine (C4: proper controller routing)
+    Route::get('/hamipatra', [FormController::class, 'showHamipatra'])->name('hamipatra');
+    Route::get('/self-declaration', [FormController::class, 'showSelfDeclaration'])->name('self-declaration');
+    Route::get('/grievance', [FormController::class, 'showGrievance'])->name('grievance');
+    Route::get('/new-application', [FormController::class, 'showNewApplication'])->name('new-application');
+    Route::get('/caste-validity', [FormController::class, 'showCasteValidity'])->name('caste-validity');
+    Route::get('/income-cert', [FormController::class, 'showIncomeCert'])->name('income-cert');
     Route::get('/rajpatra', fn() => view('forms.rajpatra-hub'))->name('rajpatra');
-    Route::get('/rajpatra-marathi', fn(\Illuminate\Http\Request $r) => app(FormController::class)->show($r, 'rajpatra_marathi'))->name('rajpatra-marathi');
-    Route::post('/rajpatra-marathi', fn(\Illuminate\Http\Request $r) => app(FormController::class)->store($r, 'rajpatra_marathi'));
-    Route::get('/rajpatra-english', fn(\Illuminate\Http\Request $r) => app(FormController::class)->show($r, 'rajpatra_english'))->name('rajpatra-english');
-    Route::post('/rajpatra-english', fn(\Illuminate\Http\Request $r) => app(FormController::class)->store($r, 'rajpatra_english'));
-    Route::get('/rajpatra-affidavit-712', fn(\Illuminate\Http\Request $r) => app(FormController::class)->show($r, 'rajpatra_affidavit_712'))->name('rajpatra-712');
-    Route::post('/rajpatra-affidavit-712', fn(\Illuminate\Http\Request $r) => app(FormController::class)->store($r, 'rajpatra_affidavit_712'));
-    Route::get('/farmer-id-card', fn(\Illuminate\Http\Request $r) => app(FormController::class)->show($r, 'farmer_id_card'))->name('farmer-id-card');
-    Route::post('/farmer-id-card', fn(\Illuminate\Http\Request $r) => app(FormController::class)->store($r, 'farmer_id_card'));
+    Route::get('/rajpatra-marathi', [FormController::class, 'showRajpatraMarathi'])->name('rajpatra-marathi');
+    Route::get('/rajpatra-english', [FormController::class, 'showRajpatraEnglish'])->name('rajpatra-english');
+    Route::get('/rajpatra-affidavit-712', [FormController::class, 'showRajpatra712'])->name('rajpatra-712');
+    Route::get('/farmer-id-card', [FormController::class, 'showFarmerIdCard'])->name('farmer-id-card');
+
+    // B4: Rate-limited form POST routes (30 per minute per user)
+    Route::middleware(['throttle:30,1'])->group(function () {
+        Route::post('/hamipatra', [FormController::class, 'storeHamipatra']);
+        Route::post('/self-declaration', [FormController::class, 'storeSelfDeclaration']);
+        Route::post('/grievance', [FormController::class, 'storeGrievance']);
+        Route::post('/new-application', [FormController::class, 'storeNewApplication']);
+        Route::post('/caste-validity', [FormController::class, 'storeCasteValidity']);
+        Route::post('/income-cert', [FormController::class, 'storeIncomeCert']);
+        Route::post('/rajpatra-marathi', [FormController::class, 'storeRajpatraMarathi']);
+        Route::post('/rajpatra-english', [FormController::class, 'storeRajpatraEnglish']);
+        Route::post('/rajpatra-affidavit-712', [FormController::class, 'storeRajpatra712']);
+        Route::post('/farmer-id-card', [FormController::class, 'storeFarmerIdCard']);
+    });
     Route::get('/farmer-id-card/bulk-print', [FormController::class, 'bulkPrintFarmer'])->name('farmer.bulk-print');
+
+    // PassportPro — Passport Photo Maker
+    Route::get('/passport-photo-maker', [PassportPhotoMakerController::class, 'index'])->name('passport-photo-maker');
+    Route::post('/passport-photo-maker/pay', [PassportPhotoMakerController::class, 'processPayment'])->name('passport-photo-maker.pay');
 
     // Form actions
     Route::delete('/forms/{id}', [FormController::class, 'delete'])->name('forms.delete');
@@ -129,5 +138,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/transactions', [AdminTransactionController::class, 'index'])->name('transactions');
     Route::get('/settings', [AdminSettingsController::class, 'index'])->name('settings');
 });
+
+// ─── Razorpay Webhook (no auth, no CSRF) ───
+Route::post('/webhook/razorpay', [WalletController::class, 'webhook'])
+    ->name('webhook.razorpay')
+    ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
 
 require __DIR__.'/auth.php';

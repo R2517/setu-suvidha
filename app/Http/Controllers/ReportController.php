@@ -62,17 +62,34 @@ class ReportController extends Controller
             ->selectRaw('scheme_type, COUNT(*) as cnt')
             ->groupBy('scheme_type')->pluck('cnt', 'scheme_type')->toArray();
 
-        // Monthly trend (last 6 months)
+        // Monthly trend (last 6 months) — single query per model instead of 6
+        $trendStart = now()->subMonths(5)->startOfMonth();
+        $trendEnd = now()->endOfMonth();
+
+        $panTrend = PanCardApplication::where('user_id', $userId)
+            ->whereBetween('created_at', [$trendStart, $trendEnd])
+            ->selectRaw("DATE_FORMAT(created_at, '%Y-%m') as ym, COUNT(*) as cnt")
+            ->groupBy('ym')->pluck('cnt', 'ym');
+
+        $voterTrend = VoterIdApplication::where('user_id', $userId)
+            ->whereBetween('created_at', [$trendStart, $trendEnd])
+            ->selectRaw("DATE_FORMAT(created_at, '%Y-%m') as ym, COUNT(*) as cnt")
+            ->groupBy('ym')->pluck('cnt', 'ym');
+
+        $bandkamTrend = BandkamRegistration::where('user_id', $userId)
+            ->whereBetween('created_at', [$trendStart, $trendEnd])
+            ->selectRaw("DATE_FORMAT(created_at, '%Y-%m') as ym, COUNT(*) as cnt")
+            ->groupBy('ym')->pluck('cnt', 'ym');
+
         $trend = [];
         for ($i = 5; $i >= 0; $i--) {
             $m = now()->subMonths($i);
-            $s = (clone $m)->startOfMonth();
-            $e = (clone $m)->endOfMonth();
+            $ym = $m->format('Y-m');
             $trend[] = [
                 'label' => $m->format('M Y'),
-                'pan' => PanCardApplication::where('user_id', $userId)->whereBetween('created_at', [$s, $e])->count(),
-                'voter' => VoterIdApplication::where('user_id', $userId)->whereBetween('created_at', [$s, $e])->count(),
-                'bandkam' => BandkamRegistration::where('user_id', $userId)->whereBetween('created_at', [$s, $e])->count(),
+                'pan' => $panTrend[$ym] ?? 0,
+                'voter' => $voterTrend[$ym] ?? 0,
+                'bandkam' => $bandkamTrend[$ym] ?? 0,
             ];
         }
 

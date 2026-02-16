@@ -170,7 +170,7 @@
                 <button type="button" @click="bulkPrint('sidebyside')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition">
                     <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i> शेजारी प्रिंट (4/पृष्ठ)
                 </button>
-                <button type="button" @click="bulkPrint('duplex')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-orange-500 text-white text-xs font-semibold hover:bg-orange-600 transition">
+                <button type="button" @click="bulkPrint('duplex')" style="background-color:#f97316;color:#ffffff;" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold hover:opacity-90 transition">
                     <i data-lucide="flip-horizontal" class="w-3.5 h-3.5"></i> दोन्ही बाजू प्रिंट (8/शीट)
                 </button>
             </div>

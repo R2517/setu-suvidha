@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FormSubmission;
+
 class PageController extends Controller
 {
     public function home() { return view('pages.home'); }
@@ -19,7 +21,7 @@ class PageController extends Controller
     public function billing()
     {
         $user = auth()->user();
-        $submissions = \App\Models\FormSubmission::where('user_id', $user->id)
+        $submissions = FormSubmission::where('user_id', $user->id)
             ->orderBy('created_at', 'desc')->paginate(20);
         return view('dashboard.billing', compact('user', 'submissions'));
     }
