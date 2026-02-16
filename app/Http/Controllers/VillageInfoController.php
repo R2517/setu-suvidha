@@ -26,6 +26,9 @@ class VillageInfoController extends Controller
             'post_office' => 'required|string|max:100',
             'village'     => 'required|string|max:100',
             'verifier_name' => 'nullable|string|max:150',
+            'certifier_name' => 'nullable|string|max:150',
+            'certifier_designation' => 'nullable|string|max:150',
+            'certifier_contact' => 'nullable|string|max:15',
         ]);
 
         VillageInfo::create([
@@ -37,6 +40,9 @@ class VillageInfoController extends Controller
             'post_office'   => strtoupper($request->post_office),
             'village'       => strtoupper($request->village),
             'verifier_name' => $request->verifier_name ? strtoupper($request->verifier_name) : null,
+            'certifier_name' => $request->certifier_name ? strtoupper($request->certifier_name) : null,
+            'certifier_designation' => $request->certifier_designation ? strtoupper($request->certifier_designation) : null,
+            'certifier_contact' => $request->certifier_contact,
         ]);
 
         return redirect()->route('aadhaar.village-info.index')
@@ -63,6 +69,9 @@ class VillageInfoController extends Controller
             'post_office' => 'required|string|max:100',
             'village'     => 'required|string|max:100',
             'verifier_name' => 'nullable|string|max:150',
+            'certifier_name' => 'nullable|string|max:150',
+            'certifier_designation' => 'nullable|string|max:150',
+            'certifier_contact' => 'nullable|string|max:15',
         ]);
 
         $village->update([
@@ -73,6 +82,9 @@ class VillageInfoController extends Controller
             'post_office'   => strtoupper($request->post_office),
             'village'       => strtoupper($request->village),
             'verifier_name' => $request->verifier_name ? strtoupper($request->verifier_name) : null,
+            'certifier_name' => $request->certifier_name ? strtoupper($request->certifier_name) : null,
+            'certifier_designation' => $request->certifier_designation ? strtoupper($request->certifier_designation) : null,
+            'certifier_contact' => $request->certifier_contact,
         ]);
 
         return redirect()->route('aadhaar.village-info.index')
