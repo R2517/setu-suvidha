@@ -112,16 +112,25 @@
         /* Row spacer */
         .row-gap td { height: 6px; }
 
-        /* Photo section (table cell) */
-        .photo-cell {
-            width: 140px; border: 1.5px solid #555; vertical-align: top;
-            text-align: center; font-size: 6pt; color: #444; padding: 4px;
+        /* Bottom address section: District/State/PIN + Photo side by side */
+        .bottom-addr-wrap { display: flex; gap: 4px; margin-top: 1px; }
+        .bottom-addr-left { flex: 1; }
+        .bottom-addr-left .form-tbl { width: 100%; }
+        .bottom-addr-right { width: 148px; flex-shrink: 0; }
+        .photo-cell-block {
+            border: 1.5px solid #555; height: 100%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; font-size: 6pt; color: #444; padding: 6px 4px;
             line-height: 1.3;
         }
-        .photo-cell .photo-text { margin-bottom: 4px; }
-        .photo-cell .red-text { color: #c00; font-weight: 600; font-size: 5.5pt; }
-        .photo-cell .nb-text { font-size: 5pt; margin-top: 3px; font-weight: bold; }
-        .photo-sig { border-top: 1px solid #555; margin-top: auto; padding-top: 3px; min-height: 35px; font-size: 5.5pt; }
+        .photo-cell-block .photo-text { margin-bottom: 6px; }
+        .photo-cell-block .red-text { color: #c00; font-weight: 600; font-size: 5.5pt; margin-bottom: 4px; }
+        .photo-cell-block .nb-text { font-size: 5pt; font-weight: bold; }
+
+        /* Signature line box */
+        .sig-line-box { padding: 4px 0 2px 97px; }
+        .sig-line { border-bottom: 1px solid #555; width: 200px; margin-bottom: 2px; min-height: 30px; }
+        .sig-line-text { font-size: 5.5pt; color: #444; text-align: center; width: 200px; }
 
         /* Certifier bottom section */
         .cert-bottom { display: flex; gap: 8px; margin-top: 4px; }
@@ -303,43 +312,57 @@
                     </div>
                 </td>
             </tr>
-            {{-- District + Photo section starts --}}
-            <tr>
-                <td class="lbl">District:</td>
-                <td class="boxes-cell" style="display:flex; gap:4px;">
-                    <div class="char-grid-wrap" style="flex:1;">
-                        <input type="text" class="hidden-input" id="inp_district" maxlength="31" oninput="fill(this,'grid_district')" onfocus="showCursor(this,'grid_district')" onblur="hideCursor('grid_district')">
-                        <div id="grid_district" class="char-grid"></div>
-                    </div>
-                    <div class="photo-cell" id="photoBox" style="min-height:130px;">
-                        <div class="photo-text">Individual Seeking to Enrol/ Aadhaar Number Holder Recent Colour Passport Size Photograph.</div>
-                        <div class="red-text">Cross Signed and<br>Cross Stamped<br>by the Certifier.</div>
-                        <div class="nb-text">NB: DO NOT OVERLAP<br>WITH TEXT BOXES.</div>
-                        <div class="photo-sig">Signature/ Thumb/ Finger Impression of<br>Individual Seeking to Enrol/ Aadhaar Number Holder</div>
-                    </div>
-                </td>
-            </tr>
-            {{-- State (2 rows, shorter) --}}
-            <tr>
-                <td class="lbl">State:</td>
-                <td class="boxes-cell">
-                    <div class="char-grid-wrap" style="margin-right:148px;">
-                        <input type="text" class="hidden-input" id="inp_state" maxlength="46" oninput="fill(this,'grid_state')" onfocus="showCursor(this,'grid_state')" onblur="hideCursor('grid_state')">
-                        <div id="grid_state" class="char-grid"></div>
-                    </div>
-                </td>
-            </tr>
-            {{-- PIN Code --}}
-            <tr>
-                <td class="lbl">PIN Code:</td>
-                <td class="boxes-cell">
-                    <div class="char-grid-wrap" style="margin-right:148px;">
-                        <input type="text" class="hidden-input" id="inp_pin" maxlength="6" oninput="fillNum(this,'grid_pin')" onfocus="showCursor(this,'grid_pin')" onblur="hideCursor('grid_pin')">
-                        <div id="grid_pin" class="char-grid"></div>
-                    </div>
-                </td>
-            </tr>
         </table>
+
+        {{-- District / State / PIN + Photo section (side by side) --}}
+        <div class="bottom-addr-wrap">
+            <div class="bottom-addr-left">
+                <table class="form-tbl">
+                    {{-- District (2 rows) --}}
+                    <tr>
+                        <td class="lbl">District:</td>
+                        <td class="boxes-cell">
+                            <div class="char-grid-wrap">
+                                <input type="text" class="hidden-input" id="inp_district" maxlength="40" oninput="fill(this,'grid_district')" onfocus="showCursor(this,'grid_district')" onblur="hideCursor('grid_district')">
+                                <div id="grid_district" class="char-grid"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    {{-- State (2 rows) --}}
+                    <tr>
+                        <td class="lbl">State:</td>
+                        <td class="boxes-cell">
+                            <div class="char-grid-wrap">
+                                <input type="text" class="hidden-input" id="inp_state" maxlength="40" oninput="fill(this,'grid_state')" onfocus="showCursor(this,'grid_state')" onblur="hideCursor('grid_state')">
+                                <div id="grid_state" class="char-grid"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    {{-- PIN Code --}}
+                    <tr>
+                        <td class="lbl">PIN Code:</td>
+                        <td class="boxes-cell">
+                            <div class="char-grid-wrap">
+                                <input type="text" class="hidden-input" id="inp_pin" maxlength="6" oninput="fillNum(this,'grid_pin')" onfocus="showCursor(this,'grid_pin')" onblur="hideCursor('grid_pin')">
+                                <div id="grid_pin" class="char-grid"></div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                {{-- Signature box below PIN --}}
+                <div class="sig-line-box">
+                    <div class="sig-line"></div>
+                    <div class="sig-line-text">Signature / Thumb / Finger Impression of<br>Individual Seeking to Enrol/ Aadhaar Number Holder</div>
+                </div>
+            </div>
+            <div class="bottom-addr-right">
+                <div class="photo-cell-block">
+                    <div class="photo-text">Individual Seeking to Enrol/<br>Aadhaar Number Holder<br>Recent Colour Passport Size<br>Photograph.</div>
+                    <div class="red-text"><em>Cross Signed and<br>Cross Stamped<br>by the Certifier.</em></div>
+                    <div class="nb-text"><strong>NB:</strong> DO NOT OVERLAP<br>WITH TEXT BOXES.</div>
+                </div>
+            </div>
+        </div>
 
         {{-- ═══════════════ CERTIFIER'S DETAILS ═══════════════ --}}
         <div class="section-bar orange">CERTIFIER'S DETAILS (TO BE FILLED BY THE CERTIFIER ONLY)</div>
@@ -465,8 +488,8 @@ const gridDefs = {
     grid_area: 62,
     grid_village: 62,
     grid_post: 62,
-    grid_district: 31,
-    grid_state: 46,
+    grid_district: 40,
+    grid_state: 40,
     grid_pin: 6,
     grid_certifier: 31,
     grid_designation: 31,
