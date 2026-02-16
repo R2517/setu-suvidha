@@ -106,13 +106,39 @@
         .back-link { position: absolute; top: 16px; left: 16px; color: rgba(255,255,255,0.6); font-size: 12px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 4px; z-index: 5; }
         .back-link:hover { color: #fff; }
 
-        /* Print */
+        /* Print - works for both Ctrl+P and JS processAndPrint() */
+        @page { margin: 0; size: auto; }
         @media print {
-            body * { visibility: hidden; }
-            #paper, #paper * { visibility: visible; }
-            #paper { position: absolute; left: 0; top: 0; box-shadow: none !important; margin: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .watermark-layer { display: none !important; }
+            html, body {
+                background: #fff !important; margin: 0 !important; padding: 0 !important;
+                overflow: visible !important; width: 100% !important; height: auto !important;
+            }
+            .sidebar, .back-link, .crop-overlay, .watermark-layer, #fileInput { display: none !important; }
+            .app-wrap {
+                display: block !important; width: 100% !important;
+                background: #fff !important; padding: 0 !important; margin: 0 !important;
+                height: auto !important;
+            }
+            .workspace {
+                display: block !important; width: 100% !important;
+                background: #fff !important; padding: 0 !important; margin: 0 !important;
+                text-align: center !important; overflow: visible !important; height: auto !important;
+            }
+            #paper {
+                display: inline-block !important;
+                box-shadow: none !important; margin: 0 auto !important;
+                -webkit-print-color-adjust: exact; print-color-adjust: exact;
+            }
+            /* Print wrapper used by JS processAndPrint() */
+            #printWrapper {
+                display: block !important; width: 100% !important;
+                background: #fff !important; margin: 0 !important; padding: 0 !important;
+                text-align: center !important;
+            }
+            .photo-slot { background: #fff !important; }
+            .photo-slot img.final-img { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
+        #printWrapper { display: none; }
 
         /* Responsive */
         @media (max-width: 768px) {
@@ -512,9 +538,12 @@ function passportPro() {
         },
 
         async processAndPrint() {
-            // Hide watermark, remove shadow
             let wm = document.getElementById('watermark');
             let paper = document.getElementById('paper');
+            let workspace = paper.parentElement;
+            let appWrap = document.querySelector('.app-wrap');
+
+            // Hide watermark, remove shadow
             wm.style.display = 'none';
             let origShadow = paper.style.boxShadow;
             paper.style.boxShadow = 'none';
@@ -539,14 +568,38 @@ function passportPro() {
 
                 Swal.close();
 
-                await new Promise(r => setTimeout(r, 500));
+                // Move paper to a clean print wrapper for perfect alignment
+                let printWrap = document.getElementById('printWrapper');
+                if (!printWrap) {
+                    printWrap = document.createElement('div');
+                    printWrap.id = 'printWrapper';
+                    document.body.appendChild(printWrap);
+                }
+                printWrap.style.display = 'block';
+                printWrap.style.cssText = 'display:block;width:100%;text-align:center;background:#fff;padding:0;margin:0;';
+                appWrap.style.display = 'none';
+                printWrap.appendChild(paper);
+
+                await new Promise(r => setTimeout(r, 300));
                 window.print();
 
+                // Restore: move paper back to workspace
+                workspace.appendChild(paper);
+                printWrap.style.display = 'none';
+                appWrap.style.display = '';
+
             } catch (err) {
+                // Restore on error too
+                if (!workspace.contains(paper)) {
+                    workspace.appendChild(paper);
+                }
+                let pw = document.getElementById('printWrapper');
+                if (pw) pw.style.display = 'none';
+                if (appWrap) appWrap.style.display = '';
                 Swal.fire('Error', 'Could not generate image. Please try again.', 'error');
             }
 
-            // Restore
+            // Restore watermark and shadow
             wm.style.display = '';
             paper.style.boxShadow = origShadow;
         },
