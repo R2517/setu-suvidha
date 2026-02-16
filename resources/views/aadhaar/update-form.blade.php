@@ -128,9 +128,9 @@
         .photo-cell-block .nb-text { font-size: 5pt; font-weight: bold; }
 
         /* Signature box */
-        .sig-box-wrap { margin: 4px 0 2px 97px; width: 210px; }
-        .sig-box { border: 1px solid #333; min-height: 45px; width: 100%; }
-        .sig-box-label { font-size: 5.5pt; color: #333; text-align: center; margin-top: 1px; line-height: 1.3; }
+        .sig-box-wrap { margin: 4px 0 2px 0; display: flex; flex-direction: column; align-items: flex-end; }
+        .sig-box { border: 1px solid #333; min-height: 45px; width: 210px; }
+        .sig-box-label { font-size: 5.5pt; color: #333; text-align: center; margin-top: 1px; line-height: 1.3; width: 210px; }
 
         /* Certifier bottom section */
         .cert-bottom { display: flex; gap: 8px; margin-top: 4px; }
