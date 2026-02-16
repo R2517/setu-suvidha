@@ -263,6 +263,15 @@
                 </div>
             </div>
 
+            {{-- Sub-district / Taluka --}}
+            <div class="form-row">
+                <label>Sub-district (Taluka)</label>
+                <div class="char-grid-wrap">
+                    <input type="text" class="hidden-input" id="inp_taluka" maxlength="23" oninput="fill(this,'grid_taluka')" onfocus="showCursor(this,'grid_taluka')" onblur="hideCursor('grid_taluka')">
+                    <div id="grid_taluka" class="char-grid"></div>
+                </div>
+            </div>
+
             {{-- District --}}
             <div class="form-row">
                 <label>District</label>
@@ -409,7 +418,7 @@ const savedAddresses = @json($addresses ?? []);
 const gridDefs = {
     grid_aadhaar: 12, grid_name: 62, grid_house: 31, grid_street: 31,
     grid_landmark: 62, grid_area: 62, grid_village: 31, grid_post: 23,
-    grid_district: 23, grid_state: 46, grid_pin: 6, grid_mobile: 10,
+    grid_taluka: 23, grid_district: 23, grid_state: 46, grid_pin: 6, grid_mobile: 10,
     grid_certifier: 31, grid_designation: 31, grid_office: 62, grid_contact: 10
 };
 
@@ -501,6 +510,7 @@ function fillAddressData() {
 
     setAndFill('inp_village', 'grid_village', addr.village, false);
     setAndFill('inp_post', 'grid_post', addr.post_office, false);
+    setAndFill('inp_taluka', 'grid_taluka', addr.taluka, false);
     setAndFill('inp_district', 'grid_district', addr.district, false);
     setAndFill('inp_state', 'grid_state', addr.state, false);
     setAndFill('inp_pin', 'grid_pin', addr.pincode, true);

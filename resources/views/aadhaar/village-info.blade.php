@@ -90,6 +90,15 @@
 
         .empty-state { text-align: center; padding: 40px; color: #94a3b8; font-size: 14px; }
 
+        /* Table controls */
+        .table-controls { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: #fff; border-bottom: 1px solid #f1f5f9; font-size: 12px; color: #64748b; }
+        .show-entries select { padding: 4px 8px; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 12px; outline: none; }
+        .pagination-row { display: flex; align-items: center; justify-content: flex-end; padding: 10px 12px; background: #fff; gap: 4px; border-top: 1px solid #f1f5f9; }
+        .page-btn { padding: 5px 14px; border: 1px solid #e2e8f0; border-radius: 4px; background: #fff; color: #64748b; font-size: 12px; cursor: pointer; font-weight: 600; }
+        .page-btn:hover { background: #f1f5f9; }
+        .page-btn.active { background: #2563eb; color: #fff; border-color: #2563eb; }
+        .form-group label { font-style: italic; }
+
         /* Right menu */
         .rm-title { font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 10px; }
         .rm-btn {
@@ -181,8 +190,11 @@
         {{-- Saved Records Table --}}
         <div class="table-section">
             <div class="table-header">
-                <h3>Saved Records ({{ $villages->count() }})</h3>
-                <input type="text" class="search-box" placeholder="🔍 Search..." id="searchBox" oninput="filterTable()">
+                <h3>📋 Saved Records ({{ $villages->count() }})</h3>
+                <input type="text" class="search-box" placeholder="Search..." id="searchBox" oninput="filterTable()">
+            </div>
+            <div class="table-controls">
+                <div class="show-entries">Show <select id="entriesCount" onchange="changeEntries()"><option value="5">5</option><option value="10">10</option><option value="25">25</option></select> entries</div>
             </div>
             @if($villages->count() > 0)
                 <table id="villageTable">
@@ -223,8 +235,12 @@
                     </tbody>
                 </table>
             @else
-                <div class="empty-state">No village records saved yet. Add one above to get started.</div>
+                <div class="empty-state"><em>No data available in table</em></div>
             @endif
+            <div class="pagination-row">
+                <button class="page-btn" id="btnPrev" onclick="changePage(-1)">Previous</button>
+                <button class="page-btn" id="btnNext" onclick="changePage(1)">Next</button>
+            </div>
         </div>
     </div>
 
@@ -243,14 +259,60 @@
 </div>
 
 <script>
-function filterTable() {
-    const q = document.getElementById('searchBox').value.toLowerCase();
-    const rows = document.querySelectorAll('#villageTable tbody tr');
-    rows.forEach(row => {
-        const text = row.textContent.toLowerCase();
-        row.style.display = text.includes(q) ? '' : 'none';
-    });
+let currentPage = 1;
+let perPage = 5;
+
+function getAllRows() {
+    return Array.from(document.querySelectorAll('#villageTable tbody tr'));
 }
+
+function getVisibleRows() {
+    const q = document.getElementById('searchBox').value.toLowerCase();
+    return getAllRows().filter(row => row.textContent.toLowerCase().includes(q));
+}
+
+function filterTable() {
+    currentPage = 1;
+    renderPage();
+}
+
+function changeEntries() {
+    perPage = parseInt(document.getElementById('entriesCount').value);
+    currentPage = 1;
+    renderPage();
+}
+
+function changePage(dir) {
+    const visible = getVisibleRows();
+    const totalPages = Math.max(1, Math.ceil(visible.length / perPage));
+    currentPage = Math.max(1, Math.min(totalPages, currentPage + dir));
+    renderPage();
+}
+
+function renderPage() {
+    const allRows = getAllRows();
+    const q = document.getElementById('searchBox').value.toLowerCase();
+
+    // Hide all first
+    allRows.forEach(r => r.style.display = 'none');
+
+    // Filter
+    const visible = allRows.filter(r => r.textContent.toLowerCase().includes(q));
+    const totalPages = Math.max(1, Math.ceil(visible.length / perPage));
+    if (currentPage > totalPages) currentPage = totalPages;
+
+    // Show current page
+    const start = (currentPage - 1) * perPage;
+    const end = start + perPage;
+    visible.slice(start, end).forEach(r => r.style.display = '');
+
+    // Update buttons
+    document.getElementById('btnPrev').disabled = currentPage <= 1;
+    document.getElementById('btnNext').disabled = currentPage >= totalPages;
+}
+
+// Init pagination on load
+document.addEventListener('DOMContentLoaded', () => { if (document.getElementById('villageTable')) renderPage(); });
 </script>
 </body>
 </html>
