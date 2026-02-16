@@ -1,0 +1,133 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\VoterIdApplication;
+use Illuminate\Http\Request;
+
+class VoterIdController extends Controller
+{
+    public function index(Request $request)
+    {
+        $userId = $request->user()->id;
+        $base = VoterIdApplication::where('user_id', $userId);
+
+        // Status counts
+        $allCount = (clone $base)->count();
+        $pendingCount = (clone $base)->where('status', 'pending')->count();
+        $processingCount = (clone $base)->where('status', 'processing')->count();
+        $completedCount = (clone $base)->where('status', 'completed')->count();
+        $rejectedCount = (clone $base)->where('status', 'rejected')->count();
+
+        $query = VoterIdApplication::where('user_id', $userId)->orderBy('created_at', 'desc');
+
+        // Status card filter
+        if ($request->status_filter) {
+            $query->where('status', $request->status_filter);
+        }
+
+        // Search
+        if ($request->search) {
+            $s = $request->search;
+            $query->where(function ($q) use ($s) {
+                $q->where('applicant_name', 'like', "%$s%")
+                  ->orWhere('mobile_number', 'like', "%$s%")
+                  ->orWhere('application_number', 'like', "%$s%")
+                  ->orWhere('aadhar_number', 'like', "%$s%");
+            });
+        }
+
+        // Advanced filters
+        if ($request->app_type) {
+            $query->whereIn('application_type', (array) $request->app_type);
+        }
+        if ($request->pay_status) {
+            $query->whereIn('payment_status', (array) $request->pay_status);
+        }
+        if ($request->pay_mode) {
+            $query->whereIn('payment_mode', (array) $request->pay_mode);
+        }
+
+        $applications = $query->paginate(25)->withQueryString();
+
+        return view('crm.voter-id', compact(
+            'applications', 'allCount', 'pendingCount', 'processingCount', 'completedCount', 'rejectedCount'
+        ));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'applicant_name' => 'required|string|max:255',
+            'mobile_number' => 'required|digits:10',
+            'application_type' => 'required|in:new,correction,transfer,duplicate',
+            'aadhar_number' => 'nullable|digits:12',
+            'dob' => 'nullable|date|before:today',
+            'amount' => 'nullable|numeric|min:0',
+            'received_amount' => 'nullable|numeric|min:0',
+            'payment_mode' => 'nullable|in:cash,online,upi,cheque',
+        ]);
+
+        $amt = (float) ($request->amount ?? 0);
+        $rcv = (float) ($request->received_amount ?? 0);
+        $payStatus = 'unpaid';
+        if ($rcv > 0 && $rcv >= $amt) $payStatus = 'paid';
+        elseif ($rcv > 0) $payStatus = 'partial';
+
+        VoterIdApplication::create([
+            'user_id' => $request->user()->id,
+            'applicant_name' => $request->applicant_name,
+            'mobile_number' => $request->mobile_number,
+            'aadhar_number' => $request->aadhar_number,
+            'application_type' => $request->application_type,
+            'application_number' => $request->application_number ?: 'VID-' . strtoupper(substr(uniqid(), -6)),
+            'dob' => $request->dob,
+            'amount' => $amt,
+            'received_amount' => $rcv,
+            'payment_mode' => $request->payment_mode ?? 'cash',
+            'payment_status' => $payStatus,
+            'status' => 'pending',
+        ]);
+
+        return redirect()->route('voter-id')->with('success', 'Voter ID अर्ज जतन झाला! ✅');
+    }
+
+    public function update(Request $request, $id)
+    {
+        $app = VoterIdApplication::where('id', $id)->where('user_id', $request->user()->id)->firstOrFail();
+
+        $request->validate([
+            'applicant_name' => 'nullable|string|max:255',
+            'mobile_number' => 'nullable|digits:10',
+            'aadhar_number' => 'nullable|digits:12',
+            'application_type' => 'nullable|in:new,correction,transfer,duplicate',
+            'status' => 'nullable|in:pending,processing,completed,rejected',
+            'dob' => 'nullable|date|before:today',
+            'amount' => 'nullable|numeric|min:0',
+            'received_amount' => 'nullable|numeric|min:0',
+            'payment_mode' => 'nullable|in:cash,online,upi,cheque',
+        ]);
+
+        $data = $request->only([
+            'applicant_name', 'mobile_number', 'aadhar_number', 'application_type',
+            'application_number', 'status', 'dob', 'amount', 'received_amount', 'payment_mode'
+        ]);
+
+        // Auto-calculate payment status
+        $amt = (float) ($data['amount'] ?? $app->amount);
+        $rcv = (float) ($data['received_amount'] ?? $app->received_amount);
+        if ($rcv > 0 && $rcv >= $amt) $data['payment_status'] = 'paid';
+        elseif ($rcv > 0) $data['payment_status'] = 'partial';
+        else $data['payment_status'] = 'unpaid';
+
+        $app->update(array_filter($data, fn($v) => $v !== null));
+
+        return redirect()->route('voter-id')->with('success', 'अर्ज अपडेट झाला! ✅');
+    }
+
+    public function destroy(Request $request, $id)
+    {
+        VoterIdApplication::where('id', $id)->where('user_id', $request->user()->id)->firstOrFail()->delete();
+        return redirect()->route('voter-id')->with('success', 'अर्ज हटवला!');
+    }
+}
