@@ -17,6 +17,8 @@ use App\Http\Controllers\BandkamController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\PassportPhotoMakerController;
+use App\Http\Controllers\AadhaarController;
+use App\Http\Controllers\VillageInfoController;
 use Illuminate\Support\Facades\Route;
 
 // ─── Public Pages ───
@@ -82,6 +84,18 @@ Route::middleware(['auth'])->group(function () {
     // PassportPro — Passport Photo Maker
     Route::get('/passport-photo-maker', [PassportPhotoMakerController::class, 'index'])->name('passport-photo-maker');
     Route::post('/passport-photo-maker/pay', [PassportPhotoMakerController::class, 'processPayment'])->name('passport-photo-maker.pay');
+
+    // Aadhaar Services Hub
+    Route::get('/aadhaar-hub', [AadhaarController::class, 'hub'])->name('aadhaar.hub');
+    Route::prefix('aadhaar')->name('aadhaar.')->group(function () {
+        Route::get('/adult-form', [AadhaarController::class, 'adultForm'])->name('adult-form');
+        Route::get('/minor-form', [AadhaarController::class, 'minorForm'])->name('minor-form');
+        Route::get('/child-form', [AadhaarController::class, 'childForm'])->name('child-form');
+        Route::get('/update-form', [AadhaarController::class, 'updateForm'])->name('update-form');
+        Route::post('/pay', [AadhaarController::class, 'processPayment'])->name('pay');
+        Route::resource('village-info', VillageInfoController::class)->except(['create', 'show']);
+        Route::get('/addresses-json', [VillageInfoController::class, 'getAddresses'])->name('addresses-json');
+    });
 
     // Form actions
     Route::delete('/forms/{id}', [FormController::class, 'delete'])->name('forms.delete');
