@@ -21,6 +21,7 @@ class VillageInfo extends Model
         'certifier_name',
         'certifier_designation',
         'certifier_contact',
+        'certifier_office_address',
     ];
 
     public function user()

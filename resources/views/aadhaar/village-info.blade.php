@@ -190,6 +190,24 @@
                         <label>Contact Number</label>
                         <input type="text" name="certifier_contact" maxlength="10" placeholder="MOBILE NUMBER" value="{{ old('certifier_contact', $village->certifier_contact ?? '') }}">
                     </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;margin:6px 0 4px;">
+                    <span style="font-size:11px;font-weight:600;color:#333;">Office Address same as above?</span>
+                    <label style="display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:700;color:#16a34a;cursor:pointer;">
+                        <input type="radio" name="same_address" value="yes" id="sameAddrYes" onchange="toggleOfficeAddr()" checked> Yes
+                    </label>
+                    <label style="display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:700;color:#dc2626;cursor:pointer;">
+                        <input type="radio" name="same_address" value="no" id="sameAddrNo" onchange="toggleOfficeAddr()"> No
+                    </label>
+                </div>
+                <div class="form-grid" id="officeAddrRow" style="display:none;">
+                    <div class="form-group" style="flex:3;min-width:300px;">
+                        <label>Office Address</label>
+                        <input type="text" name="certifier_office_address" id="certOfficeAddr" placeholder="OFFICE ADDRESS (IF DIFFERENT)" value="{{ old('certifier_office_address', $village->certifier_office_address ?? '') }}">
+                    </div>
+                </div>
+                <input type="hidden" name="certifier_office_address_auto" id="certOfficeAddrAuto" value="">
+                <div class="form-grid">
                     <button type="submit" class="btn-save">{{ isset($village) ? '✏️ Update' : '+ Save' }}</button>
                     @if(isset($village))
                         <a href="{{ route('aadhaar.village-info.index') }}" class="btn-save" style="background:#64748b;text-decoration:none;text-align:center;">Cancel</a>
@@ -321,6 +339,54 @@ function renderPage() {
 
 // Init pagination on load
 document.addEventListener('DOMContentLoaded', () => { if (document.getElementById('villageTable')) renderPage(); });
+
+// ═══ Office Address toggle ═══
+function toggleOfficeAddr() {
+    const isNo = document.getElementById('sameAddrNo').checked;
+    document.getElementById('officeAddrRow').style.display = isNo ? 'flex' : 'none';
+    if (!isNo) {
+        document.getElementById('certOfficeAddr').value = '';
+    }
+}
+
+// On form submit: if "Yes" selected, auto-build address from village fields
+document.querySelectorAll('form').forEach(form => {
+    form.addEventListener('submit', function() {
+        const isYes = document.getElementById('sameAddrYes').checked;
+        if (isYes) {
+            const v = (name) => { const el = form.querySelector('[name="'+name+'"]'); return el ? el.value.trim() : ''; };
+            const parts = [v('village'), v('post_office'), v('taluka'), v('district'), v('state'), v('pincode')].filter(Boolean);
+            const addr = parts.join(', ').toUpperCase();
+            // Set the actual field value
+            let addrField = document.getElementById('certOfficeAddr');
+            if (addrField) addrField.value = addr;
+            // Also create/set a hidden input if the visible one is hidden
+            if (!addrField) {
+                let hidden = document.createElement('input');
+                hidden.type = 'hidden';
+                hidden.name = 'certifier_office_address';
+                hidden.value = addr;
+                form.appendChild(hidden);
+            }
+        }
+    });
+});
+
+// On edit: if certifier_office_address already has a custom value, check "No"
+document.addEventListener('DOMContentLoaded', () => {
+    const addrVal = document.getElementById('certOfficeAddr');
+    if (addrVal && addrVal.value.trim() !== '') {
+        // Check if it matches the auto-built address
+        const form = addrVal.closest('form');
+        const v = (name) => { const el = form.querySelector('[name="'+name+'"]'); return el ? el.value.trim() : ''; };
+        const parts = [v('village'), v('post_office'), v('taluka'), v('district'), v('state'), v('pincode')].filter(Boolean);
+        const autoAddr = parts.join(', ').toUpperCase();
+        if (addrVal.value.trim().toUpperCase() !== autoAddr) {
+            document.getElementById('sameAddrNo').checked = true;
+            toggleOfficeAddr();
+        }
+    }
+});
 </script>
 </body>
 </html>

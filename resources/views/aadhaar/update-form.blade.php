@@ -569,6 +569,7 @@ function fillAddressData() {
         if (addr.certifier_name) setAndFill('inp_certifier', 'grid_certifier', addr.certifier_name, false);
         if (addr.certifier_designation) setAndFill('inp_designation', 'grid_designation', addr.certifier_designation, false);
         if (addr.certifier_contact) setAndFill('inp_contact', 'grid_contact', addr.certifier_contact, true);
+        if (addr.certifier_office_address) setAndFill('inp_office', 'grid_office', addr.certifier_office_address, false);
     }
 }
 

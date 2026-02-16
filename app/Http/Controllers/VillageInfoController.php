@@ -29,6 +29,7 @@ class VillageInfoController extends Controller
             'certifier_name' => 'nullable|string|max:150',
             'certifier_designation' => 'nullable|string|max:150',
             'certifier_contact' => 'nullable|string|max:15',
+            'certifier_office_address' => 'nullable|string|max:255',
         ]);
 
         VillageInfo::create([
@@ -43,6 +44,7 @@ class VillageInfoController extends Controller
             'certifier_name' => $request->certifier_name ? strtoupper($request->certifier_name) : null,
             'certifier_designation' => $request->certifier_designation ? strtoupper($request->certifier_designation) : null,
             'certifier_contact' => $request->certifier_contact,
+            'certifier_office_address' => $request->certifier_office_address ? strtoupper($request->certifier_office_address) : null,
         ]);
 
         return redirect()->route('aadhaar.village-info.index')
@@ -72,6 +74,7 @@ class VillageInfoController extends Controller
             'certifier_name' => 'nullable|string|max:150',
             'certifier_designation' => 'nullable|string|max:150',
             'certifier_contact' => 'nullable|string|max:15',
+            'certifier_office_address' => 'nullable|string|max:255',
         ]);
 
         $village->update([
@@ -85,6 +88,7 @@ class VillageInfoController extends Controller
             'certifier_name' => $request->certifier_name ? strtoupper($request->certifier_name) : null,
             'certifier_designation' => $request->certifier_designation ? strtoupper($request->certifier_designation) : null,
             'certifier_contact' => $request->certifier_contact,
+            'certifier_office_address' => $request->certifier_office_address ? strtoupper($request->certifier_office_address) : null,
         ]);
 
         return redirect()->route('aadhaar.village-info.index')
