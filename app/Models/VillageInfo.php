@@ -18,6 +18,9 @@ class VillageInfo extends Model
         'post_office',
         'village',
         'verifier_name',
+        'certifier_name',
+        'certifier_designation',
+        'certifier_contact',
     ];
 
     public function user()

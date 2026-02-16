@@ -175,6 +175,21 @@
                         <label>Village / City</label>
                         <input type="text" name="village" placeholder="VILLAGE NAME" value="{{ old('village', $village->village ?? '') }}" required>
                     </div>
+                </div>
+                <div style="padding:8px 0 2px;font-weight:700;font-size:11px;color:#bf360c;text-transform:uppercase;border-top:1px solid #e2e8f0;margin-top:6px;">Certifier's Details (To Be Filled By The Certifier Only)</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Name of the Certifier</label>
+                        <input type="text" name="certifier_name" placeholder="CERTIFIER NAME" value="{{ old('certifier_name', $village->certifier_name ?? '') }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Designation</label>
+                        <input type="text" name="certifier_designation" placeholder="DESIGNATION" value="{{ old('certifier_designation', $village->certifier_designation ?? '') }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Contact Number</label>
+                        <input type="text" name="certifier_contact" maxlength="10" placeholder="MOBILE NUMBER" value="{{ old('certifier_contact', $village->certifier_contact ?? '') }}">
+                    </div>
                     <button type="submit" class="btn-save">{{ isset($village) ? '✏️ Update' : '+ Save' }}</button>
                     @if(isset($village))
                         <a href="{{ route('aadhaar.village-info.index') }}" class="btn-save" style="background:#64748b;text-decoration:none;text-align:center;">Cancel</a>

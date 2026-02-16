@@ -426,6 +426,11 @@
         <div class="sb-label">Address Auto-fill</div>
         <select class="sb-select" id="addressSelector" onchange="fillAddressData()"><option value="">-- Select Address --</option></select>
         <a href="{{ route('aadhaar.village-info.index') }}" class="sb-link">+ Add New</a>
+        <label style="display:flex;align-items:center;gap:6px;margin-top:10px;font-size:11px;font-weight:600;color:#333;cursor:pointer;">
+            <input type="checkbox" id="certifierToggle" checked style="width:15px;height:15px;accent-color:#bf360c;cursor:pointer;">
+            <span>Fill Certifier's Details</span>
+        </label>
+        <div id="certifierStatus" style="font-size:10px;color:#16a34a;margin-top:3px;font-weight:600;">✓ Certifier data will be filled</div>
     </div>
     <div class="sb-divider"></div>
     <div class="sb-section" style="text-align:center;"><div class="sb-label">Wallet Deduction</div><div class="sb-cost">₹5.00</div></div>
@@ -557,8 +562,27 @@ function fillAddressData() {
     setAndFill('inp_district', 'grid_district', addr.district, false);
     setAndFill('inp_state', 'grid_state', addr.state, false);
     setAndFill('inp_pin', 'grid_pin', addr.pincode, true);
-    if (addr.verifier_name) setAndFill('inp_certifier', 'grid_certifier', addr.verifier_name, false);
+
+    // Certifier details — only fill if checkbox is checked
+    const fillCert = document.getElementById('certifierToggle').checked;
+    if (fillCert) {
+        if (addr.certifier_name) setAndFill('inp_certifier', 'grid_certifier', addr.certifier_name, false);
+        if (addr.certifier_designation) setAndFill('inp_designation', 'grid_designation', addr.certifier_designation, false);
+        if (addr.certifier_contact) setAndFill('inp_contact', 'grid_contact', addr.certifier_contact, true);
+    }
 }
+
+// ═══ Certifier toggle status text ═══
+document.getElementById('certifierToggle').addEventListener('change', function() {
+    const status = document.getElementById('certifierStatus');
+    if (this.checked) {
+        status.textContent = '✓ Certifier data will be filled';
+        status.style.color = '#16a34a';
+    } else {
+        status.textContent = '✗ Certifier data will NOT be filled';
+        status.style.color = '#dc2626';
+    }
+});
 
 // ═══ Auto-advance for date d-boxes ═══
 document.querySelectorAll('.d-box').forEach((box) => {
