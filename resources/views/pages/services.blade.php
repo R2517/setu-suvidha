@@ -28,12 +28,12 @@
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             @foreach([
-                ['icon' => 'user', 'title' => 'Adult Form (18+)', 'desc' => 'Form 1 — वयस्क नोंदणी फॉर्म, संपूर्ण 7 सेक्शन', 'price' => '₹5', 'color' => 'orange'],
-                ['icon' => 'user-round', 'title' => 'Minor Form (5-18)', 'desc' => 'Form 3 — अल्पवयीन नोंदणी फॉर्म', 'price' => '₹5', 'color' => 'blue'],
-                ['icon' => 'baby', 'title' => 'Child Form (0-5)', 'desc' => 'Form 5 — बालक नोंदणी, पालक माहिती', 'price' => '₹5', 'color' => 'pink'],
-                ['icon' => 'map-pin', 'title' => 'Update / Address', 'desc' => 'Certificate Form — पत्ता बदल प्रमाणपत्र', 'price' => '₹5', 'color' => 'green'],
+                ['icon' => 'user', 'title' => 'Adult Form (18+)', 'desc' => 'Form 1 — वयस्क नोंदणी फॉर्म, संपूर्ण 7 सेक्शन', 'price' => '₹5', 'color' => 'orange', 'url' => null],
+                ['icon' => 'user-round', 'title' => 'Minor Form (5-18)', 'desc' => 'Form 3 — अल्पवयीन नोंदणी फॉर्म', 'price' => '₹5', 'color' => 'blue', 'url' => null],
+                ['icon' => 'baby', 'title' => 'Child Form (0-5)', 'desc' => 'Form 5 — बालक नोंदणी, पालक माहिती', 'price' => '₹5', 'color' => 'pink', 'url' => null],
+                ['icon' => 'map-pin', 'title' => 'Update / Address', 'desc' => 'Certificate Form — पत्ता बदल प्रमाणपत्र', 'price' => '₹5', 'color' => 'green', 'url' => null],
             ] as $s)
-            <div class="group bg-gray-50 dark:bg-gray-900 rounded-2xl p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-gray-100 dark:border-gray-800">
+            <a href="{{ $s['url'] ?? route('register') }}" class="group bg-gray-50 dark:bg-gray-900 rounded-2xl p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-gray-100 dark:border-gray-800 block">
                 <div class="flex items-center justify-between mb-4">
                     <div class="w-12 h-12 rounded-xl bg-{{ $s['color'] }}-100 dark:bg-{{ $s['color'] }}-900/30 flex items-center justify-center">
                         <i data-lucide="{{ $s['icon'] }}" class="w-6 h-6 text-{{ $s['color'] }}-600 dark:text-{{ $s['color'] }}-400"></i>
@@ -42,7 +42,8 @@
                 </div>
                 <h3 class="font-semibold text-gray-900 dark:text-white mb-1">{{ $s['title'] }}</h3>
                 <p class="text-sm text-gray-500 dark:text-gray-400">{{ $s['desc'] }}</p>
-            </div>
+                <span class="inline-flex items-center gap-1 text-xs font-semibold text-{{ $s['color'] }}-600 mt-3 group-hover:gap-2 transition-all">{{ $s['url'] ? 'Get Now' : 'Coming Soon' }} <i data-lucide="arrow-right" class="w-3 h-3"></i></span>
+            </a>
             @endforeach
         </div>
     </div>
@@ -62,16 +63,16 @@
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             @foreach([
-                ['icon' => 'file-text', 'title' => 'हमीपत्र', 'desc' => 'Disclaimer / Guarantee Bond — जामीनदार हमीपत्र', 'price' => '₹2', 'color' => 'blue'],
-                ['icon' => 'shield', 'title' => 'स्वयंघोषणापत्र', 'desc' => 'Self-Declaration Form — शपथ टेक्स्टसह', 'price' => '₹2', 'color' => 'green'],
-                ['icon' => 'alert-triangle', 'title' => 'तक्रार नोंदणी', 'desc' => 'Grievance Registration — प्रकार + वर्णन', 'price' => '₹2', 'color' => 'yellow'],
-                ['icon' => 'file-plus', 'title' => 'नवीन अर्ज', 'desc' => 'New Application — सामान्य अर्ज फॉर्म', 'price' => '₹2', 'color' => 'purple'],
-                ['icon' => 'badge-check', 'title' => 'जात पडताळणी', 'desc' => 'Caste Validity — जात + उपजात फॉर्म', 'price' => '₹3', 'color' => 'teal'],
-                ['icon' => 'landmark', 'title' => 'उत्पन्न प्रमाणपत्र', 'desc' => 'Income Certificate — 4 प्रिंट फॉरमॅट', 'price' => '₹5', 'color' => 'pink'],
-                ['icon' => 'scale', 'title' => 'राजपत्र नमुना', 'desc' => 'Gazette Notice — मराठी, English, 7/12', 'price' => '₹5', 'color' => 'emerald'],
-                ['icon' => 'leaf', 'title' => 'शेतकरी ओळखपत्र', 'desc' => 'Farmer ID Card — QR कोडसह', 'price' => '₹3', 'color' => 'lime'],
+                ['icon' => 'file-text', 'title' => 'हमीपत्र', 'desc' => 'Disclaimer / Guarantee Bond — जामीनदार हमीपत्र', 'price' => '₹2', 'color' => 'blue', 'url' => null],
+                ['icon' => 'shield', 'title' => 'स्वयंघोषणापत्र', 'desc' => 'Self-Declaration Form — शपथ टेक्स्टसह', 'price' => '₹2', 'color' => 'green', 'url' => null],
+                ['icon' => 'alert-triangle', 'title' => 'तक्रार नोंदणी', 'desc' => 'Grievance Registration — प्रकार + वर्णन', 'price' => '₹2', 'color' => 'yellow', 'url' => null],
+                ['icon' => 'file-plus', 'title' => 'नवीन अर्ज', 'desc' => 'New Application — सामान्य अर्ज फॉर्म', 'price' => '₹2', 'color' => 'purple', 'url' => null],
+                ['icon' => 'badge-check', 'title' => 'जात पडताळणी', 'desc' => 'Caste Validity — जात + उपजात फॉर्म', 'price' => '₹3', 'color' => 'teal', 'url' => null],
+                ['icon' => 'landmark', 'title' => 'उत्पन्न प्रमाणपत्र', 'desc' => 'Income Certificate — 4 प्रिंट फॉरमॅट', 'price' => '₹5', 'color' => 'pink', 'url' => null],
+                ['icon' => 'scale', 'title' => 'राजपत्र नमुना', 'desc' => 'Gazette Notice — मराठी, English, 7/12', 'price' => '₹5', 'color' => 'emerald', 'url' => null],
+                ['icon' => 'leaf', 'title' => 'शेतकरी ओळखपत्र', 'desc' => 'Farmer ID Card — QR कोडसह', 'price' => '₹3', 'color' => 'lime', 'url' => route('farmer-card-public')],
             ] as $s)
-            <div class="group bg-white dark:bg-gray-800 rounded-2xl p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-gray-100 dark:border-gray-700">
+            <a href="{{ $s['url'] ?? route('register') }}" class="group bg-white dark:bg-gray-800 rounded-2xl p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-gray-100 dark:border-gray-700 block">
                 <div class="flex items-center justify-between mb-4">
                     <div class="w-12 h-12 rounded-xl bg-{{ $s['color'] }}-100 dark:bg-{{ $s['color'] }}-900/30 flex items-center justify-center">
                         <i data-lucide="{{ $s['icon'] }}" class="w-6 h-6 text-{{ $s['color'] }}-600 dark:text-{{ $s['color'] }}-400"></i>
@@ -80,7 +81,8 @@
                 </div>
                 <h3 class="font-semibold text-gray-900 dark:text-white mb-1">{{ $s['title'] }}</h3>
                 <p class="text-sm text-gray-500 dark:text-gray-400">{{ $s['desc'] }}</p>
-            </div>
+                <span class="inline-flex items-center gap-1 text-xs font-semibold text-{{ $s['color'] }}-600 mt-3 group-hover:gap-2 transition-all">{{ $s['url'] ? 'Get Now →' : 'Coming Soon' }} <i data-lucide="arrow-right" class="w-3 h-3"></i></span>
+            </a>
             @endforeach
         </div>
     </div>
@@ -100,16 +102,16 @@
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             @foreach([
-                ['icon' => 'credit-card', 'title' => 'पॅन कार्ड CRM', 'desc' => 'PAN Card Application — ट्रॅकिंग, स्टेटस, फिल्टर्स', 'price' => 'CRM', 'color' => 'indigo'],
-                ['icon' => 'user-check', 'title' => 'वोटर ID CRM', 'desc' => 'Voter ID Application — CRUD + स्टेटस ट्रॅकिंग', 'price' => 'CRM', 'color' => 'sky'],
-                ['icon' => 'hard-hat', 'title' => 'बांधकाम कामगार', 'desc' => 'Construction Worker — नोंदणी, किट, स्कॉलरशिप', 'price' => 'CRM', 'color' => 'orange'],
-                ['icon' => 'camera', 'title' => 'पासपोर्ट फोटो मेकर', 'desc' => 'Passport Size Photo — ऑटो क्रॉप, A4 शीट', 'price' => '₹5', 'color' => 'rose'],
-                ['icon' => 'wallet', 'title' => 'प्रीपेड वॉलेट', 'desc' => 'Razorpay रिचार्ज — ऑटो डिडक्शन प्रणाली', 'price' => 'Free', 'color' => 'emerald'],
-                ['icon' => 'bar-chart-3', 'title' => 'रिपोर्ट्स & Analytics', 'desc' => 'Revenue, Usage, CRM — सर्व डेटा एकत्र', 'price' => 'Free', 'color' => 'violet'],
-                ['icon' => 'download', 'title' => 'CSV Export', 'desc' => 'PAN, Voter, Bandkam — एक्सपोर्ट तुमचा डेटा', 'price' => 'Free', 'color' => 'cyan'],
-                ['icon' => 'settings', 'title' => 'Admin Panel', 'desc' => 'व्यवस्थापन — युजर्स, सेटिंग्स, बिलिंग', 'price' => 'Admin', 'color' => 'gray'],
+                ['icon' => 'credit-card', 'title' => 'पॅन कार्ड CRM', 'desc' => 'PAN Card Application — ट्रॅकिंग, स्टेटस, फिल्टर्स', 'price' => 'CRM', 'color' => 'indigo', 'url' => null],
+                ['icon' => 'user-check', 'title' => 'वोटर ID CRM', 'desc' => 'Voter ID Application — CRUD + स्टेटस ट्रॅकिंग', 'price' => 'CRM', 'color' => 'sky', 'url' => null],
+                ['icon' => 'hard-hat', 'title' => 'बांधकाम कामगार', 'desc' => 'Construction Worker — नोंदणी, किट, स्कॉलरशिप', 'price' => 'CRM', 'color' => 'orange', 'url' => null],
+                ['icon' => 'camera', 'title' => 'पासपोर्ट फोटो मेकर', 'desc' => 'Passport Size Photo — ऑटो क्रॉप, A4 शीट', 'price' => '₹5', 'color' => 'rose', 'url' => null],
+                ['icon' => 'wallet', 'title' => 'प्रीपेड वॉलेट', 'desc' => 'Razorpay रिचार्ज — ऑटो डिडक्शन प्रणाली', 'price' => 'Free', 'color' => 'emerald', 'url' => null],
+                ['icon' => 'bar-chart-3', 'title' => 'रिपोर्ट्स & Analytics', 'desc' => 'Revenue, Usage, CRM — सर्व डेटा एकत्र', 'price' => 'Free', 'color' => 'violet', 'url' => null],
+                ['icon' => 'download', 'title' => 'CSV Export', 'desc' => 'PAN, Voter, Bandkam — एक्सपोर्ट तुमचा डेटा', 'price' => 'Free', 'color' => 'cyan', 'url' => null],
+                ['icon' => 'settings', 'title' => 'Admin Panel', 'desc' => 'व्यवस्थापन — युजर्स, सेटिंग्स, बिलिंग', 'price' => 'Admin', 'color' => 'gray', 'url' => null],
             ] as $s)
-            <div class="group bg-gray-50 dark:bg-gray-900 rounded-2xl p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-gray-100 dark:border-gray-800">
+            <a href="{{ $s['url'] ?? route('register') }}" class="group bg-gray-50 dark:bg-gray-900 rounded-2xl p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-gray-100 dark:border-gray-800 block">
                 <div class="flex items-center justify-between mb-4">
                     <div class="w-12 h-12 rounded-xl bg-{{ $s['color'] }}-100 dark:bg-{{ $s['color'] }}-900/30 flex items-center justify-center">
                         <i data-lucide="{{ $s['icon'] }}" class="w-6 h-6 text-{{ $s['color'] }}-600 dark:text-{{ $s['color'] }}-400"></i>
@@ -118,7 +120,8 @@
                 </div>
                 <h3 class="font-semibold text-gray-900 dark:text-white mb-1">{{ $s['title'] }}</h3>
                 <p class="text-sm text-gray-500 dark:text-gray-400">{{ $s['desc'] }}</p>
-            </div>
+                <span class="inline-flex items-center gap-1 text-xs font-semibold text-{{ $s['color'] }}-600 mt-3 group-hover:gap-2 transition-all">{{ $s['url'] ? 'Get Now →' : 'Coming Soon' }} <i data-lucide="arrow-right" class="w-3 h-3"></i></span>
+            </a>
             @endforeach
         </div>
     </div>

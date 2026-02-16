@@ -61,26 +61,27 @@
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             @foreach([
-                ['icon' => 'fingerprint', 'title' => 'आधार सेवा Hub', 'desc' => 'Adult, Minor, Child, Update Forms', 'color' => 'orange'],
-                ['icon' => 'file-text', 'title' => 'हमीपत्र', 'desc' => 'Disclaimer / Guarantee Bond', 'color' => 'blue'],
-                ['icon' => 'shield', 'title' => 'स्वयंघोषणापत्र', 'desc' => 'Self-Declaration Form', 'color' => 'green'],
-                ['icon' => 'alert-triangle', 'title' => 'तक्रार नोंदणी', 'desc' => 'Grievance Registration', 'color' => 'yellow'],
-                ['icon' => 'file-plus', 'title' => 'नवीन अर्ज', 'desc' => 'New Application', 'color' => 'purple'],
-                ['icon' => 'badge-check', 'title' => 'जात पडताळणी', 'desc' => 'Caste Validity', 'color' => 'teal'],
-                ['icon' => 'landmark', 'title' => 'उत्पन्न प्रमाणपत्र', 'desc' => 'Income Certificate', 'color' => 'pink'],
-                ['icon' => 'scale', 'title' => 'राजपत्र नमुना', 'desc' => 'Gazette Notice (3 formats)', 'color' => 'emerald'],
-                ['icon' => 'leaf', 'title' => 'शेतकरी ओळखपत्र', 'desc' => 'Farmer ID Card with QR', 'color' => 'lime'],
-                ['icon' => 'camera', 'title' => 'पासपोर्ट फोटो', 'desc' => 'Passport Photo Maker', 'color' => 'rose'],
-                ['icon' => 'credit-card', 'title' => 'पॅन कार्ड CRM', 'desc' => 'PAN Card Applications', 'color' => 'indigo'],
-                ['icon' => 'hard-hat', 'title' => 'बांधकाम कामगार', 'desc' => 'Construction Worker CRM', 'color' => 'orange'],
+                ['icon' => 'fingerprint', 'title' => 'आधार सेवा Hub', 'desc' => 'Adult, Minor, Child, Update Forms', 'color' => 'orange', 'url' => null],
+                ['icon' => 'file-text', 'title' => 'हमीपत्र', 'desc' => 'Disclaimer / Guarantee Bond', 'color' => 'blue', 'url' => null],
+                ['icon' => 'shield', 'title' => 'स्वयंघोषणापत्र', 'desc' => 'Self-Declaration Form', 'color' => 'green', 'url' => null],
+                ['icon' => 'alert-triangle', 'title' => 'तक्रार नोंदणी', 'desc' => 'Grievance Registration', 'color' => 'yellow', 'url' => null],
+                ['icon' => 'file-plus', 'title' => 'नवीन अर्ज', 'desc' => 'New Application', 'color' => 'purple', 'url' => null],
+                ['icon' => 'badge-check', 'title' => 'जात पडताळणी', 'desc' => 'Caste Validity', 'color' => 'teal', 'url' => null],
+                ['icon' => 'landmark', 'title' => 'उत्पन्न प्रमाणपत्र', 'desc' => 'Income Certificate', 'color' => 'pink', 'url' => null],
+                ['icon' => 'scale', 'title' => 'राजपत्र नमुना', 'desc' => 'Gazette Notice (3 formats)', 'color' => 'emerald', 'url' => null],
+                ['icon' => 'leaf', 'title' => 'शेतकरी ओळखपत्र', 'desc' => 'Farmer ID Card with QR', 'color' => 'lime', 'url' => route('farmer-card-public')],
+                ['icon' => 'camera', 'title' => 'पासपोर्ट फोटो', 'desc' => 'Passport Photo Maker', 'color' => 'rose', 'url' => null],
+                ['icon' => 'credit-card', 'title' => 'पॅन कार्ड CRM', 'desc' => 'PAN Card Applications', 'color' => 'indigo', 'url' => null],
+                ['icon' => 'hard-hat', 'title' => 'बांधकाम कामगार', 'desc' => 'Construction Worker CRM', 'color' => 'orange', 'url' => null],
             ] as $service)
-            <div class="group bg-gray-50 dark:bg-gray-900 rounded-2xl p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-gray-100 dark:border-gray-800">
+            <a href="{{ $service['url'] ?? route('services') }}" class="group bg-gray-50 dark:bg-gray-900 rounded-2xl p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-gray-100 dark:border-gray-800 block">
                 <div class="w-12 h-12 rounded-xl bg-{{ $service['color'] }}-100 dark:bg-{{ $service['color'] }}-900/30 flex items-center justify-center mb-4">
                     <i data-lucide="{{ $service['icon'] }}" class="w-6 h-6 text-{{ $service['color'] }}-600 dark:text-{{ $service['color'] }}-400"></i>
                 </div>
                 <h3 class="font-semibold text-gray-900 dark:text-white mb-1">{{ $service['title'] }}</h3>
                 <p class="text-sm text-gray-500 dark:text-gray-400">{{ $service['desc'] }}</p>
-            </div>
+                <span class="inline-flex items-center gap-1 text-xs font-semibold text-{{ $service['color'] }}-600 mt-3 group-hover:gap-2 transition-all">{{ $service['url'] ? 'Get Now →' : 'View →' }} <i data-lucide="arrow-right" class="w-3 h-3"></i></span>
+            </a>
             @endforeach
         </div>
     </div>
