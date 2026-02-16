@@ -175,10 +175,6 @@
                         <label>Village / City</label>
                         <input type="text" name="village" placeholder="VILLAGE NAME" value="{{ old('village', $village->village ?? '') }}" required>
                     </div>
-                    <div class="form-group">
-                        <label>Verifier / Footer</label>
-                        <input type="text" name="verifier_name" placeholder="E.G. SARPANCH NAME" value="{{ old('verifier_name', $village->verifier_name ?? '') }}">
-                    </div>
                     <button type="submit" class="btn-save">{{ isset($village) ? '✏️ Update' : '+ Save' }}</button>
                     @if(isset($village))
                         <a href="{{ route('aadhaar.village-info.index') }}" class="btn-save" style="background:#64748b;text-decoration:none;text-align:center;">Cancel</a>
@@ -203,7 +199,7 @@
                             <th>Village</th>
                             <th>Post / Taluka</th>
                             <th>Dist / State</th>
-                            <th>Pin / Verifier</th>
+                            <th>Pincode</th>
                             <th>Act</th>
                         </tr>
                     </thead>
@@ -219,10 +215,7 @@
                                 <div class="td-primary">{{ $v->district }}</div>
                                 <div class="td-secondary">{{ $v->state }}</div>
                             </td>
-                            <td>
-                                <div class="td-primary">{{ $v->pincode }}</div>
-                                <div class="td-secondary">{{ $v->verifier_name ?: '—' }}</div>
-                            </td>
+                            <td class="td-primary">{{ $v->pincode }}</td>
                             <td>
                                 <a href="{{ route('aadhaar.village-info.edit', $v->id) }}" class="btn-action btn-edit">Edit</a>
                                 <form method="POST" action="{{ route('aadhaar.village-info.destroy', $v->id) }}" style="display:inline" onsubmit="return confirm('Delete this record?')">
