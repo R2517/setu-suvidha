@@ -32,7 +32,7 @@
             {{-- Stats --}}
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-16 max-w-2xl mx-auto">
                 <div class="bg-white/60 dark:bg-gray-800/60 backdrop-blur rounded-2xl p-4 text-center">
-                    <div class="text-2xl font-bold text-amber-600">12+</div>
+                    <div class="text-2xl font-bold text-amber-600">20+</div>
                     <div class="text-xs text-gray-500 dark:text-gray-400">फॉर्म प्रकार</div>
                 </div>
                 <div class="bg-white/60 dark:bg-gray-800/60 backdrop-blur rounded-2xl p-4 text-center">
@@ -61,6 +61,7 @@
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             @foreach([
+                ['icon' => 'fingerprint', 'title' => 'आधार सेवा Hub', 'desc' => 'Adult, Minor, Child, Update Forms', 'color' => 'orange'],
                 ['icon' => 'file-text', 'title' => 'हमीपत्र', 'desc' => 'Disclaimer / Guarantee Bond', 'color' => 'blue'],
                 ['icon' => 'shield', 'title' => 'स्वयंघोषणापत्र', 'desc' => 'Self-Declaration Form', 'color' => 'green'],
                 ['icon' => 'alert-triangle', 'title' => 'तक्रार नोंदणी', 'desc' => 'Grievance Registration', 'color' => 'yellow'],
@@ -69,10 +70,9 @@
                 ['icon' => 'landmark', 'title' => 'उत्पन्न प्रमाणपत्र', 'desc' => 'Income Certificate', 'color' => 'pink'],
                 ['icon' => 'scale', 'title' => 'राजपत्र नमुना', 'desc' => 'Gazette Notice (3 formats)', 'color' => 'emerald'],
                 ['icon' => 'leaf', 'title' => 'शेतकरी ओळखपत्र', 'desc' => 'Farmer ID Card with QR', 'color' => 'lime'],
+                ['icon' => 'camera', 'title' => 'पासपोर्ट फोटो', 'desc' => 'Passport Photo Maker', 'color' => 'rose'],
                 ['icon' => 'credit-card', 'title' => 'पॅन कार्ड CRM', 'desc' => 'PAN Card Applications', 'color' => 'indigo'],
-                ['icon' => 'user-check', 'title' => 'वोटर ID CRM', 'desc' => 'Voter ID Applications', 'color' => 'sky'],
                 ['icon' => 'hard-hat', 'title' => 'बांधकाम कामगार', 'desc' => 'Construction Worker CRM', 'color' => 'orange'],
-                ['icon' => 'wallet', 'title' => 'वॉलेट सिस्टम', 'desc' => 'Prepaid Wallet + Razorpay', 'color' => 'amber'],
             ] as $service)
             <div class="group bg-gray-50 dark:bg-gray-900 rounded-2xl p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-gray-100 dark:border-gray-800">
                 <div class="w-12 h-12 rounded-xl bg-{{ $service['color'] }}-100 dark:bg-{{ $service['color'] }}-900/30 flex items-center justify-center mb-4">
