@@ -127,10 +127,10 @@
         .photo-cell-block .red-text { color: #c00; font-weight: 600; font-size: 5.5pt; margin-bottom: 4px; }
         .photo-cell-block .nb-text { font-size: 5pt; font-weight: bold; }
 
-        /* Signature line box */
-        .sig-line-box { padding: 4px 0 2px 97px; }
-        .sig-line { border-bottom: 1px solid #555; width: 200px; margin-bottom: 2px; min-height: 30px; }
-        .sig-line-text { font-size: 5.5pt; color: #444; text-align: center; width: 200px; }
+        /* Signature box */
+        .sig-box-wrap { margin: 4px 0 2px 97px; width: 210px; }
+        .sig-box { border: 1px solid #333; min-height: 45px; width: 100%; }
+        .sig-box-label { font-size: 5.5pt; color: #333; text-align: center; margin-top: 1px; line-height: 1.3; }
 
         /* Certifier bottom section */
         .cert-bottom { display: flex; gap: 8px; margin-top: 4px; }
@@ -350,9 +350,9 @@
                     </tr>
                 </table>
                 {{-- Signature box below PIN --}}
-                <div class="sig-line-box">
-                    <div class="sig-line"></div>
-                    <div class="sig-line-text">Signature / Thumb / Finger Impression of<br>Individual Seeking to Enrol/ Aadhaar Number Holder</div>
+                <div class="sig-box-wrap">
+                    <div class="sig-box"></div>
+                    <div class="sig-box-label">Signature/ Thumb/ Finger Impression of<br>Individual Seeking to Enrol/ Aadhaar Number Holder</div>
                 </div>
             </div>
             <div class="bottom-addr-right">
