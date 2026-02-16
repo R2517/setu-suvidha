@@ -128,20 +128,23 @@
         .photo-cell-block .nb-text { font-size: 5pt; font-weight: bold; }
 
         /* Signature box */
-        .sig-box-wrap { margin: 4px 0 2px 0; display: flex; flex-direction: column; align-items: flex-end; }
-        .sig-box { border: 1px solid #333; min-height: 45px; width: 210px; }
+        .sig-box-wrap { margin: 2px 0 2px 0; display: flex; flex-direction: column; align-items: flex-end; }
+        .sig-box { border: 1px solid #333; min-height: 75px; width: 210px; }
         .sig-box-label { font-size: 5.5pt; color: #333; text-align: center; margin-top: 1px; line-height: 1.3; width: 210px; }
 
         /* Certifier bottom section */
-        .cert-bottom { display: flex; gap: 8px; margin-top: 4px; }
+        .cert-bottom { display: flex; gap: 6px; margin-top: 4px; }
         .cert-left { flex: 1; font-size: 6.5pt; line-height: 1.5; }
-        .cert-left .cert-heading { font-weight: bold; font-size: 7pt; margin-bottom: 3px; }
+        .cert-left .cert-heading { font-size: 7pt; margin-bottom: 3px; }
         .cert-left label { display: block; margin-bottom: 1px; }
-        .cert-right { width: 200px; flex-shrink: 0; }
-        .checklist-box { border: 1px solid #555; padding: 4px 6px; font-size: 6.5pt; margin-bottom: 4px; }
-        .checklist-box .ck-title { font-weight: bold; font-size: 7pt; text-align: center; margin-bottom: 3px; border-bottom: 1px solid #ccc; padding-bottom: 2px; }
-        .checklist-box label { display: inline-flex; align-items: center; gap: 2px; margin-right: 4px; margin-bottom: 2px; }
-        .stamp-box { border: 1.5px solid #555; min-height: 55px; text-align: center; font-size: 6.5pt; color: #555; padding: 4px; display: flex; align-items: flex-end; justify-content: center; font-style: italic; }
+        .cert-right { width: 260px; flex-shrink: 0; }
+        .checklist-box { border: 1px solid #555; padding: 4px 6px; font-size: 6.5pt; margin-bottom: 0; }
+        .checklist-box .ck-title { font-weight: bold; font-size: 7.5pt; text-align: center; margin-bottom: 3px; }
+        .checklist-box .ck-row { display: flex; flex-wrap: wrap; gap: 1px 8px; margin-bottom: 2px; }
+        .checklist-box .ck-row label { display: inline-flex; align-items: center; gap: 2px; white-space: nowrap; }
+        .checklist-box .ck-photo-line { margin-top: 1px; }
+        .checklist-box .ck-photo-line label { display: inline-flex; align-items: flex-start; gap: 2px; }
+        .stamp-box { border: 1.5px solid #555; border-top: none; min-height: 70px; text-align: center; font-size: 6.5pt; color: #555; padding: 4px; display: flex; align-items: flex-end; justify-content: center; }
 
         /* Footer */
         .footer-note { font-size: 5.5pt; color: #555; margin-top: 4px; text-align: center; font-style: italic; }
@@ -413,7 +416,7 @@
         {{-- ═══════════════ CERTIFICATION + CHECKLIST ═══════════════ --}}
         <div class="cert-bottom">
             <div class="cert-left">
-                <div class="cert-heading">I hereby certify above mentioned details of the Individual seeking to enrol /Aadhaar number holder and I am a.... (Tick appropriate box below)</div>
+                <div class="cert-heading"><em>I hereby certify above mentioned details of the Individual seeking to enrol /Aadhaar number holder and I am a....</em> (Tick appropriate box below)</div>
                 <label><input type="checkbox" class="cb-box"> MP / MLA / MLC / Municipal Councillor</label>
                 <label><input type="checkbox" class="cb-box"> Gazetted Officer Group 'A'/ Employees Provident Fund Organisation (EPFO) Officer</label>
                 <label><input type="checkbox" class="cb-box"> Tehsildar/ Gazetted Officer Group 'B'</label>
@@ -424,13 +427,15 @@
             <div class="cert-right">
                 <div class="checklist-box">
                     <div class="ck-title">CHECKLIST FOR CERTIFIER</div>
-                    <label><input type="checkbox" class="cb-box"> No overwriting</label>
-                    <label><input type="checkbox" class="cb-box"> Issue date is filled</label>
-                    <label><input type="checkbox" class="cb-box"> Resident's signature</label>
-                    <label><input type="checkbox" class="cb-box"> Certifier's details</label>
-                    <div style="margin-top:2px;"><label><input type="checkbox" class="cb-box"> Resident's Photo is cross signed and cross stamped (paper to photo or photo to paper)</label></div>
+                    <div class="ck-row">
+                        <label><input type="checkbox" class="cb-box"> No overwriting</label>
+                        <label><input type="checkbox" class="cb-box"> Issue date is filled</label>
+                        <label><input type="checkbox" class="cb-box"> Resident's signature</label>
+                        <label><input type="checkbox" class="cb-box"> Certifier's details</label>
+                    </div>
+                    <div class="ck-photo-line"><label><input type="checkbox" class="cb-box"> Resident's Photo is cross signed and cross stamped <em>(paper to photo or photo to paper)</em></label></div>
                 </div>
-                <div class="stamp-box">Signature &amp; Stamp of the Certifier</div>
+                <div class="stamp-box"><em>Signature &amp; Stamp of the Certifier</em></div>
             </div>
         </div>
 
