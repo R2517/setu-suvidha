@@ -9,7 +9,8 @@ set -e
 
 DOMAIN="setusuvidha.com"
 HOME_DIR="/home/u515436084"
-HTDOCS_DIR="$HOME_DIR/htdocs/$DOMAIN"
+DOMAIN_DIR="$HOME_DIR/domains/$DOMAIN"
+HTDOCS_DIR="$DOMAIN_DIR/public_html"
 APP_DIR="$HOME_DIR/setu-suvidha"
 REPO_URL="https://github.com/R2517/setu-suvidha.git"
 DB_NAME="u515436084_setu_suvidha"
@@ -70,18 +71,22 @@ fi
 echo "Repo ready at: $APP_DIR"
 echo ""
 
-# ─── Step 4: Symlink public folder to htdocs ───
+# ─── Step 4: Symlink public folder to web root ───
 echo ">>> Step 4: Setting up web root symlink..."
-# Backup existing htdocs content
+
+# Ensure domain directory exists
+mkdir -p "$DOMAIN_DIR"
+
+# Backup existing public_html if it's a real directory
 if [ -d "$HTDOCS_DIR" ] && [ ! -L "$HTDOCS_DIR" ]; then
-    echo "Backing up existing htdocs..."
-    mv "$HTDOCS_DIR" "${HTDOCS_DIR}_backup_$(date +%Y%m%d_%H%M%S)" 2>/dev/null || true
+    echo "Backing up existing public_html..."
+    mv "$HTDOCS_DIR" "${DOMAIN_DIR}/public_html_backup_$(date +%Y%m%d_%H%M%S)" 2>/dev/null || true
 fi
 
 # Remove existing symlink if any
 rm -f "$HTDOCS_DIR" 2>/dev/null || true
 
-# Create symlink: htdocs/setusuvidha.com -> setu-suvidha/public
+# Create symlink: domains/setusuvidha.com/public_html -> setu-suvidha/public
 ln -sf "$APP_DIR/public" "$HTDOCS_DIR"
 echo "Symlink created: $HTDOCS_DIR -> $APP_DIR/public"
 echo ""
