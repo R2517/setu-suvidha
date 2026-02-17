@@ -1,21 +1,24 @@
 #!/bin/bash
 # ══════════════════════════════════════════════════════════════════
-# SETU Suvidha — Full Deployment Script for Hostinger VPS
+# SETU Suvidha — Hostinger VPS Deployment (No Sudo)
+# CloudLinux 8 / Hostinger Managed Hosting
 # Domain: setusuvidha.com
 # ══════════════════════════════════════════════════════════════════
 
 set -e
 
 DOMAIN="setusuvidha.com"
-APP_DIR="/home/u515436084/htdocs/$DOMAIN"
+HOME_DIR="/home/u515436084"
+HTDOCS_DIR="$HOME_DIR/htdocs/$DOMAIN"
+APP_DIR="$HOME_DIR/setu-suvidha"
 REPO_URL="https://github.com/R2517/setu-suvidha.git"
-DB_NAME="setu_suvidha"
-DB_USER="setu_user"
-DB_PASS="SetuSuvidha@2026#Secure"
+DB_NAME="u515436084_setu_suvidha"
+DB_USER="u515436084_setu_suvidha"
+DB_PASS='Rajat@19941996'
 
 echo ""
 echo "═══════════════════════════════════════════════════"
-echo "  SETU Suvidha — Deployment Starting..."
+echo "  SETU Suvidha — Hostinger Deployment"
 echo "  Domain: $DOMAIN"
 echo "═══════════════════════════════════════════════════"
 echo ""
@@ -23,62 +26,43 @@ echo ""
 # ─── Step 1: Check environment ───
 echo ">>> Step 1: Checking environment..."
 php -v | head -1
-mysql --version 2>/dev/null || echo "MySQL client not found (will check server)"
-composer --version 2>/dev/null | head -1 || echo "Composer not found - installing..."
-node -v 2>/dev/null || echo "Node.js not found - installing..."
+mysql --version 2>/dev/null || echo "MySQL client check skipped"
+composer --version 2>/dev/null | head -1
 echo ""
 
-# ─── Step 2: Install missing tools ───
-echo ">>> Step 2: Installing required tools..."
+# ─── Step 2: Install Node.js via nvm (no sudo) ───
+echo ">>> Step 2: Installing Node.js via nvm..."
+export NVM_DIR="$HOME_DIR/.nvm"
 
-# Composer (if not present)
-if ! command -v composer &> /dev/null; then
-    echo "Installing Composer..."
-    curl -sS https://getcomposer.org/installer | php
-    sudo mv composer.phar /usr/local/bin/composer
-    echo "Composer installed."
+if [ ! -d "$NVM_DIR" ]; then
+    echo "Installing nvm..."
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
 fi
 
-# Node.js (if not present, for Vite build)
+# Load nvm
+export NVM_DIR="$HOME_DIR/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
 if ! command -v node &> /dev/null; then
-    echo "Installing Node.js 20..."
-    curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-    sudo apt-get install -y nodejs
-    echo "Node.js installed: $(node -v)"
+    echo "Installing Node.js 20 via nvm..."
+    nvm install 20
+    nvm use 20
+    nvm alias default 20
 fi
-
-# Required PHP extensions
-echo "Checking PHP extensions..."
-php -m | grep -i "pdo_mysql" || (echo "Installing php-mysql..." && sudo apt-get install -y php-mysql)
-php -m | grep -i "mbstring" || (echo "Installing php-mbstring..." && sudo apt-get install -y php-mbstring)
-php -m | grep -i "xml" || (echo "Installing php-xml..." && sudo apt-get install -y php-xml)
-php -m | grep -i "curl" || (echo "Installing php-curl..." && sudo apt-get install -y php-curl)
-php -m | grep -i "gd" || (echo "Installing php-gd..." && sudo apt-get install -y php-gd)
-php -m | grep -i "zip" || (echo "Installing php-zip..." && sudo apt-get install -y php-zip)
-php -m | grep -i "bcmath" || (echo "Installing php-bcmath..." && sudo apt-get install -y php-bcmath)
-echo "PHP extensions OK."
+echo "Node.js: $(node -v)"
+echo "npm: $(npm -v)"
 echo ""
 
-# ─── Step 3: Create MySQL Database ───
-echo ">>> Step 3: Setting up MySQL database..."
-sudo mysql -e "CREATE DATABASE IF NOT EXISTS $DB_NAME CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;" 2>/dev/null || echo "DB may already exist or need manual setup"
-sudo mysql -e "CREATE USER IF NOT EXISTS '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';" 2>/dev/null || echo "User may already exist"
-sudo mysql -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;" 2>/dev/null || echo "Grants may need manual setup"
-echo "Database setup done."
-echo ""
-
-# ─── Step 4: Clone or Pull repo ───
-echo ">>> Step 4: Setting up application..."
+# ─── Step 3: Clone or Pull repo ───
+echo ">>> Step 3: Setting up application code..."
 if [ -d "$APP_DIR/.git" ]; then
     echo "Repo exists, pulling latest..."
     cd "$APP_DIR"
     git pull origin main
 else
     echo "Cloning fresh repo..."
-    # Backup existing files if any
-    if [ -d "$APP_DIR" ] && [ "$(ls -A $APP_DIR 2>/dev/null)" ]; then
-        echo "Backing up existing files..."
-        sudo mv "$APP_DIR" "${APP_DIR}_backup_$(date +%Y%m%d_%H%M%S)"
+    if [ -d "$APP_DIR" ]; then
+        mv "$APP_DIR" "${APP_DIR}_backup_$(date +%Y%m%d_%H%M%S)" 2>/dev/null || true
     fi
     git clone "$REPO_URL" "$APP_DIR"
     cd "$APP_DIR"
@@ -86,30 +70,41 @@ fi
 echo "Repo ready at: $APP_DIR"
 echo ""
 
+# ─── Step 4: Symlink public folder to htdocs ───
+echo ">>> Step 4: Setting up web root symlink..."
+# Backup existing htdocs content
+if [ -d "$HTDOCS_DIR" ] && [ ! -L "$HTDOCS_DIR" ]; then
+    echo "Backing up existing htdocs..."
+    mv "$HTDOCS_DIR" "${HTDOCS_DIR}_backup_$(date +%Y%m%d_%H%M%S)" 2>/dev/null || true
+fi
+
+# Remove existing symlink if any
+rm -f "$HTDOCS_DIR" 2>/dev/null || true
+
+# Create symlink: htdocs/setusuvidha.com -> setu-suvidha/public
+ln -sf "$APP_DIR/public" "$HTDOCS_DIR"
+echo "Symlink created: $HTDOCS_DIR -> $APP_DIR/public"
+echo ""
+
 # ─── Step 5: Create .env ───
 echo ">>> Step 5: Creating .env for production..."
-cat > "$APP_DIR/.env" << 'ENVEOF'
+cat > "$APP_DIR/.env" << ENVEOF
 APP_NAME="SETU Suvidha"
 APP_ENV=production
 APP_DEBUG=false
 APP_TIMEZONE=Asia/Kolkata
-APP_URL=https://setusuvidha.com
+APP_URL=https://$DOMAIN
 APP_KEY=
 
 LOG_CHANNEL=stack
 LOG_LEVEL=error
 
 DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
+DB_HOST=localhost
 DB_PORT=3306
-ENVEOF
-
-# Append DB credentials (not using heredoc to avoid variable issues)
-echo "DB_DATABASE=$DB_NAME" >> "$APP_DIR/.env"
-echo "DB_USERNAME=$DB_USER" >> "$APP_DIR/.env"
-echo "DB_PASSWORD=$DB_PASS" >> "$APP_DIR/.env"
-
-cat >> "$APP_DIR/.env" << 'ENVEOF2'
+DB_DATABASE=$DB_NAME
+DB_USERNAME=$DB_USER
+DB_PASSWORD=$DB_PASS
 
 SESSION_DRIVER=database
 SESSION_LIFETIME=120
@@ -130,106 +125,77 @@ RAZORPAY_KEY_SECRET=
 RAZORPAY_WEBHOOK_SECRET=
 
 FILESYSTEM_DISK=public
-ENVEOF2
-
+ENVEOF
 echo ".env created."
 echo ""
 
-# ─── Step 6: Install dependencies ───
+# ─── Step 6: Install PHP dependencies ───
 echo ">>> Step 6: Installing PHP dependencies..."
 cd "$APP_DIR"
 composer install --no-dev --optimize-autoloader --no-interaction
 echo ""
 
-echo ">>> Step 6b: Installing Node.js dependencies & building..."
-npm ci --production=false
+# ─── Step 7: Install Node.js dependencies & build ───
+echo ">>> Step 7: Building frontend assets (Vite + Tailwind)..."
+# Make sure nvm is loaded
+export NVM_DIR="$HOME_DIR/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+npm ci
 npm run build
 echo "Vite build complete."
 echo ""
 
-# ─── Step 7: Laravel setup ───
-echo ">>> Step 7: Laravel setup..."
+# ─── Step 8: Laravel setup ───
+echo ">>> Step 8: Laravel setup..."
 php artisan key:generate --force
-php artisan storage:link
+php artisan storage:link 2>/dev/null || echo "Storage link may already exist"
 php artisan migrate --force
-php artisan db:seed --force 2>/dev/null || echo "Seeders skipped (may already be seeded)"
+php artisan db:seed --force 2>/dev/null || echo "Seeders run (or already seeded)"
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
-php artisan optimize
 echo "Laravel setup complete."
 echo ""
 
-# ─── Step 8: Set permissions ───
-echo ">>> Step 8: Setting file permissions..."
-sudo chown -R www-data:www-data "$APP_DIR"
-sudo chmod -R 755 "$APP_DIR"
-sudo chmod -R 775 "$APP_DIR/storage" "$APP_DIR/bootstrap/cache"
+# ─── Step 9: Set permissions ───
+echo ">>> Step 9: Setting file permissions..."
+chmod -R 755 "$APP_DIR"
+chmod -R 775 "$APP_DIR/storage" "$APP_DIR/bootstrap/cache"
 echo "Permissions set."
 echo ""
 
-# ─── Step 9: Nginx configuration ───
-echo ">>> Step 9: Configuring Nginx..."
-NGINX_CONF="/etc/nginx/sites-available/$DOMAIN"
-sudo tee "$NGINX_CONF" > /dev/null << NGINXEOF
-server {
-    listen 80;
-    listen [::]:80;
-    server_name $DOMAIN www.$DOMAIN;
-    root ${APP_DIR}/public;
+# ─── Step 10: Add .htaccess for PHP routing ───
+echo ">>> Step 10: Ensuring .htaccess is correct..."
+# The public/.htaccess from Laravel should handle routing
+# But ensure it exists
+if [ ! -f "$APP_DIR/public/.htaccess" ]; then
+    cat > "$APP_DIR/public/.htaccess" << 'HTEOF'
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
 
-    index index.php index.html;
+    RewriteEngine On
 
-    charset utf-8;
-    client_max_body_size 20M;
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-    # Security headers
-    add_header X-Frame-Options "SAMEORIGIN" always;
-    add_header X-Content-Type-Options "nosniff" always;
-    add_header X-XSS-Protection "1; mode=block" always;
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
 
-    location / {
-        try_files \$uri \$uri/ /index.php?\$query_string;
-    }
-
-    location = /favicon.ico { access_log off; log_not_found off; }
-    location = /robots.txt  { access_log off; log_not_found off; }
-
-    error_page 404 /index.php;
-
-    location ~ \.php\$ {
-        fastcgi_pass unix:/var/run/php/php-fpm.sock;
-        fastcgi_param SCRIPT_FILENAME \$realpath_root\$fastcgi_script_name;
-        include fastcgi_params;
-        fastcgi_hide_header X-Powered-By;
-    }
-
-    location ~ /\.(?!well-known).* {
-        deny all;
-    }
-
-    # Cache static assets
-    location ~* \.(css|js|jpg|jpeg|png|gif|ico|svg|woff|woff2|ttf|eot)$ {
-        expires 30d;
-        add_header Cache-Control "public, immutable";
-    }
-}
-NGINXEOF
-
-# Enable site
-sudo ln -sf "$NGINX_CONF" /etc/nginx/sites-enabled/
-sudo nginx -t && sudo systemctl reload nginx
-echo "Nginx configured and reloaded."
-echo ""
-
-# ─── Step 10: SSL with Let's Encrypt ───
-echo ">>> Step 10: Setting up SSL..."
-if command -v certbot &> /dev/null; then
-    sudo certbot --nginx -d "$DOMAIN" -d "www.$DOMAIN" --non-interactive --agree-tos --email admin@setusuvidha.com --redirect 2>/dev/null || echo "SSL setup may need manual intervention"
+    # Send Requests To Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+</IfModule>
+HTEOF
+    echo ".htaccess created."
 else
-    echo "Installing Certbot..."
-    sudo apt-get install -y certbot python3-certbot-nginx
-    sudo certbot --nginx -d "$DOMAIN" -d "www.$DOMAIN" --non-interactive --agree-tos --email admin@setusuvidha.com --redirect 2>/dev/null || echo "SSL setup may need manual intervention"
+    echo ".htaccess already exists."
 fi
 echo ""
 
@@ -240,19 +206,33 @@ CRON_CMD="* * * * * cd $APP_DIR && php artisan schedule:run >> /dev/null 2>&1"
 echo "Cron job added."
 echo ""
 
+# ─── Step 12: Add nvm to bashrc for future sessions ───
+echo ">>> Step 12: Ensuring nvm loads on login..."
+if ! grep -q "NVM_DIR" "$HOME_DIR/.bashrc" 2>/dev/null; then
+    echo '' >> "$HOME_DIR/.bashrc"
+    echo '# NVM (Node Version Manager)' >> "$HOME_DIR/.bashrc"
+    echo 'export NVM_DIR="$HOME/.nvm"' >> "$HOME_DIR/.bashrc"
+    echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> "$HOME_DIR/.bashrc"
+    echo "Added nvm to .bashrc"
+else
+    echo "nvm already in .bashrc"
+fi
+echo ""
+
 # ─── Done! ───
 echo ""
 echo "═══════════════════════════════════════════════════"
-echo "  ✅ DEPLOYMENT COMPLETE!"
+echo "  DEPLOYMENT COMPLETE!"
 echo ""
-echo "  🌐 Site: https://$DOMAIN"
-echo "  📁 Path: $APP_DIR"
-echo "  🗃️  DB:   $DB_NAME"
+echo "  Site: https://$DOMAIN"
+echo "  App:  $APP_DIR"
+echo "  Web:  $HTDOCS_DIR -> $APP_DIR/public"
+echo "  DB:   $DB_NAME"
 echo ""
 echo "  Next steps:"
-echo "  1. Point your domain DNS A record to: $(curl -s ifconfig.me)"
-echo "  2. Add Razorpay keys in .env if needed"
-echo "  3. Add SMTP credentials in .env for email"
-echo "  4. Register admin user at https://$DOMAIN/register"
+echo "  1. Enable SSL in hPanel (SSL section)"
+echo "  2. Add Razorpay keys: nano $APP_DIR/.env"
+echo "  3. Register at https://$DOMAIN/register"
+echo "  4. Future updates: bash $APP_DIR/redeploy.sh"
 echo "═══════════════════════════════════════════════════"
 echo ""

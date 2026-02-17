@@ -1,12 +1,17 @@
 #!/bin/bash
 # ══════════════════════════════════════════════════════
 # SETU Suvidha — Quick Re-deploy (after git push)
-# Run this on VPS after pushing changes from local
+# Hostinger VPS — No sudo required
+# Run: bash ~/setu-suvidha/redeploy.sh
 # ══════════════════════════════════════════════════════
 
 set -e
 
-APP_DIR="/home/u515436084/htdocs/setusuvidha.com"
+APP_DIR="/home/u515436084/setu-suvidha"
+
+# Load nvm
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
 echo ">>> Pulling latest changes..."
 cd "$APP_DIR"
@@ -16,7 +21,7 @@ echo ">>> Installing dependencies..."
 composer install --no-dev --optimize-autoloader --no-interaction
 
 echo ">>> Building frontend..."
-npm ci --production=false
+npm ci
 npm run build
 
 echo ">>> Running migrations..."
@@ -26,11 +31,9 @@ echo ">>> Clearing caches..."
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
-php artisan optimize
 
 echo ">>> Setting permissions..."
-sudo chown -R www-data:www-data "$APP_DIR"
-sudo chmod -R 775 "$APP_DIR/storage" "$APP_DIR/bootstrap/cache"
+chmod -R 775 "$APP_DIR/storage" "$APP_DIR/bootstrap/cache"
 
 echo ""
-echo "✅ Re-deploy complete! Changes are now live."
+echo "Re-deploy complete! Changes are now live on https://setusuvidha.com"
