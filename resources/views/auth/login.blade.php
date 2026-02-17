@@ -88,26 +88,6 @@
                 खातं नाही? <a href="{{ route('register') }}" class="text-amber-600 hover:text-amber-700 font-semibold">मोफत नोंदणी करा</a>
             </p>
 
-            {{-- Quick Login (Dev Only) --}}
-            <div class="mt-6 pt-5 border-t border-dashed border-gray-300 dark:border-gray-700">
-                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-3 text-center">Quick Login (Dev)</p>
-                <div class="grid grid-cols-2 gap-3">
-                    <button type="button" onclick="document.getElementById('email').value='admin@setusuvidha.com';document.getElementById('password').value='admin123';"
-                        class="flex flex-col items-center gap-1 p-3 rounded-xl border-2 border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/30 hover:border-red-400 hover:shadow-md transition cursor-pointer group">
-                        <span class="text-lg">🔑</span>
-                        <span class="text-xs font-bold text-red-700 dark:text-red-400">Admin</span>
-                        <span class="text-[10px] text-gray-500 select-all">admin@setusuvidha.com</span>
-                        <span class="text-[10px] text-gray-400">admin123</span>
-                    </button>
-                    <button type="button" onclick="document.getElementById('email').value='user@setusuvidha.com';document.getElementById('password').value='user123';"
-                        class="flex flex-col items-center gap-1 p-3 rounded-xl border-2 border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/30 hover:border-blue-400 hover:shadow-md transition cursor-pointer group">
-                        <span class="text-lg">👤</span>
-                        <span class="text-xs font-bold text-blue-700 dark:text-blue-400">User (VLE)</span>
-                        <span class="text-[10px] text-gray-500 select-all">user@setusuvidha.com</span>
-                        <span class="text-[10px] text-gray-400">user123</span>
-                    </button>
-                </div>
-            </div>
 
             <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800 text-center text-xs text-gray-400">
                 <a href="{{ route('terms') }}" class="hover:text-amber-500">अटी व शर्ती</a> · <a href="{{ route('privacy') }}" class="hover:text-amber-500">गोपनीयता</a>
