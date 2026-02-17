@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\AdminPricingController;
 use App\Http\Controllers\Admin\AdminPlanController;
 use App\Http\Controllers\Admin\AdminTransactionController;
 use App\Http\Controllers\Admin\AdminSettingsController;
+use App\Http\Controllers\Admin\AdminFarmerCardController;
 use App\Http\Controllers\PanCardController;
 use App\Http\Controllers\VoterIdController;
 use App\Http\Controllers\BandkamController;
@@ -161,6 +162,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::delete('/plans/{id}', [AdminPlanController::class, 'destroy'])->name('plans.destroy');
     Route::get('/transactions', [AdminTransactionController::class, 'index'])->name('transactions');
     Route::get('/settings', [AdminSettingsController::class, 'index'])->name('settings');
+    Route::get('/farmer-card-orders', [AdminFarmerCardController::class, 'index'])->name('farmer-card-orders');
 });
 
 // ─── Razorpay Webhook (no auth, no CSRF) ───

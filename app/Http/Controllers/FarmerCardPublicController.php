@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\FarmerCardOrder;
+use App\Models\FormPricing;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -12,10 +13,20 @@ class FarmerCardPublicController extends Controller
     /**
      * SEO Blog / Landing page
      */
+    /**
+     * Get service pricing from DB
+     */
+    private function getServicePrice(): float
+    {
+        $pricing = FormPricing::where('form_type', 'farmer_id_card_public')->first();
+        return $pricing ? (float) $pricing->price : 0;
+    }
+
     public function index()
     {
         $districts = config('maharashtra.districts');
-        return view('public.farmer-id-card', compact('districts'));
+        $servicePrice = $this->getServicePrice();
+        return view('public.farmer-id-card', compact('districts', 'servicePrice'));
     }
 
     /**
@@ -61,7 +72,8 @@ class FarmerCardPublicController extends Controller
         }
 
         $txn = FarmerCardOrder::generateTransactionNo();
-        $amountPaise = 5000; // ₹50
+        $servicePrice = $this->getServicePrice();
+        $amountPaise = (int) ($servicePrice * 100); // Convert ₹ to paise
 
         $order = FarmerCardOrder::create([
             'transaction_no'   => $txn,
@@ -79,11 +91,21 @@ class FarmerCardPublicController extends Controller
             'photo'            => $photoPath,
             'land_details'     => $lands,
             'amount'           => $amountPaise,
-            'status'           => 'pending',
+            'status'           => $amountPaise === 0 ? 'paid' : 'pending',
             'ip_address'       => $request->ip(),
         ]);
 
-        // Create Razorpay order
+        // If FREE (price=0), skip Razorpay — direct download
+        if ($amountPaise === 0) {
+            return response()->json([
+                'success'        => true,
+                'free'           => true,
+                'transaction_no' => $txn,
+                'download_url'   => route('farmer-card-public.download', $txn),
+            ]);
+        }
+
+        // Create Razorpay order for paid service
         $razorpayOrderId = null;
         try {
             $keyId = config('razorpay.key_id');
@@ -112,6 +134,7 @@ class FarmerCardPublicController extends Controller
 
         return response()->json([
             'success'           => true,
+            'free'              => false,
             'transaction_no'    => $txn,
             'order_id'          => $order->id,
             'razorpay_order_id' => $razorpayOrderId,

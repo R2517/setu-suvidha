@@ -374,7 +374,7 @@
                                     <i data-lucide="arrow-left" class="w-4 h-4"></i> Back
                                 </button>
                                 <button type="button" @click="goStep(3)" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-xl transition flex items-center gap-2">
-                                    Next: Review & Pay <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                    <span x-text="isFree ? 'Next: Review & Download' : 'Next: Review & Pay'"></span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
                                 </button>
                             </div>
                         </div>
@@ -396,7 +396,12 @@
                             </div>
 
                             <div class="bg-amber-50 dark:bg-amber-900/10 rounded-xl p-4 mb-6 border border-amber-200 dark:border-amber-800 text-center">
-                                <p class="text-sm text-amber-700 dark:text-amber-400 font-semibold"><i data-lucide="info" class="w-4 h-4 inline"></i> After payment, you will receive a <strong>Transaction Number</strong>. Use it to re-download your card anytime within 7 days.</p>
+                                <template x-if="isFree">
+                                    <p class="text-sm text-green-700 dark:text-green-400 font-semibold"><i data-lucide="gift" class="w-4 h-4 inline"></i> This service is currently <strong>FREE</strong>! Click below to generate & download your card instantly. You'll get a Transaction Number for re-downloads.</p>
+                                </template>
+                                <template x-if="!isFree">
+                                    <p class="text-sm text-amber-700 dark:text-amber-400 font-semibold"><i data-lucide="info" class="w-4 h-4 inline"></i> After payment, you will receive a <strong>Transaction Number</strong>. Use it to re-download your card anytime within 7 days.</p>
+                                </template>
                             </div>
 
                             <div class="flex justify-between mt-6">
@@ -404,8 +409,8 @@
                                     <i data-lucide="arrow-left" class="w-4 h-4"></i> Back
                                 </button>
                                 <button type="submit" :disabled="submitting" class="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold px-8 py-4 rounded-xl transition flex items-center gap-2 shadow-lg text-lg disabled:opacity-50">
-                                    <i data-lucide="credit-card" class="w-5 h-5"></i>
-                                    <span x-text="submitting ? 'Processing...' : 'Generate & Pay'"></span>
+                                    <i :data-lucide="isFree ? 'download' : 'credit-card'" class="w-5 h-5"></i>
+                                    <span x-text="submitting ? 'Processing...' : (isFree ? 'Generate & Download' : 'Generate & Pay')"></span>
                                 </button>
                             </div>
                         </div>
@@ -502,6 +507,7 @@ function farmerPublic() {
         lookupTxn: '',
         lookupLoading: false,
         lookupResult: null,
+        isFree: {{ $servicePrice == 0 ? 'true' : 'false' }},
 
         form: {
             applicant_name: '', name_english: '', dob: '', gender: '',
@@ -576,11 +582,17 @@ function farmerPublic() {
                     return;
                 }
 
-                // Open Razorpay
-                if (data.razorpay_order_id && data.razorpay_key) {
+                // FREE mode: direct download
+                if (data.free) {
+                    this.orderSuccess = true;
+                    this.successTxn = data.transaction_no;
+                    window.scrollTo({ top: document.getElementById('form-section').offsetTop - 80, behavior: 'smooth' });
+                }
+                // Paid mode: open Razorpay
+                else if (data.razorpay_order_id && data.razorpay_key) {
                     this.openRazorpay(data);
                 } else {
-                    // If Razorpay not configured, mark as paid directly (dev mode)
+                    // Razorpay not configured fallback
                     this.orderSuccess = true;
                     this.successTxn = data.transaction_no;
                 }
