@@ -16,6 +16,7 @@ REPO_URL="https://github.com/R2517/setu-suvidha.git"
 DB_NAME="u515436084_setu_suvidha"
 DB_USER="u515436084_setu_suvidha"
 DB_PASS='Rajat@19941996'
+PHP_BIN="/opt/alt/php83/usr/bin/php"
 
 echo ""
 echo "═══════════════════════════════════════════════════"
@@ -26,9 +27,9 @@ echo ""
 
 # ─── Step 1: Check environment ───
 echo ">>> Step 1: Checking environment..."
-php -v | head -1
+$PHP_BIN -v | head -1
 mysql --version 2>/dev/null || echo "MySQL client check skipped"
-composer --version 2>/dev/null | head -1
+$PHP_BIN $(which composer) --version 2>/dev/null | head -1
 echo ""
 
 # ─── Step 2: Install Node.js via nvm (no sudo) ───
@@ -137,7 +138,7 @@ echo ""
 # ─── Step 6: Install PHP dependencies ───
 echo ">>> Step 6: Installing PHP dependencies..."
 cd "$APP_DIR"
-composer install --no-dev --optimize-autoloader --no-interaction
+$PHP_BIN $(which composer) install --no-dev --optimize-autoloader --no-interaction
 echo ""
 
 # ─── Step 7: Install Node.js dependencies & build ───
@@ -153,13 +154,13 @@ echo ""
 
 # ─── Step 8: Laravel setup ───
 echo ">>> Step 8: Laravel setup..."
-php artisan key:generate --force
-php artisan storage:link 2>/dev/null || echo "Storage link may already exist"
-php artisan migrate --force
-php artisan db:seed --force 2>/dev/null || echo "Seeders run (or already seeded)"
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
+$PHP_BIN artisan key:generate --force
+$PHP_BIN artisan storage:link 2>/dev/null || echo "Storage link may already exist"
+$PHP_BIN artisan migrate --force
+$PHP_BIN artisan db:seed --force 2>/dev/null || echo "Seeders run (or already seeded)"
+$PHP_BIN artisan config:cache
+$PHP_BIN artisan route:cache
+$PHP_BIN artisan view:cache
 echo "Laravel setup complete."
 echo ""
 
@@ -206,7 +207,7 @@ echo ""
 
 # ─── Step 11: Setup Cron for scheduler ───
 echo ">>> Step 11: Setting up Laravel scheduler cron..."
-CRON_CMD="* * * * * cd $APP_DIR && php artisan schedule:run >> /dev/null 2>&1"
+CRON_CMD="* * * * * cd $APP_DIR && $PHP_BIN artisan schedule:run >> /dev/null 2>&1"
 (crontab -l 2>/dev/null | grep -v "artisan schedule:run"; echo "$CRON_CMD") | crontab -
 echo "Cron job added."
 echo ""

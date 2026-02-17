@@ -8,6 +8,7 @@
 set -e
 
 APP_DIR="/home/u515436084/setu-suvidha"
+PHP_BIN="/opt/alt/php83/usr/bin/php"
 
 # Load nvm
 export NVM_DIR="$HOME/.nvm"
@@ -18,19 +19,19 @@ cd "$APP_DIR"
 git pull origin main
 
 echo ">>> Installing dependencies..."
-composer install --no-dev --optimize-autoloader --no-interaction
+$PHP_BIN $(which composer) install --no-dev --optimize-autoloader --no-interaction
 
 echo ">>> Building frontend..."
 npm ci
 npm run build
 
 echo ">>> Running migrations..."
-php artisan migrate --force
+$PHP_BIN artisan migrate --force
 
 echo ">>> Clearing caches..."
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
+$PHP_BIN artisan config:cache
+$PHP_BIN artisan route:cache
+$PHP_BIN artisan view:cache
 
 echo ">>> Setting permissions..."
 chmod -R 775 "$APP_DIR/storage" "$APP_DIR/bootstrap/cache"
