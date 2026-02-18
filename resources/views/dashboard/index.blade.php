@@ -123,7 +123,7 @@
                 <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></i>
                 <input type="text" x-model="searchQuery" placeholder="सेवा शोधा..." class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition">
             </div>
-            <button @click="showCustomize = true"
+            <button @click="openCustomize()"
                 class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm
                        bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700
                        shadow-sm hover:shadow-md hover:border-amber-300 dark:hover:border-amber-600 transition-all">
@@ -258,6 +258,39 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
 <script>
+var _sortable = null;
+
+function startSortable() {
+    setTimeout(function() {
+        var el = document.getElementById('customizeList');
+        if (!el) return;
+        if (_sortable) { try { _sortable.destroy(); } catch(e){} }
+        _sortable = Sortable.create(el, {
+            animation: 250,
+            delay: 0,
+            draggable: '.sortable-item',
+            handle: '.drag-handle',
+            ghostClass: 'sortable-ghost',
+            chosenClass: 'sortable-chosen',
+            forceFallback: true,
+            fallbackTolerance: 3,
+        });
+    }, 350);
+}
+
+function getConfigFromDOM() {
+    var items = document.querySelectorAll('#customizeList .sortable-item');
+    var order = [];
+    var hidden = [];
+    items.forEach(function(item) {
+        var id = item.getAttribute('data-id');
+        var cb = item.querySelector('.visibility-toggle');
+        order.push(id);
+        if (cb && !cb.checked) hidden.push(id);
+    });
+    return { order: order, hidden: hidden };
+}
+
 function dashboardApp() {
     return {
         showThemePicker: false,
@@ -266,66 +299,38 @@ function dashboardApp() {
         searchQuery: '',
         selectedThemeIdx: parseInt(localStorage.getItem('setuThemeIdx') || '0'),
         themes: @json(config('themes')),
-        sortableInstance: null,
         get currentTheme() {
             return this.themes[this.selectedThemeIdx] || this.themes[0];
         },
         initTheme() {
             this.selectedThemeIdx = parseInt(localStorage.getItem('setuThemeIdx') || '0');
-            this.$watch('showCustomize', (val) => {
-                if (val) {
-                    this.$nextTick(() => this.initSortable());
-                } else if (this.sortableInstance) {
-                    this.sortableInstance.destroy();
-                    this.sortableInstance = null;
-                }
-            });
         },
         setTheme(idx) {
             this.selectedThemeIdx = idx;
             localStorage.setItem('setuThemeIdx', idx);
             this.showThemePicker = false;
         },
-        initSortable() {
-            const el = document.getElementById('customizeList');
-            if (!el) return;
-            if (this.sortableInstance) this.sortableInstance.destroy();
-            this.sortableInstance = new Sortable(el, {
-                animation: 200,
-                ghostClass: 'opacity-30',
-                chosenClass: 'ring-2 ring-amber-500 shadow-lg',
-                handle: '.drag-handle',
-                draggable: '.sortable-item',
-            });
-            lucide.createIcons({ attrs: { class: ['w-4', 'h-4'] }, nameAttr: 'data-lucide' });
-        },
-        getConfigFromDOM() {
-            const items = document.querySelectorAll('#customizeList .sortable-item');
-            const order = [];
-            const hidden = [];
-            items.forEach(item => {
-                const id = item.dataset.id;
-                const checkbox = item.querySelector('.visibility-toggle');
-                order.push(id);
-                if (!checkbox.checked) hidden.push(id);
-            });
-            return { order, hidden };
+        openCustomize() {
+            this.showCustomize = true;
+            startSortable();
         },
         async saveConfig() {
             this.saving = true;
-            const { order, hidden } = this.getConfigFromDOM();
+            var cfg = getConfigFromDOM();
             try {
-                const res = await fetch('{{ route("dashboard.save-config") }}', {
+                var res = await fetch('{{ route("dashboard.save-config") }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                     },
-                    body: JSON.stringify({ order, hidden })
+                    body: JSON.stringify(cfg)
                 });
                 if (res.ok) {
                     this.showCustomize = false;
                     window.location.reload();
+                } else {
+                    alert('सेव्ह करण्यात त्रुटी आली.');
                 }
             } catch (e) {
                 alert('सेव्ह करण्यात त्रुटी आली. पुन्हा प्रयत्न करा.');
@@ -335,7 +340,7 @@ function dashboardApp() {
         async resetConfig() {
             this.saving = true;
             try {
-                const res = await fetch('{{ route("dashboard.save-config") }}', {
+                var res = await fetch('{{ route("dashboard.save-config") }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -355,5 +360,10 @@ function dashboardApp() {
     }
 }
 </script>
+<style>
+.sortable-ghost { opacity: 0.3; }
+.sortable-chosen { box-shadow: 0 4px 20px rgba(245,158,11,0.4); border-color: #f59e0b !important; }
+.drag-handle { touch-action: none; }
+</style>
 @endpush
 @endsection
