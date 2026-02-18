@@ -49,6 +49,7 @@ Route::get('/farmer-id-card-online/download/{txn}', [FarmerCardPublicController:
 // ─── VLE Dashboard (Auth Required) ───
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('/dashboard/save-config', [DashboardController::class, 'saveConfig'])->name('dashboard.save-config');
 
     // Profile
     Route::get('/profile', [VleProfileController::class, 'index'])->name('profile');

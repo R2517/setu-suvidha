@@ -19,11 +19,13 @@ class Profile extends Model
         'taluka',
         'wallet_balance',
         'is_active',
+        'dashboard_config',
     ];
 
     protected $casts = [
         'wallet_balance' => 'decimal:2',
         'is_active' => 'boolean',
+        'dashboard_config' => 'array',
     ];
 
     public function user(): BelongsTo

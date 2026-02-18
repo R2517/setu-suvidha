@@ -12,11 +12,74 @@ class DashboardController extends Controller
         $profile = $user->profile;
         $walletBalance = $profile?->wallet_balance ?? 0;
 
-        $serviceCards = $this->getServiceCards();
-        $totalServices = count($serviceCards);
-        $readyServices = count(array_filter($serviceCards, fn($c) => $c['ready']));
+        $allCards = $this->getServiceCards();
+        $config = $profile?->dashboard_config;
+        $order = $config['order'] ?? [];
+        $hidden = $config['hidden'] ?? [];
 
-        return view('dashboard.index', compact('user', 'profile', 'walletBalance', 'serviceCards', 'totalServices', 'readyServices'));
+        // Separate live and upcoming
+        $liveCards = array_filter($allCards, fn($c) => $c['ready']);
+        $upcomingCards = array_filter($allCards, fn($c) => !$c['ready']);
+
+        // Apply custom order to live cards
+        if (!empty($order)) {
+            usort($liveCards, function ($a, $b) use ($order) {
+                $posA = array_search($a['id'], $order);
+                $posB = array_search($b['id'], $order);
+                if ($posA === false) $posA = 999;
+                if ($posB === false) $posB = 999;
+                return $posA - $posB;
+            });
+        }
+
+        // Apply hidden filter
+        $liveCards = array_values(array_filter($liveCards, fn($c) => !in_array($c['id'], $hidden)));
+        $upcomingCards = array_values($upcomingCards);
+
+        $totalServices = count($allCards);
+        $readyServices = count(array_filter($allCards, fn($c) => $c['ready']));
+
+        // All cards for customize modal (with visibility state)
+        $allCardsWithState = array_map(function ($c) use ($hidden) {
+            $c['visible'] = !in_array($c['id'], $hidden);
+            return $c;
+        }, array_filter($allCards, fn($c) => $c['ready']));
+
+        // Apply order for customize modal too
+        if (!empty($order)) {
+            usort($allCardsWithState, function ($a, $b) use ($order) {
+                $posA = array_search($a['id'], $order);
+                $posB = array_search($b['id'], $order);
+                if ($posA === false) $posA = 999;
+                if ($posB === false) $posB = 999;
+                return $posA - $posB;
+            });
+        }
+        $allCardsWithState = array_values($allCardsWithState);
+
+        return view('dashboard.index', compact(
+            'user', 'profile', 'walletBalance',
+            'liveCards', 'upcomingCards', 'allCardsWithState',
+            'totalServices', 'readyServices'
+        ));
+    }
+
+    public function saveConfig(Request $request)
+    {
+        $request->validate([
+            'order' => 'required|array',
+            'hidden' => 'present|array',
+        ]);
+
+        $profile = $request->user()->profile;
+        $profile->update([
+            'dashboard_config' => [
+                'order' => $request->order,
+                'hidden' => $request->hidden,
+            ],
+        ]);
+
+        return response()->json(['success' => true]);
     }
 
     private function getServiceCards(): array

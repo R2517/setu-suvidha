@@ -117,73 +117,232 @@
             </div>
         </div>
 
-        {{-- Search Filter --}}
-        <div class="mb-6">
-            <div class="relative max-w-md">
+        {{-- Search + Customize --}}
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
+            <div class="relative max-w-md w-full sm:flex-1">
                 <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></i>
                 <input type="text" x-model="searchQuery" placeholder="सेवा शोधा..." class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition">
             </div>
+            <button @click="showCustomize = true"
+                class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm
+                       bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700
+                       shadow-sm hover:shadow-md hover:border-amber-300 dark:hover:border-amber-600 transition-all">
+                <i data-lucide="settings-2" class="w-4 h-4 text-amber-500"></i>
+                <span>डॅशबोर्ड कस्टमाइज करा</span>
+            </button>
         </div>
 
-        {{-- Service Cards Grid --}}
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 pb-12">
-            @foreach($serviceCards as $index => $card)
-            <div x-show="'{{ strtolower($card['title']) }}'.includes(searchQuery.toLowerCase()) || searchQuery === ''"
-                 x-transition
-                 class="animate-card-enter"
-                 style="animation-delay: {{ $index * 50 }}ms">
-                @if($card['ready'])
-                <a href="{{ $card['path'] }}" class="block group">
-                @else
-                <div class="block group cursor-pointer" @click="alert('ही सेवा लवकरच उपलब्ध होईल!')">
-                @endif
-                    <div class="relative bg-white dark:bg-gray-900 rounded-2xl p-5 border border-gray-100 dark:border-gray-800 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                        @if($card['badge'])
-                        <span class="absolute top-3 right-3 text-[10px] font-bold px-2 py-0.5 rounded-full
-                            @if($card['badgeType'] === 'ready') bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400
-                            @elseif($card['badgeType'] === 'new') bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400
-                            @elseif($card['badgeType'] === 'fast') bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400
-                            @endif">
-                            {{ $card['badge'] }}
-                        </span>
-                        @endif
-                        <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-3" style="background: {{ $card['iconBg'] }}">
-                            <i data-lucide="{{ $card['icon'] }}" class="w-6 h-6" style="color: {{ $card['iconColor'] }}"></i>
-                        </div>
-                        <h3 class="font-semibold text-gray-900 dark:text-white text-sm leading-tight">{{ $card['title'] }}</h3>
-                        @if(!$card['ready'])
-                        <p class="text-xs text-gray-400 mt-1">लवकरच येत आहे...</p>
-                        @endif
-                    </div>
-                @if($card['ready'])
-                </a>
-                @else
-                </div>
-                @endif
+        {{-- ═══ LIVE SERVICES ═══ --}}
+        <div class="mb-10">
+            <div class="flex items-center gap-2 mb-4">
+                <span class="inline-flex items-center gap-1.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-3 py-1 rounded-full text-xs font-bold">
+                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> LIVE सेवा
+                </span>
+                <span class="text-xs text-gray-400">({{ count($liveCards) }} सक्रिय)</span>
             </div>
-            @endforeach
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                @foreach($liveCards as $index => $card)
+                <div x-show="'{{ strtolower($card['title']) }}'.includes(searchQuery.toLowerCase()) || searchQuery === ''"
+                     x-transition class="animate-card-enter" style="animation-delay: {{ $index * 50 }}ms">
+                    <a href="{{ $card['path'] }}" class="block group">
+                        <div class="relative bg-white dark:bg-gray-900 rounded-2xl p-5 border border-gray-100 dark:border-gray-800 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                            @if($card['badge'])
+                            <span class="absolute top-3 right-3 text-[10px] font-bold px-2 py-0.5 rounded-full
+                                @if($card['badgeType'] === 'ready') bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400
+                                @elseif($card['badgeType'] === 'new') bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400
+                                @elseif($card['badgeType'] === 'fast') bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400
+                                @endif">
+                                {{ $card['badge'] }}
+                            </span>
+                            @endif
+                            <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-3" style="background: {{ $card['iconBg'] }}">
+                                <i data-lucide="{{ $card['icon'] }}" class="w-6 h-6" style="color: {{ $card['iconColor'] }}"></i>
+                            </div>
+                            <h3 class="font-semibold text-gray-900 dark:text-white text-sm leading-tight">{{ $card['title'] }}</h3>
+                        </div>
+                    </a>
+                </div>
+                @endforeach
+            </div>
+        </div>
+
+        {{-- ═══ UPCOMING SERVICES ═══ --}}
+        @if(count($upcomingCards) > 0)
+        <div class="mb-12">
+            <div class="flex items-center gap-2 mb-4">
+                <span class="inline-flex items-center gap-1.5 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-3 py-1 rounded-full text-xs font-bold">
+                    <i data-lucide="clock" class="w-3 h-3"></i> लवकरच येत आहे
+                </span>
+                <span class="text-xs text-gray-400">({{ count($upcomingCards) }} आगामी)</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 opacity-75">
+                @foreach($upcomingCards as $index => $card)
+                <div x-show="'{{ strtolower($card['title']) }}'.includes(searchQuery.toLowerCase()) || searchQuery === ''"
+                     x-transition class="animate-card-enter" style="animation-delay: {{ $index * 50 }}ms">
+                    <div class="block group cursor-pointer" @click="alert('ही सेवा लवकरच उपलब्ध होईल!')">
+                        <div class="relative bg-white dark:bg-gray-900 rounded-2xl p-5 border border-dashed border-gray-200 dark:border-gray-700 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+                            @if($card['badge'])
+                            <span class="absolute top-3 right-3 text-[10px] font-bold px-2 py-0.5 rounded-full bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
+                                {{ $card['badge'] ?: 'UPCOMING' }}
+                            </span>
+                            @else
+                            <span class="absolute top-3 right-3 text-[10px] font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-500">
+                                UPCOMING
+                            </span>
+                            @endif
+                            <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-3 grayscale-[30%]" style="background: {{ $card['iconBg'] }}">
+                                <i data-lucide="{{ $card['icon'] }}" class="w-6 h-6" style="color: {{ $card['iconColor'] }}"></i>
+                            </div>
+                            <h3 class="font-semibold text-gray-900 dark:text-white text-sm leading-tight">{{ $card['title'] }}</h3>
+                            <p class="text-xs text-gray-400 mt-1">लवकरच येत आहे...</p>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+        @endif
+    </div>
+
+    {{-- ═══ CUSTOMIZE MODAL ═══ --}}
+    <div x-show="showCustomize" x-transition.opacity class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" @click.self="showCustomize = false">
+        <div x-show="showCustomize" x-transition.scale.95 @click.stop
+             class="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-lg max-h-[85vh] flex flex-col">
+            {{-- Header --}}
+            <div class="flex items-center justify-between p-5 border-b border-gray-200 dark:border-gray-800">
+                <div>
+                    <h2 class="text-lg font-bold text-gray-900 dark:text-white">डॅशबोर्ड कस्टमाइज करा</h2>
+                    <p class="text-xs text-gray-500 mt-0.5">सेवा Drag & Drop करून क्रम लावा, चेकबॉक्स वापरून Show/Hide करा</p>
+                </div>
+                <button @click="showCustomize = false" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+                    <i data-lucide="x" class="w-5 h-5 text-gray-400"></i>
+                </button>
+            </div>
+            {{-- Sortable List --}}
+            <div class="flex-1 overflow-y-auto p-5" id="customizeList">
+                <template x-for="(item, idx) in customizeItems" :key="item.id">
+                    <div class="flex items-center gap-3 p-3 mb-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 cursor-grab active:cursor-grabbing transition-all hover:shadow-md"
+                         :data-id="item.id">
+                        <div class="flex-shrink-0 text-gray-400 dark:text-gray-500 cursor-grab">
+                            <i data-lucide="grip-vertical" class="w-5 h-5"></i>
+                        </div>
+                        <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" :style="{ background: item.iconBg }">
+                            <i :data-lucide="item.icon" class="w-4.5 h-4.5" :style="{ color: item.iconColor }"></i>
+                        </div>
+                        <span class="flex-1 text-sm font-medium text-gray-900 dark:text-white truncate" x-text="item.title"></span>
+                        <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                            <input type="checkbox" :checked="item.visible" @change="item.visible = $event.target.checked" class="sr-only peer">
+                            <div class="w-9 h-5 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-amber-500 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500"></div>
+                        </label>
+                    </div>
+                </template>
+            </div>
+            {{-- Footer --}}
+            <div class="flex items-center justify-between p-5 border-t border-gray-200 dark:border-gray-800">
+                <button @click="resetConfig()" class="text-sm text-gray-500 hover:text-red-500 transition flex items-center gap-1">
+                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> रीसेट करा
+                </button>
+                <div class="flex gap-2">
+                    <button @click="showCustomize = false" class="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition">रद्द करा</button>
+                    <button @click="saveConfig()" :disabled="saving"
+                        class="px-5 py-2 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-amber-500 to-orange-500 hover:shadow-lg transition disabled:opacity-50">
+                        <span x-show="!saving">सेव्ह करा</span>
+                        <span x-show="saving" class="flex items-center gap-1"><i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> सेव्ह...</span>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
 <script>
 function dashboardApp() {
     return {
         showThemePicker: false,
+        showCustomize: false,
+        saving: false,
         searchQuery: '',
         selectedThemeIdx: parseInt(localStorage.getItem('setuThemeIdx') || '0'),
         themes: @json(config('themes')),
+        customizeItems: @json($allCardsWithState),
+        sortableInstance: null,
         get currentTheme() {
             return this.themes[this.selectedThemeIdx] || this.themes[0];
         },
         initTheme() {
             this.selectedThemeIdx = parseInt(localStorage.getItem('setuThemeIdx') || '0');
+            this.$watch('showCustomize', (val) => {
+                if (val) {
+                    this.$nextTick(() => this.initSortable());
+                } else if (this.sortableInstance) {
+                    this.sortableInstance.destroy();
+                    this.sortableInstance = null;
+                }
+            });
         },
         setTheme(idx) {
             this.selectedThemeIdx = idx;
             localStorage.setItem('setuThemeIdx', idx);
             this.showThemePicker = false;
+        },
+        initSortable() {
+            const el = document.getElementById('customizeList');
+            if (!el) return;
+            this.sortableInstance = new Sortable(el, {
+                animation: 200,
+                ghostClass: 'opacity-30',
+                chosenClass: 'ring-2 ring-amber-500 shadow-lg',
+                dragClass: 'rotate-1',
+                handle: '[data-lucide="grip-vertical"]',
+                onEnd: (evt) => {
+                    const moved = this.customizeItems.splice(evt.oldIndex, 1)[0];
+                    this.customizeItems.splice(evt.newIndex, 0, moved);
+                }
+            });
+        },
+        async saveConfig() {
+            this.saving = true;
+            const order = this.customizeItems.map(i => i.id);
+            const hidden = this.customizeItems.filter(i => !i.visible).map(i => i.id);
+            try {
+                const res = await fetch('{{ route("dashboard.save-config") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({ order, hidden })
+                });
+                if (res.ok) {
+                    this.showCustomize = false;
+                    window.location.reload();
+                }
+            } catch (e) {
+                alert('सेव्ह करण्यात त्रुटी आली. पुन्हा प्रयत्न करा.');
+            }
+            this.saving = false;
+        },
+        async resetConfig() {
+            this.saving = true;
+            try {
+                const res = await fetch('{{ route("dashboard.save-config") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({ order: [], hidden: [] })
+                });
+                if (res.ok) {
+                    this.showCustomize = false;
+                    window.location.reload();
+                }
+            } catch (e) {
+                alert('रीसेट करण्यात त्रुटी आली.');
+            }
+            this.saving = false;
         }
     }
 }
