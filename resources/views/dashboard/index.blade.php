@@ -220,22 +220,22 @@
             </div>
             {{-- Sortable List --}}
             <div class="flex-1 overflow-y-auto p-5" id="customizeList">
-                <template x-for="(item, idx) in customizeItems" :key="item.id">
-                    <div class="flex items-center gap-3 p-3 mb-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 cursor-grab active:cursor-grabbing transition-all hover:shadow-md"
-                         :data-id="item.id">
-                        <div class="flex-shrink-0 text-gray-400 dark:text-gray-500 cursor-grab">
-                            <i data-lucide="grip-vertical" class="w-5 h-5"></i>
-                        </div>
-                        <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" :style="{ background: item.iconBg }">
-                            <i :data-lucide="item.icon" class="w-4.5 h-4.5" :style="{ color: item.iconColor }"></i>
-                        </div>
-                        <span class="flex-1 text-sm font-medium text-gray-900 dark:text-white truncate" x-text="item.title"></span>
-                        <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
-                            <input type="checkbox" :checked="item.visible" @change="item.visible = $event.target.checked" class="sr-only peer">
-                            <div class="w-9 h-5 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-amber-500 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500"></div>
-                        </label>
+                @foreach($allCardsWithState as $cItem)
+                <div class="sortable-item flex items-center gap-3 p-3 mb-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 transition-all hover:shadow-md"
+                     data-id="{{ $cItem['id'] }}" data-visible="{{ $cItem['visible'] ? '1' : '0' }}">
+                    <div class="drag-handle flex-shrink-0 text-gray-400 dark:text-gray-500 cursor-grab active:cursor-grabbing">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg>
                     </div>
-                </template>
+                    <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background: {{ $cItem['iconBg'] }}">
+                        <i data-lucide="{{ $cItem['icon'] }}" class="w-4 h-4" style="color: {{ $cItem['iconColor'] }}"></i>
+                    </div>
+                    <span class="flex-1 text-sm font-medium text-gray-900 dark:text-white truncate">{{ $cItem['title'] }}</span>
+                    <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                        <input type="checkbox" class="sr-only peer visibility-toggle" {{ $cItem['visible'] ? 'checked' : '' }}>
+                        <div class="w-9 h-5 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-amber-500 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500"></div>
+                    </label>
+                </div>
+                @endforeach
             </div>
             {{-- Footer --}}
             <div class="flex items-center justify-between p-5 border-t border-gray-200 dark:border-gray-800">
@@ -266,7 +266,6 @@ function dashboardApp() {
         searchQuery: '',
         selectedThemeIdx: parseInt(localStorage.getItem('setuThemeIdx') || '0'),
         themes: @json(config('themes')),
-        customizeItems: @json($allCardsWithState),
         sortableInstance: null,
         get currentTheme() {
             return this.themes[this.selectedThemeIdx] || this.themes[0];
@@ -290,22 +289,31 @@ function dashboardApp() {
         initSortable() {
             const el = document.getElementById('customizeList');
             if (!el) return;
+            if (this.sortableInstance) this.sortableInstance.destroy();
             this.sortableInstance = new Sortable(el, {
                 animation: 200,
                 ghostClass: 'opacity-30',
                 chosenClass: 'ring-2 ring-amber-500 shadow-lg',
-                dragClass: 'rotate-1',
-                handle: '[data-lucide="grip-vertical"]',
-                onEnd: (evt) => {
-                    const moved = this.customizeItems.splice(evt.oldIndex, 1)[0];
-                    this.customizeItems.splice(evt.newIndex, 0, moved);
-                }
+                handle: '.drag-handle',
+                draggable: '.sortable-item',
             });
+            lucide.createIcons({ attrs: { class: ['w-4', 'h-4'] }, nameAttr: 'data-lucide' });
+        },
+        getConfigFromDOM() {
+            const items = document.querySelectorAll('#customizeList .sortable-item');
+            const order = [];
+            const hidden = [];
+            items.forEach(item => {
+                const id = item.dataset.id;
+                const checkbox = item.querySelector('.visibility-toggle');
+                order.push(id);
+                if (!checkbox.checked) hidden.push(id);
+            });
+            return { order, hidden };
         },
         async saveConfig() {
             this.saving = true;
-            const order = this.customizeItems.map(i => i.id);
-            const hidden = this.customizeItems.filter(i => !i.visible).map(i => i.id);
+            const { order, hidden } = this.getConfigFromDOM();
             try {
                 const res = await fetch('{{ route("dashboard.save-config") }}', {
                     method: 'POST',
