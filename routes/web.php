@@ -44,13 +44,16 @@ Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index'
 Route::get('/reviews/{slug}', [ReviewController::class, 'show'])->name('reviews.show');
 
 // ─── Public: Farmer ID Card Online (Self-Service) ───
-Route::get('/farmer-id-card-online', [FarmerCardPublicController::class, 'index'])->name('farmer-card-public');
-Route::post('/farmer-id-card-online/store', [FarmerCardPublicController::class, 'store'])->name('farmer-card-public.store');
-Route::post('/farmer-id-card-online/verify-payment', [FarmerCardPublicController::class, 'verifyPayment'])
+Route::get('/services/farmer-id-card-online', [FarmerCardPublicController::class, 'index'])->name('farmer-card-public');
+Route::post('/services/farmer-id-card-online/store', [FarmerCardPublicController::class, 'store'])->name('farmer-card-public.store');
+Route::post('/services/farmer-id-card-online/verify-payment', [FarmerCardPublicController::class, 'verifyPayment'])
     ->name('farmer-card-public.verify')
     ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
-Route::post('/farmer-id-card-online/lookup', [FarmerCardPublicController::class, 'lookup'])->name('farmer-card-public.lookup');
-Route::get('/farmer-id-card-online/download/{txn}', [FarmerCardPublicController::class, 'download'])->name('farmer-card-public.download');
+Route::post('/services/farmer-id-card-online/lookup', [FarmerCardPublicController::class, 'lookup'])->name('farmer-card-public.lookup');
+Route::get('/services/farmer-id-card-online/download/{txn}', [FarmerCardPublicController::class, 'download'])->name('farmer-card-public.download');
+
+// 301 Redirect: old URL → new URL
+Route::get('/farmer-id-card-online', fn() => redirect('/services/farmer-id-card-online', 301));
 
 // ─── VLE Dashboard (Auth Required) ───
 Route::middleware(['auth'])->group(function () {

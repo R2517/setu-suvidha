@@ -7,8 +7,8 @@
 <meta property="og:title" content="Farmer ID Card Online - शेतकरी ओळखपत्र डाउनलोड">
 <meta property="og:description" content="Get your Farmer ID Card with QR code instantly. Fill details, pay & download. शेतकरी ओळखपत्र ऑनलाइन बनवा.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="{{ url('/farmer-id-card-online') }}">
-<link rel="canonical" href="{{ url('/farmer-id-card-online') }}">
+<meta property="og:url" content="{{ url('/services/farmer-id-card-online') }}">
+<link rel="canonical" href="{{ url('/services/farmer-id-card-online') }}">
 @endpush
 
 @section('content')
@@ -195,7 +195,7 @@
                         <p class="text-xs text-gray-400 mt-1">Save this number to re-download your card anytime (valid for 7 days)</p>
                     </div>
                     <div>
-                        <a :href="'/farmer-id-card-online/download/' + successTxn" target="_blank" class="inline-flex items-center gap-2 bg-green-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-green-700 transition shadow-lg">
+                        <a :href="'/services/farmer-id-card-online/download/' + successTxn" target="_blank" class="inline-flex items-center gap-2 bg-green-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-green-700 transition shadow-lg">
                             <i data-lucide="download" class="w-5 h-5"></i> Download Your Farmer ID Card
                         </a>
                     </div>

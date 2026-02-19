@@ -186,7 +186,7 @@
         <h4 class="text-base font-bold text-gray-900 dark:text-white mb-1">शेतकरी ओळखपत्र — मोफत ऑनलाइन बनवा</h4>
         <p class="text-sm text-gray-600 dark:text-gray-400">SETU Suvidha वरून तुमचे शेतकरी ओळखपत्र (Farmer ID Card) मोफत ऑनलाइन बनवा. कोणतेही शुल्क नाही, फक्त माहिती भरा आणि डाउनलोड करा.</p>
     </div>
-    <a href="{{ url('/farmer-id-card-online') }}" class="shrink-0 bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-colors flex items-center gap-2">
+    <a href="{{ url('/services/farmer-id-card-online') }}" class="shrink-0 bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-colors flex items-center gap-2">
         <i data-lucide="external-link" class="w-4 h-4"></i> आता बनवा
     </a>
 </div>

@@ -80,7 +80,7 @@
                 SETU Suvidha वर उपलब्ध सेवा
             </h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                <a href="{{ url('/farmer-id-card-online') }}" class="flex items-center gap-2 px-4 py-3 bg-white dark:bg-gray-800 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 hover:shadow-md transition-all">
+                <a href="{{ url('/services/farmer-id-card-online') }}" class="flex items-center gap-2 px-4 py-3 bg-white dark:bg-gray-800 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 hover:shadow-md transition-all">
                     <i data-lucide="leaf" class="w-4 h-4 text-green-500"></i> शेतकरी ओळखपत्र (Farmer ID)
                 </a>
                 <a href="{{ url('/services') }}" class="flex items-center gap-2 px-4 py-3 bg-white dark:bg-gray-800 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-amber-600 dark:hover:text-amber-400 hover:shadow-md transition-all">

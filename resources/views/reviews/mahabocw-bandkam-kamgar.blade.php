@@ -69,7 +69,7 @@
     </nav>
     <div class="mt-8 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-800 rounded-xl p-4 border border-green-100 dark:border-gray-700">
         <p class="text-xs font-bold text-green-700 dark:text-green-400 mb-2 flex items-center gap-1.5"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i> SETU Suvidha सेवा</p>
-        <a href="{{ url('/farmer-id-card-online') }}" class="block text-sm text-gray-700 dark:text-gray-300 hover:text-green-600 font-medium mb-2">🌾 शेतकरी ओळखपत्र — मोफत ऑनलाइन</a>
+        <a href="{{ url('/services/farmer-id-card-online') }}" class="block text-sm text-gray-700 dark:text-gray-300 hover:text-green-600 font-medium mb-2">🌾 शेतकरी ओळखपत्र — मोफत ऑनलाइन</a>
         <a href="{{ url('/services') }}" class="block text-sm text-gray-700 dark:text-gray-300 hover:text-amber-600 font-medium">📋 हमीपत्र, राजपत्र, उत्पन्न दाखला</a>
     </div>
 </div>
