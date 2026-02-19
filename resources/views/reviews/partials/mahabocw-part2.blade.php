@@ -192,32 +192,6 @@
 </div>
 </div>
 
-{{-- REFERENCES --}}
-<section id="refs" class="mb-8">
-<h2 class="text-2xl font-extrabold text-gray-900 dark:text-white mb-5 flex items-center gap-3">
-    <span class="w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 text-lg">📚</span> संदर्भ (References)
-</h2>
-<div class="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
-<ol class="text-xs text-gray-500 dark:text-gray-400 space-y-1.5 list-decimal pl-4">
-    <li><a href="https://mahabocw.in/" target="_blank" rel="noopener" class="hover:text-amber-600 transition">मुख्य पृष्ठ — Maharashtra Building & Other Construction Workers Welfare Board (mahabocw.in)</a></li>
-    <li><a href="https://www.registerkaro.in/post/mahabocw-online-registration-process-empowering-construction-workers-in-maharashtra" target="_blank" rel="noopener" class="hover:text-amber-600 transition">MAHABOCW Registration: Empowering Maharashtra Construction Workers — RegisterKaro</a></li>
-    <li><a href="https://cleartax.in/s/labour-card" target="_blank" rel="noopener" class="hover:text-amber-600 transition">Labour Card 2026: How to Apply, Status Check, Renewal — ClearTax</a></li>
-    <li><a href="https://mahabocw.in/en/workers-registration/" target="_blank" rel="noopener" class="hover:text-amber-600 transition">Workers Registration — MahaBOCW</a></li>
-    <li><a href="https://mahabocw.in/en/notifications/" target="_blank" rel="noopener" class="hover:text-amber-600 transition">Notifications — MahaBOCW</a></li>
-    <li><a href="https://kamgaryojana.com/" target="_blank" rel="noopener" class="hover:text-amber-600 transition">Kamgar Yojana — Maharashtra Building and Construction Workers</a></li>
-    <li><a href="https://prsindia.org/files/budget/budget_state/maharashtra/2025/MH_Budget_Analysis_2025-26.pdf" target="_blank" rel="noopener" class="hover:text-amber-600 transition">Maharashtra Budget Analysis 2025-26 — PRS India</a></li>
-    <li><a href="https://mahabocw.in/en/download/" target="_blank" rel="noopener" class="hover:text-amber-600 transition">Download — MahaBOCW</a></li>
-    <li><a href="https://mahabocw.in/en/welfare-schemes/" target="_blank" rel="noopener" class="hover:text-amber-600 transition">Welfare Schemes — MahaBOCW</a></li>
-    <li><a href="https://mahabocw.in/wp-content/uploads/2025/05/Scheme-wise-Beneficiaries-and-amount-Disbursed-as-of-APRIL-2025.pdf" target="_blank" rel="noopener" class="hover:text-amber-600 transition">Scheme-wise Beneficiaries and Amount Disbursed (April 2025) — MahaBOCW</a></li>
-    <li><a href="https://mahabocw.in/en/government-decisions/" target="_blank" rel="noopener" class="hover:text-amber-600 transition">Government Resolutions — MahaBOCW</a></li>
-    <li><a href="https://mahabocw.in/en/benefits-transferred/" target="_blank" rel="noopener" class="hover:text-amber-600 transition">Benefits Transferred — MahaBOCW</a></li>
-    <li><a href="https://www.buddy4study.com/article/kamgar-kalyan-scholarship" target="_blank" rel="noopener" class="hover:text-amber-600 transition">Kamgar Kalyan Scholarship 2026 — Buddy4Study</a></li>
-    <li><a href="https://iwbms.mahabocw.in/registration-and-renewal/registration" target="_blank" rel="noopener" class="hover:text-amber-600 transition">New BOCW Registration — Mahabocw IWBMS</a></li>
-    <li><a href="https://housing.com/news/mahabocw-maharashtra-building-other-construction-workers-welfare-board/" target="_blank" rel="noopener" class="hover:text-amber-600 transition">Mahabocw online registration, eligibility and benefits — Housing.com</a></li>
-</ol>
-</div>
-</section>
-
 {{-- Back to Reviews --}}
 <div class="flex items-center justify-between pt-6 border-t border-gray-200 dark:border-gray-800">
 <a href="{{ url('/reviews') }}" class="inline-flex items-center gap-2 text-amber-600 dark:text-amber-400 text-sm font-bold hover:gap-3 transition-all">

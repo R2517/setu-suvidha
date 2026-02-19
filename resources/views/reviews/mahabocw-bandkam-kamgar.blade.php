@@ -10,7 +10,7 @@
 <meta name="keywords" content="MAHABOCW, बांधकाम कामगार योजना, महाराष्ट्र, कामगार नोंदणी, ९० दिवस प्रमाणपत्र, शैक्षणिक योजना, IWBMS, mahabocw.in, bandkam kamgar yojana 2026">
 <link rel="canonical" href="{{ url('/reviews/mahabocw-bandkam-kamgar-yojana-2026') }}">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Article","headline":"महाराष्ट्र बांधकाम कामगार योजना (MAHABOCW) २०२६","datePublished":"2026-02-20","dateModified":"2026-02-20","author":{"@type":"Organization","name":"SETU Suvidha","url":"https://setusuvidha.com"},"publisher":{"@type":"Organization","name":"SETU Suvidha","url":"https://setusuvidha.com"},"mainEntityOfPage":{"@type":"WebPage","@id":"{{ url('/reviews/mahabocw-bandkam-kamgar-yojana-2026') }}"}}
+{"@@context":"https://schema.org","@@type":"Article","headline":"महाराष्ट्र बांधकाम कामगार योजना (MAHABOCW) २०२६","datePublished":"2026-02-20","dateModified":"2026-02-20","author":{"@@type":"Organization","name":"SETU Suvidha","url":"https://setusuvidha.com"},"publisher":{"@@type":"Organization","name":"SETU Suvidha","url":"https://setusuvidha.com"},"mainEntityOfPage":{"@@type":"WebPage","@@id":"{{ url('/reviews/mahabocw-bandkam-kamgar-yojana-2026') }}"}}
 </script>
 @endpush
 @push('styles')
@@ -66,7 +66,6 @@
         <a href="#ch8" class="toc-link block text-gray-600 dark:text-gray-400 hover:text-amber-600">८. आव्हाने</a>
         <a href="#ch9" class="toc-link block text-gray-600 dark:text-gray-400 hover:text-amber-600">९. भविष्य</a>
         <a href="#end" class="toc-link block text-gray-600 dark:text-gray-400 hover:text-amber-600 font-medium">निष्कर्ष</a>
-        <a href="#refs" class="toc-link block text-gray-600 dark:text-gray-400 hover:text-amber-600">संदर्भ</a>
     </nav>
     <div class="mt-8 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-800 rounded-xl p-4 border border-green-100 dark:border-gray-700">
         <p class="text-xs font-bold text-green-700 dark:text-green-400 mb-2 flex items-center gap-1.5"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i> SETU Suvidha सेवा</p>

@@ -1,2 +1,32 @@
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /wallet
+Disallow: /billing
+Disallow: /admin
+Disallow: /pan-card
+Disallow: /voter-id
+Disallow: /bandkam
+Disallow: /management
+Disallow: /reports
+Disallow: /export
+Disallow: /hamipatra
+Disallow: /self-declaration
+Disallow: /income-cert
+Disallow: /rajpatra
+Disallow: /rajpatra-marathi
+Disallow: /rajpatra-english
+Disallow: /rajpatra-affidavit-712
+Disallow: /farmer-id-card
+Disallow: /passport-photo-maker
+Disallow: /aadhaar-hub
+Disallow: /aadhaar
+Disallow: /bond-formats
+Disallow: /grievance
+Disallow: /new-application
+Disallow: /caste-validity
+Disallow: /api/
+Disallow: /webhook/
+
+Sitemap: https://setusuvidha.com/sitemap.xml
