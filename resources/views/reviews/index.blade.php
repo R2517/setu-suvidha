@@ -14,7 +14,7 @@
 {{-- Hero --}}
 <section class="relative overflow-hidden bg-gradient-to-br from-amber-50 via-white to-orange-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 py-16 sm:py-24">
     <div class="absolute inset-0 opacity-[0.03] dark:opacity-[0.05]" style="background-image:url('data:image/svg+xml,%3Csvg width=60 height=60 viewBox=%270 0 60 60%27 xmlns=%27http://www.w3.org/2000/svg%27%3E%3Cg fill=%27none%27 fill-rule=%27evenodd%27%3E%3Cg fill=%27%23000%27 fill-opacity=%271%27%3E%3Cpath d=%27M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z%27/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')"></div>
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
         <div class="inline-flex items-center gap-2 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-4 py-1.5 rounded-full text-xs font-bold mb-6">
             <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
             शासकीय योजना व सेवा रिव्ह्यू
@@ -30,7 +30,7 @@
 
 {{-- Articles Grid --}}
 <section class="py-12 sm:py-16 bg-white dark:bg-gray-950">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             @foreach($articles as $article)
             <a href="{{ url('/reviews/' . $article['slug']) }}" class="group block">

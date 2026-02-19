@@ -19,7 +19,7 @@
 @section('content')
 {{-- Hero --}}
 <section class="relative overflow-hidden bg-gradient-to-br from-amber-50 via-white to-orange-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 py-12 sm:py-16">
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 <nav class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mb-6">
     <a href="{{ url('/') }}" class="hover:text-amber-600 transition">मुख्यपृष्ठ</a>
     <i data-lucide="chevron-right" class="w-3 h-3"></i>
@@ -39,13 +39,13 @@
 
 {{-- CTA Banner --}}
 <div class="bg-gradient-to-r from-amber-500 to-orange-600 py-3">
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-center justify-between gap-3">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-center justify-between gap-3">
     <p class="text-white text-sm font-medium flex items-center gap-2"><i data-lucide="info" class="w-4 h-4"></i> SETU Suvidha वर बांधकाम कामगार नोंदणी व व्यवस्थापन सेवा उपलब्ध आहे.</p>
     <a href="{{ url('/services') }}" class="bg-white text-amber-700 px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-amber-50 transition">सेवा पहा →</a>
 </div>
 </div>
 
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
 <div class="lg:flex lg:gap-10">
 
 {{-- Sidebar TOC --}}
