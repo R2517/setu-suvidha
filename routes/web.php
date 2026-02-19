@@ -21,6 +21,7 @@ use App\Http\Controllers\PassportPhotoMakerController;
 use App\Http\Controllers\AadhaarController;
 use App\Http\Controllers\VillageInfoController;
 use App\Http\Controllers\FarmerCardPublicController;
+use App\Http\Controllers\BondFormatController;
 use Illuminate\Support\Facades\Route;
 
 // ─── Public Pages ───
@@ -147,6 +148,11 @@ Route::middleware(['auth'])->group(function () {
 
     // Reports
     Route::get('/reports', [ReportController::class, 'index'])->name('reports');
+
+    // Bond Formats
+    Route::get('/bond-formats', [BondFormatController::class, 'index'])->name('bonds.index');
+    Route::get('/bond-formats/{slug}', [BondFormatController::class, 'show'])->name('bonds.show');
+    Route::post('/bond-formats/deduct-fee', [BondFormatController::class, 'deductFee'])->name('bonds.deductFee');
 });
 
 // ─── Admin Panel ───

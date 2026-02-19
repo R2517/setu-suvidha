@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             FormPricingSeeder::class,
             SubscriptionPlanSeeder::class,
             AdminUserSeeder::class,
+            BondFormatSeeder::class,
         ]);
     }
 }
