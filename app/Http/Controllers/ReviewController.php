@@ -11,6 +11,18 @@ class ReviewController extends Controller
     private function articles(): array
     {
         return [
+            'farmer-id-card-online-guide-2026' => [
+                'slug'        => 'farmer-id-card-online-guide-2026',
+                'title'       => 'Farmer ID Card Online 2026: शेतकरी ओळखपत्र संपूर्ण मार्गदर्शक',
+                'title_en'    => 'Farmer ID Card Online Guide 2026: How to Make, Benefits, PM Kisan',
+                'excerpt'     => 'Farmer ID Card कसे बनवायचे — PM Kisan, Agristack, crop insurance, KCC loan. Maharashtra, West Bengal, UP, MP सर्व राज्यांसाठी step-by-step guide.',
+                'icon'        => 'leaf',
+                'color'       => 'green',
+                'category'    => 'शेतकरी सेवा',
+                'date'        => '१९ फेब्रुवारी २०२६',
+                'read_time'   => '१२ मिनिटे',
+                'view'        => 'reviews.farmer-id-card-guide',
+            ],
             'ladki-bahin-yojana-maharashtra-2026' => [
                 'slug'        => 'ladki-bahin-yojana-maharashtra-2026',
                 'title'       => 'मुख्यमंत्री माझी लाडकी बहीण योजना २०२६: संपूर्ण माहिती',

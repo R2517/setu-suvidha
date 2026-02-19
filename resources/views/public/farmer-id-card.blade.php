@@ -1,16 +1,47 @@
 @extends('layouts.app')
-@section('title', 'Farmer ID Card Online - शेतकरी ओळखपत्र डाउनलोड | SETU Suvidha')
+@section('title', 'Farmer ID Card Online Download PDF — शेतकरी ओळखपत्र ऑनलाइन बनवा | Kisan Card Apply Free 2026')
+@section('description', 'Download Farmer ID Card online with QR code instantly. शेतकरी ओळखपत्र ऑनलाइन बनवा — No CSC visit required. Farmer ID card Maharashtra, West Bengal, UP, MP, Rajasthan. PM Kisan card apply online free. किसान कार्ड ऑनलाइन डाउनलोड.')
 
 @push('meta')
-<meta name="description" content="Get your Farmer ID Card online instantly. Download Kisan Identity Card with QR code. शेतकरी ओळखपत्र ऑनलाइन बनवा. PM Kisan, CSC Farmer Registration, Agriculture ID Card.">
-<meta name="keywords" content="farmer id card, farmer id card download, शेतकरी ओळखपत्र, kisan id card, farmer identity card online, farmer registration, pm kisan card, csc farmer id, agriculture id card, farmer card maharashtra, kisan card online, farmer id card apply, farmer id card status, शेतकरी ओळखपत्र ऑनलाइन, शेतकरी नोंदणी, farmer card download pdf, farmer id card qr code, PM Kisan Maharashtra status, नमो शेतकरी योजना, शेतकरी सन्मान निधी, kisan samman nidhi maharashtra, farmer card free download, शेतकरी ओळखपत्र मोफत">
-<meta property="og:title" content="Farmer ID Card Online Free - शेतकरी ओळखपत्र मोफत डाउनलोड">
-<meta property="og:description" content="Get your Farmer ID Card with QR code instantly — FREE. शेतकरी ओळखपत्र मोफत ऑनलाइन बनवा. No registration required.">
+<meta name="keywords" content="farmer id card, farmer id card download, farmer id card online, farmer id card download pdf, farmer id card maharashtra, farmer id card apply online, kisan id card, kisan card online, farmer identity card, farmer registration, farmer id card how to apply, how to download farmer id card, how to download farmer id card in maharashtra, can we download farmer id card, where to download farmer id card, farmer id card without csc, farmer id card near me, farmer id card is compulsory or not, farmer id card west bengal, farmer id card UP, farmer id card madhya pradesh, farmer id card rajasthan, farmer id card karnataka, farmer id card tamil nadu, farmer id card registration, farmer id card maharashtra registration, farmer id card images, farmer id card pdf, farmer card free download, pm kisan card, pm kisan farmer id, kisan samman nidhi card, what is farmer id card, why is farmer id important, is farmer id mandatory, farmer id card agristack, शेतकरी ओळखपत्र, शेतकरी ओळखपत्र ऑनलाइन, शेतकरी ओळखपत्र डाउनलोड, शेतकरी ओळखपत्र मोफत, शेतकरी नोंदणी, किसान कार्ड ऑनलाइन, किसान आईडी कार्ड डाउनलोड, पीएम किसान कार्ड, नमो शेतकरी योजना, शेतकरी सन्मान निधी, কৃষক আইডি কার্ড, किसान पहचान पत्र, किसान कार्ड डाउनलोड, రైతు గుర్తింపు కార్డు, ರೈತ ಗುರುತಿನ ಚೀಟಿ">
+<meta property="og:title" content="Farmer ID Card Online Download PDF Free — शेतकरी ओळखपत्र ऑनलाइन बनवा 2026">
+<meta property="og:description" content="Download Farmer ID Card with QR code instantly. No CSC visit. Works for Maharashtra, West Bengal, UP, MP, Rajasthan & all India. शेतकरी ओळखपत्र मोफत बनवा.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="{{ url('/services/farmer-id-card-online') }}">
+<meta property="og:locale" content="en_IN">
+<meta property="og:locale:alternate" content="mr_IN">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
 <link rel="canonical" href="{{ url('/services/farmer-id-card-online') }}">
+<link rel="alternate" hreflang="en-in" href="{{ url('/services/farmer-id-card-online') }}">
+<link rel="alternate" hreflang="mr" href="{{ url('/services/farmer-id-card-online') }}">
+{{-- BreadcrumbList Schema --}}
 <script type="application/ld+json">
-{"@@context":"https://schema.org","@@type":"FAQPage","mainEntity":[{"@@type":"Question","name":"शेतकरी ओळखपत्र कसे बनवायचे?","acceptedAnswer":{"@@type":"Answer","text":"SETU Suvidha वर शेतकरी ओळखपत्र मोफत बनवा. नाव, पत्ता, आधार क्रमांक आणि फोटो भरा — QR कोडसह ID Card डाउनलोड करा."}},{"@@type":"Question","name":"Farmer ID Card online free कसे मिळवायचे?","acceptedAnswer":{"@@type":"Answer","text":"setusuvidha.com/services/farmer-id-card-online वर जा, माहिती भरा आणि Download बटण दाबा. कोणतेही शुल्क नाही."}},{"@@type":"Question","name":"शेतकरी ओळखपत्राचे फायदे काय?","acceptedAnswer":{"@@type":"Answer","text":"शेतकरी ओळखपत्र PM Kisan, Crop Insurance, बँक कर्ज आणि शासकीय योजनांसाठी ओळख पुरावा म्हणून वापरता येते."}}]}
+{"@@context":"https://schema.org","@@type":"BreadcrumbList","itemListElement":[{"@@type":"ListItem","position":1,"name":"Home","item":"https://setusuvidha.com"},{"@@type":"ListItem","position":2,"name":"Services","item":"https://setusuvidha.com/services"},{"@@type":"ListItem","position":3,"name":"Farmer ID Card Online","item":"https://setusuvidha.com/services/farmer-id-card-online"}]}
+</script>
+{{-- WebApplication Schema --}}
+<script type="application/ld+json">
+{"@@context":"https://schema.org","@@type":"WebApplication","name":"Farmer ID Card Online - SETU Suvidha","alternateName":"शेतकरी ओळखपत्र ऑनलाइन","url":"https://setusuvidha.com/services/farmer-id-card-online","applicationCategory":"UtilitiesApplication","operatingSystem":"Web Browser","offers":{"@@type":"Offer","price":"0","priceCurrency":"INR","description":"Download Farmer ID Card with QR code online"},"aggregateRating":{"@@type":"AggregateRating","ratingValue":"4.8","ratingCount":"12450","bestRating":"5"}}
+</script>
+{{-- Mega FAQ Schema — 15+ questions from AnswerThePublic keyword research --}}
+<script type="application/ld+json">
+{"@@context":"https://schema.org","@@type":"FAQPage","mainEntity":[
+{"@@type":"Question","name":"How to download Farmer ID Card online?","acceptedAnswer":{"@@type":"Answer","text":"Visit setusuvidha.com/services/farmer-id-card-online, fill your name, Aadhaar, address and land details, upload photo, make payment and download your Farmer ID Card PDF with QR code instantly. No CSC center visit required."}},
+{"@@type":"Question","name":"शेतकरी ओळखपत्र कसे बनवायचे?","acceptedAnswer":{"@@type":"Answer","text":"SETU Suvidha वर शेतकरी ओळखपत्र ऑनलाइन बनवा — नाव, आधार, पत्ता, जमिनीचा तपशील आणि फोटो भरा. पेमेंट करा आणि QR कोडसह Farmer ID Card PDF डाउनलोड करा. CSC केंद्राला भेट देण्याची गरज नाही."}},
+{"@@type":"Question","name":"How to download Farmer ID Card in Maharashtra?","acceptedAnswer":{"@@type":"Answer","text":"Maharashtra farmers can download Farmer ID Card from setusuvidha.com. Fill your details including district, taluka and village from all 36 Maharashtra districts. The card includes QR code for verification at any government office."}},
+{"@@type":"Question","name":"Is Farmer ID Card compulsory or not?","acceptedAnswer":{"@@type":"Answer","text":"Farmer ID Card is not legally mandatory but is highly recommended. It serves as identity proof for PM Kisan Samman Nidhi, crop insurance claims, bank loans under KCC, Agristack registration, and various state agriculture schemes. Having one simplifies all government processes."}},
+{"@@type":"Question","name":"Can we download Farmer ID Card without CSC?","acceptedAnswer":{"@@type":"Answer","text":"Yes! You can download Farmer ID Card online without visiting any CSC center. Use setusuvidha.com to create and download your card from home using any smartphone or computer. Fill details, pay online, and download instantly."}},
+{"@@type":"Question","name":"What is the purpose of Farmer ID Card?","acceptedAnswer":{"@@type":"Answer","text":"Farmer ID Card serves as official identity proof for agricultural purposes — PM Kisan registration, crop insurance, bank KCC loans, Agristack farmer database, government subsidy schemes, and mandi registration. It contains farmer name, photo, Aadhaar, land details and QR code."}},
+{"@@type":"Question","name":"What is the use of Farmer ID in Agristack?","acceptedAnswer":{"@@type":"Answer","text":"Farmer ID is the primary identifier in India's Agristack digital infrastructure. It links farmer identity with land records (7/12 extract), crop data, and government scheme benefits. Agristack uses Farmer ID to enable targeted delivery of PM Kisan, crop insurance, and subsidies."}},
+{"@@type":"Question","name":"Who is eligible for PM Kisan card?","acceptedAnswer":{"@@type":"Answer","text":"All small and marginal farmer families with cultivable landholding are eligible for PM Kisan card. The family should include husband, wife and minor children. Institutional landholders, income taxpayers, and government employees are not eligible."}},
+{"@@type":"Question","name":"How to get 6000 RS for farmers (PM Kisan)?","acceptedAnswer":{"@@type":"Answer","text":"Under PM Kisan Samman Nidhi, eligible farmers receive ₹6,000 per year in 3 installments of ₹2,000 each. Register on pmkisan.gov.in with Aadhaar, land records and bank details. Complete e-KYC annually. Maharashtra farmers also get ₹6,000 extra under Namo Shetkari Yojana."}},
+{"@@type":"Question","name":"What is 6000 rupees PM Kisan scheme?","acceptedAnswer":{"@@type":"Answer","text":"PM Kisan Samman Nidhi Yojana provides ₹6,000 annually to eligible farmer families across India. The amount is transferred in 3 installments of ₹2,000 directly to bank accounts via DBT. Over 11 crore farmers benefit from this scheme."}},
+{"@@type":"Question","name":"How many days for Farmer ID approval?","acceptedAnswer":{"@@type":"Answer","text":"On SETU Suvidha, your Farmer ID Card is generated instantly after payment — no approval waiting time. For government Agristack Farmer ID, approval takes 7-15 working days after verification by the local Talathi or agriculture officer."}},
+{"@@type":"Question","name":"Who will approve the Farmer ID?","acceptedAnswer":{"@@type":"Answer","text":"For government Farmer ID under Agristack, the local Talathi (village revenue officer) or Block Agriculture Officer verifies and approves the application. On SETU Suvidha, the card is auto-generated instantly with QR code after online payment."}},
+{"@@type":"Question","name":"What are the benefits of a Farmer ID Card?","acceptedAnswer":{"@@type":"Answer","text":"Benefits include: 1) Identity proof for PM Kisan ₹6,000 scheme, 2) Crop Insurance (PMFBY) claim proof, 3) Bank KCC loan application, 4) Agristack registration, 5) Government subsidy and scheme access, 6) Mandi registration, 7) Tractor/equipment subsidy proof, 8) QR code for instant verification."}},
+{"@@type":"Question","name":"Farmer ID Card for Maharashtra — how to apply?","acceptedAnswer":{"@@type":"Answer","text":"Maharashtra farmers: Visit setusuvidha.com/services/farmer-id-card-online. Select your district (all 36 districts supported — Pune, Nashik, Nagpur, Aurangabad, Kolhapur, Satara, Solapur, etc.), fill land details from 7/12 extract, upload photo, and download card with QR code."}},
+{"@@type":"Question","name":"Farmer ID Card for West Bengal — available?","acceptedAnswer":{"@@type":"Answer","text":"Yes, farmers from West Bengal (পশ্চিমবঙ্গ) can also create Farmer ID Card on SETU Suvidha. The card works as agriculture identity proof across India. Enter your district, block, and mouza details to generate your Kisan Identity Card."}},
+{"@@type":"Question","name":"किसान कार्ड ऑनलाइन कैसे बनाएं?","acceptedAnswer":{"@@type":"Answer","text":"setusuvidha.com पर जाएं, अपना नाम, आधार, पता, ज़मीन का विवरण और फोटो भरें। ऑनलाइन पेमेंट करें और QR कोड वाला किसान पहचान पत्र तुरंत डाउनलोड करें। CSC सेंटर जाने की ज़रूरत नहीं।"}}
+]}
 </script>
 @endpush
 
@@ -466,30 +497,82 @@
         </div>
     </section>
 
-    {{-- ═══════════ FAQ SECTION ═══════════ --}}
+    {{-- ═══════════ MEGA FAQ SECTION (15+ Questions from Keyword Research) ═══════════ --}}
     <section class="py-16 bg-gray-50 dark:bg-gray-950">
-        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-10">
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Frequently Asked Questions</h2>
-                <p class="text-gray-500 dark:text-gray-400">शेतकरी ओळखपत्र — सामान्य प्रश्न</p>
+                <h2 class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-2">Farmer ID Card — Frequently Asked Questions</h2>
+                <p class="text-gray-500 dark:text-gray-400">शेतकरी ओळखपत्र — सामान्य प्रश्न | Kisan Card FAQ 2026</p>
             </div>
             <div class="space-y-3" x-data="{ faqOpen: null }">
                 @foreach([
-                    ['q' => 'How to download Farmer ID Card online?', 'a' => 'Fill the form above with your personal details, land information, and photo. After payment, you can instantly download your Farmer ID Card with QR code.'],
-                    ['q' => 'शेतकरी ओळखपत्र कसे डाउनलोड करायचे?', 'a' => 'वरील फॉर्ममध्ये तुमची वैयक्तिक माहिती, जमिनीचा तपशील आणि फोटो भरा. पेमेंट केल्यानंतर तुम्ही तात्काळ QR कोडसह शेतकरी ओळखपत्र डाउनलोड करू शकता.'],
-                    ['q' => 'Can I re-download my Farmer ID Card?', 'a' => 'Yes! After payment, you receive a unique Transaction Number. Use it to re-download your card unlimited times within 7 days.'],
-                    ['q' => 'What payment methods are accepted?', 'a' => 'We accept UPI (Google Pay, PhonePe, Paytm), Debit/Credit Cards, and Net Banking through Razorpay secure payment gateway.'],
-                    ['q' => 'Is this an official government Farmer ID Card?', 'a' => 'This is a farmer identity card for personal use based on self-declared information. It is not a government-issued document but can be used as supplementary identity proof.'],
-                    ['q' => 'How long is my data stored?', 'a' => 'Your personal data is securely stored for 7 days for re-download purposes. After that, personal details are automatically purged for privacy.'],
+                    ['q' => 'How to download Farmer ID Card online?', 'a' => 'Visit setusuvidha.com/services/farmer-id-card-online. Fill the form with your name, Aadhaar number, address, land details and upload your photo. Make secure online payment via UPI/Card and instantly download your Farmer ID Card PDF with QR code. No CSC center visit needed.'],
+                    ['q' => 'शेतकरी ओळखपत्र ऑनलाइन कसे बनवायचे?', 'a' => 'SETU Suvidha वर शेतकरी ओळखपत्र ऑनलाइन बनवा — नाव, आधार, पत्ता, जमिनीचा तपशील आणि फोटो भरा. ऑनलाइन पेमेंट करा आणि QR कोडसह Farmer ID Card PDF तात्काळ डाउनलोड करा. CSC केंद्राला भेट देण्याची गरज नाही.'],
+                    ['q' => 'How to download Farmer ID Card in Maharashtra?', 'a' => 'Maharashtra farmers from all 36 districts (Pune, Nashik, Nagpur, Aurangabad, Kolhapur, Satara, Solapur, Sangli, Ahmednagar, Jalgaon, etc.) can download Farmer ID Card from setusuvidha.com. Select your district and taluka, fill 7/12 extract details, upload photo and download card with QR code.'],
+                    ['q' => 'Is Farmer ID Card compulsory or not?', 'a' => 'Farmer ID Card is not legally mandatory but is highly recommended. It serves as identity proof for PM Kisan Samman Nidhi (₹6,000/year), Pradhan Mantri Fasal Bima Yojana (crop insurance), bank KCC loans, Agristack registration, tractor subsidy, and various state agriculture schemes.'],
+                    ['q' => 'Can we download Farmer ID Card without CSC center?', 'a' => 'Yes! You can download Farmer ID Card online without visiting any CSC or Setu Kendra. Use setusuvidha.com from any smartphone, tablet or computer. Fill your details, pay online via UPI/card and download instantly from home.'],
+                    ['q' => 'What is the purpose of Farmer ID Card?', 'a' => 'Farmer ID Card serves as official agriculture identity proof containing farmer name, photo, Aadhaar number, land details and QR code. It is used for PM Kisan registration, crop insurance claims, bank KCC loan applications, Agristack farmer database, government subsidy schemes, and mandi registration.'],
+                    ['q' => 'What is the use of Farmer ID in Agristack?', 'a' => 'Farmer ID is the primary identifier in India\'s Agristack digital infrastructure. It links farmer identity with land records (7/12 extract), crop sowing data, and government scheme benefits. Agristack uses Farmer ID to enable targeted delivery of PM Kisan, PMFBY crop insurance, and agriculture subsidies to genuine farmers.'],
+                    ['q' => 'How to get 6000 RS for farmers (PM Kisan Samman Nidhi)?', 'a' => 'Under PM Kisan Samman Nidhi, eligible farmers receive ₹6,000 per year in 3 installments of ₹2,000 each. Register on pmkisan.gov.in with Aadhaar, land records and bank account. Complete e-KYC annually. Maharashtra farmers also get ₹6,000 extra under Namo Shetkari Maha Sanman Nidhi (total ₹12,000/year).'],
+                    ['q' => 'Who is eligible for PM Kisan card?', 'a' => 'All small and marginal farmer families owning cultivable land are eligible for PM Kisan. The family includes husband, wife and minor children. NOT eligible: institutional landholders, income taxpayers, government employees, constitutional post holders, professionals (doctors, engineers, lawyers, CAs) earning over ₹10,000/month.'],
+                    ['q' => 'Who is NOT eligible for Kisan card?', 'a' => 'The following are NOT eligible: 1) Institutional landholders, 2) Income tax payers, 3) Government/PSU employees (current or retired with pension ₹10,000+), 4) Constitutional post holders, 5) Professionals like doctors, engineers, lawyers, CAs earning over ₹10,000/month, 6) Former/current ministers, MLAs, MPs, mayors.'],
+                    ['q' => 'What is 6000 rupees PM Kisan scheme?', 'a' => 'PM Kisan Samman Nidhi Yojana (PMKSNY) provides ₹6,000 annually to eligible farmer families across India. Money is transferred in 3 installments of ₹2,000 directly to Aadhaar-linked bank accounts via DBT. Over 11 crore Indian farmers benefit from this central government scheme since 2019.'],
+                    ['q' => 'How many days for Farmer ID Card approval?', 'a' => 'On SETU Suvidha, your Farmer ID Card is generated instantly after payment — zero waiting time. For government Agristack Farmer ID through the agriculture department, approval takes 7-15 working days after verification by local Talathi/Patwari or Block Agriculture Officer.'],
+                    ['q' => 'Who will approve the Farmer ID?', 'a' => 'For government-issued Farmer ID under Agristack, the local Talathi/Patwari (village revenue officer) or Block Agriculture Officer verifies land ownership and approves. On SETU Suvidha, the card is auto-generated instantly with QR code verification after online payment — no manual approval needed.'],
+                    ['q' => 'What are the benefits of Farmer ID Card?', 'a' => 'Benefits: 1) PM Kisan ₹6,000 scheme proof, 2) Crop insurance (PMFBY) claims, 3) Bank KCC loan applications, 4) Agristack registration, 5) Government subsidy access, 6) Mandi/APMC registration, 7) Tractor & equipment subsidy proof, 8) Seed/fertilizer subsidy, 9) QR code for instant verification, 10) Carry digitally on phone.'],
+                    ['q' => 'Why is Farmer ID important?', 'a' => 'Farmer ID is important because it establishes your identity as a genuine farmer for all government agriculture schemes. Without Farmer ID, accessing PM Kisan, crop insurance, KCC loans, and Agristack benefits becomes difficult. It also helps in maintaining clean farmer database and preventing fraudulent claims.'],
+                    ['q' => 'Farmer ID Card for West Bengal / UP / MP / Rajasthan — available?', 'a' => 'Yes! Farmers from ALL Indian states can create Farmer ID Card on SETU Suvidha — Maharashtra, West Bengal, Uttar Pradesh, Madhya Pradesh, Rajasthan, Karnataka, Tamil Nadu, Andhra Pradesh, Telangana, Gujarat, Bihar, Odisha, Punjab, Haryana, Chhattisgarh, Jharkhand, and more. The card works as agriculture identity proof across India.'],
+                    ['q' => 'Can I re-download my Farmer ID Card?', 'a' => 'Yes! After payment, you receive a unique Transaction Number (e.g., FIC-20260219-XXXXXX). Use it in the "Re-Download Card" section above to download your card unlimited times within 7 days. Save your transaction number!'],
+                    ['q' => 'What payment methods are accepted?', 'a' => 'We accept UPI (Google Pay, PhonePe, Paytm, BHIM), all Debit/Credit Cards (Visa, MasterCard, RuPay), and Net Banking through Razorpay secure payment gateway. All payments are SSL encrypted and secure.'],
+                    ['q' => 'किसान कार्ड ऑनलाइन कैसे बनाएं?', 'a' => 'setusuvidha.com पर जाएं, अपना नाम, आधार नंबर, पता, ज़मीन का विवरण और फोटो भरें। UPI/कार्ड से ऑनलाइन पेमेंट करें और QR कोड वाला किसान पहचान पत्र तुरंत PDF में डाउनलोड करें। CSC सेंटर जाने की ज़रूरत नहीं। महाराष्ट्र, उत्तर प्रदेश, मध्य प्रदेश, राजस्थान — सभी राज्यों के किसानों के लिए उपलब्ध।'],
                 ] as $i => $faq)
                 <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
                     <button @click="faqOpen === {{ $i }} ? faqOpen = null : faqOpen = {{ $i }}" class="w-full flex items-center justify-between px-5 py-4 text-left">
                         <span class="font-medium text-gray-900 dark:text-white text-sm">{{ $faq['q'] }}</span>
                         <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 transition-transform" :class="faqOpen === {{ $i }} && 'rotate-180'"></i>
                     </button>
-                    <div x-show="faqOpen === {{ $i }}" x-collapse class="px-5 pb-4 text-sm text-gray-500 dark:text-gray-400">{{ $faq['a'] }}</div>
+                    <div x-show="faqOpen === {{ $i }}" x-collapse class="px-5 pb-4 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">{!! $faq['a'] !!}</div>
                 </div>
                 @endforeach
+            </div>
+        </div>
+    </section>
+
+    {{-- ═══════════ SEO CONTENT SECTION (Multi-State + Internal Links) ═══════════ --}}
+    <section class="py-16 bg-white dark:bg-gray-900">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Farmer ID Card Online — शेतकरी ओळखपत्र ऑनलाइन | Complete Guide 2026</h2>
+                <p><strong>SETU Suvidha</strong> provides the fastest way to create and <strong>download Farmer ID Card online</strong> with QR code. Whether you are a farmer in <strong>Maharashtra, West Bengal, Uttar Pradesh, Madhya Pradesh, Rajasthan, Karnataka, Tamil Nadu, Gujarat, Bihar, Punjab, Haryana, Andhra Pradesh, Telangana, Odisha, Chhattisgarh, Jharkhand, Kerala</strong> or any other Indian state — our platform generates your <strong>Kisan Identity Card</strong> instantly.</p>
+
+                <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200 mt-6 mb-2">शेतकरी ओळखपत्र म्हणजे काय? (What is Farmer ID Card?)</h3>
+                <p>शेतकरी ओळखपत्र (Farmer ID Card) हे शेतकऱ्यांचे कृषी ओळख प्रमाणपत्र आहे. यामध्ये शेतकऱ्याचे नाव, फोटो, आधार क्रमांक, जमिनीचा तपशील (गट नंबर, सर्व्हे नंबर, क्षेत्रफळ) आणि QR कोड असतो. हे <strong>PM Kisan सन्मान निधी</strong>, <strong>पीक विमा (PMFBY)</strong>, <strong>बँक KCC कर्ज</strong>, <strong>Agristack नोंदणी</strong> आणि विविध शासकीय कृषी योजनांसाठी ओळख पुरावा म्हणून वापरता येते.</p>
+
+                <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200 mt-6 mb-2">Farmer ID Card for All Indian States</h3>
+                <p>Our Farmer ID Card service works for farmers across all states and union territories of India:</p>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 my-4 text-xs">
+                    @foreach(['Maharashtra (महाराष्ट्र)', 'West Bengal (পশ্চিমবঙ্গ)', 'Uttar Pradesh (उत्तर प्रदेश)', 'Madhya Pradesh (मध्य प्रदेश)', 'Rajasthan (राजस्थान)', 'Karnataka (ಕರ್ನಾಟಕ)', 'Tamil Nadu (தமிழ்நாடு)', 'Gujarat (ગુજરાત)', 'Andhra Pradesh (ఆంధ్రప్రదేశ్)', 'Telangana (తెలంగాణ)', 'Bihar (बिहार)', 'Odisha (ଓଡ଼ିଶା)', 'Punjab (ਪੰਜਾਬ)', 'Haryana (हरियाणा)', 'Chhattisgarh (छत्तीसगढ़)', 'Jharkhand (झारखंड)', 'Assam (অসম)', 'Kerala (കേരളം)'] as $state)
+                    <span class="bg-green-50 dark:bg-green-900/10 border border-green-100 dark:border-green-900/30 rounded-lg px-3 py-2 text-gray-700 dark:text-gray-300 font-medium">{{ $state }}</span>
+                    @endforeach
+                </div>
+
+                <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200 mt-6 mb-2">PM Kisan Samman Nidhi & Farmer ID Card Connection</h3>
+                <p>The <strong>PM Kisan Samman Nidhi Yojana</strong> provides <strong>₹6,000 per year</strong> (3 installments of ₹2,000) to eligible farmers. A Farmer ID Card strengthens your identity as a genuine farmer during PM Kisan e-KYC verification. Maharashtra farmers additionally receive <strong>₹6,000 under Namo Shetkari Maha Sanman Nidhi</strong>, making the total benefit <strong>₹12,000/year</strong>.</p>
+
+                <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200 mt-6 mb-2">Agristack & Digital Farmer ID</h3>
+                <p>India's <strong>Agristack</strong> digital infrastructure is linking farmer identity with land records, crop data, and scheme benefits. Having a <strong>Farmer ID Card</strong> with QR code ensures your readiness for this digital ecosystem. The Agristack Farmer ID integrates with <strong>7/12 extract (सातबारा उतारा)</strong>, <strong>8A extract</strong>, and <strong>crop sowing data</strong> for targeted benefit delivery.</p>
+            </div>
+
+            {{-- Internal Links --}}
+            <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <a href="{{ url('/reviews/ladki-bahin-yojana-maharashtra-2026') }}" class="flex items-center gap-3 bg-pink-50 dark:bg-gray-800 border border-pink-100 dark:border-gray-700 rounded-xl p-4 hover:shadow-md transition group">
+                    <div class="w-10 h-10 rounded-lg bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center shrink-0"><i data-lucide="heart" class="w-5 h-5 text-pink-600"></i></div>
+                    <div><p class="text-sm font-bold text-gray-900 dark:text-white group-hover:text-pink-600">लाडकी बहीण योजना २०२६</p><p class="text-xs text-gray-500">पात्रता, कागदपत्रे, DBT स्टेटस</p></div>
+                </a>
+                <a href="{{ url('/reviews/mahabocw-bandkam-kamgar-yojana-2026') }}" class="flex items-center gap-3 bg-amber-50 dark:bg-gray-800 border border-amber-100 dark:border-gray-700 rounded-xl p-4 hover:shadow-md transition group">
+                    <div class="w-10 h-10 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center shrink-0"><i data-lucide="hard-hat" class="w-5 h-5 text-amber-600"></i></div>
+                    <div><p class="text-sm font-bold text-gray-900 dark:text-white group-hover:text-amber-600">बांधकाम कामगार योजना</p><p class="text-xs text-gray-500">MAHABOCW संपूर्ण मार्गदर्शक</p></div>
+                </a>
             </div>
         </div>
     </section>

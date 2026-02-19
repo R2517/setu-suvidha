@@ -182,6 +182,24 @@
     </div>
 </section>
 
+{{-- Farmer ID Card CTA (SEO) --}}
+<section class="py-10 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-gray-900 dark:to-gray-900 border-y border-green-100 dark:border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col sm:flex-row items-center gap-6 sm:gap-8">
+            <div class="w-16 h-16 rounded-2xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center shrink-0">
+                <i data-lucide="leaf" class="w-8 h-8 text-green-600"></i>
+            </div>
+            <div class="flex-1 text-center sm:text-left">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-1">Farmer ID Card Online — शेतकरी ओळखपत्र मोफत बनवा</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Download <strong>Kisan Identity Card with QR Code</strong> instantly. PM Kisan, crop insurance, KCC loan — सर्व शासकीय योजनांसाठी ओळख पुरावा. Maharashtra, West Bengal, UP, MP & all India.</p>
+            </div>
+            <a href="{{ url('/services/farmer-id-card-online') }}" class="shrink-0 inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-bold px-6 py-3 rounded-xl transition text-sm shadow-md">
+                <i data-lucide="download" class="w-4 h-4"></i> Get Farmer ID Card
+            </a>
+        </div>
+    </div>
+</section>
+
 {{-- FAQ Section --}}
 <section class="py-20 bg-gray-50 dark:bg-gray-900">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
