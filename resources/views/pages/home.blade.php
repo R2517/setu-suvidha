@@ -1,5 +1,18 @@
 @extends('layouts.app')
-@section('title', 'SETU Suvidha — महा ई-सेवा पोर्टल | सर्व सरकारी फॉर्म्स एकाच ठिकाणी')
+@section('title', 'SETU Suvidha — सेतू सुविधा | महा ई-सेवा पोर्टल | सर्व सरकारी फॉर्म्स एकाच ठिकाणी')
+@section('description', 'सेतु केंद्र, CSC केंद्र, महा ई-सेवा दुकानदारांसाठी — हमीपत्र, उत्पन्नाचा दाखला, जातीचा दाखला, राजपत्र, शेतकरी ओळखपत्र, आधार सेवा, पॅन कार्ड, बांधकाम कामगार नोंदणी. आपले सरकार सेवा सेतू सुविधा केंद्र.')
+
+@push('meta')
+<meta name="keywords" content="setu suvidha, सेतू सुविधा, setu kendra, सेतू केंद्र, maha e seva, महा ई-सेवा, CSC center Maharashtra, aaple sarkar seva kendra, सेतू सुविधा केंद्र जवळ, government forms online Maharashtra, हमीपत्र, उत्पन्नाचा दाखला, जातीचा दाखला, राजपत्र नमुना, शेतकरी ओळखपत्र, farmer id card online, income certificate Maharashtra, caste certificate Maharashtra, सरकारी फॉर्म्स, digital seva portal, maha e seva kendra registration">
+<meta property="og:title" content="SETU Suvidha — महा ई-सेवा पोर्टल | सर्व सरकारी फॉर्म्स एकाच ठिकाणी">
+<meta property="og:description" content="सेतु केंद्र आणि महा ई-सेवा दुकानदारांसाठी — हमीपत्र, उत्पन्नाचा दाखला, जातीचा दाखला, शेतकरी ओळखपत्र आणि बरंच काही!">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ url('/') }}">
+<link rel="canonical" href="{{ url('/') }}">
+<script type="application/ld+json">
+{"@@context":"https://schema.org","@@type":"Organization","name":"SETU Suvidha","alternateName":"सेतू सुविधा","url":"https://setusuvidha.com","description":"महाराष्ट्रातील सेतू केंद्र, CSC केंद्र आणि महा ई-सेवा दुकानदारांसाठी सर्व सरकारी फॉर्म्स, CRM आणि बिलिंग प्लॅटफॉर्म.","areaServed":{"@@type":"State","name":"Maharashtra"}}
+</script>
+@endpush
 
 @section('content')
 {{-- Hero Section --}}

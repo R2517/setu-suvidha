@@ -1,5 +1,16 @@
 @extends('layouts.app')
-@section('title', 'आमच्याबद्दल — SETU Suvidha')
+@section('title', 'आमच्याबद्दल — SETU Suvidha | सेतू सुविधा ई-सेवा पोर्टल')
+@section('description', 'SETU Suvidha (सेतू सुविधा) हे महाराष्ट्रातील सेतू केंद्र, CSC केंद्र आणि महा ई-सेवा दुकानदारांसाठी तयार केलेले SaaS प्लॅटफॉर्म. 12+ सरकारी फॉर्म्स, 3 CRM मॉड्युल्स, प्रीपेड वॉलेट, A4 प्रिंट इंजिन.')
+
+@push('meta')
+<meta name="keywords" content="setu suvidha about, सेतू सुविधा बद्दल, setu kendra software, CSC center software Maharashtra, maha e seva kendra software, सेतू केंद्र सॉफ्टवेअर, VLE platform Maharashtra, digital seva portal Maharashtra, setu suvidha features">
+<meta property="og:title" content="आमच्याबद्दल — SETU Suvidha | सेतू सुविधा">
+<meta property="og:description" content="महाराष्ट्रातील सेतू केंद्र आणि CSC केंद्रांसाठी आधुनिक SaaS प्लॅटफॉर्म — 12+ फॉर्म्स, 3 CRM, वॉलेट सिस्टम.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ url('/about') }}">
+<link rel="canonical" href="{{ url('/about') }}">
+@endpush
+
 @section('content')
 <section class="py-20 bg-white dark:bg-gray-950">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">

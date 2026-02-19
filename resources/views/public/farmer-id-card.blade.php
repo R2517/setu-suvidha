@@ -3,12 +3,15 @@
 
 @push('meta')
 <meta name="description" content="Get your Farmer ID Card online instantly. Download Kisan Identity Card with QR code. शेतकरी ओळखपत्र ऑनलाइन बनवा. PM Kisan, CSC Farmer Registration, Agriculture ID Card.">
-<meta name="keywords" content="farmer id card, farmer id card download, शेतकरी ओळखपत्र, kisan id card, farmer identity card online, farmer registration, pm kisan card, csc farmer id, agriculture id card, farmer card maharashtra, kisan card online, farmer id card apply, farmer id card status, शेतकरी ओळखपत्र ऑनलाइन, शेतकरी नोंदणी, farmer card download pdf, farmer id card qr code">
-<meta property="og:title" content="Farmer ID Card Online - शेतकरी ओळखपत्र डाउनलोड">
-<meta property="og:description" content="Get your Farmer ID Card with QR code instantly. Fill details, pay & download. शेतकरी ओळखपत्र ऑनलाइन बनवा.">
+<meta name="keywords" content="farmer id card, farmer id card download, शेतकरी ओळखपत्र, kisan id card, farmer identity card online, farmer registration, pm kisan card, csc farmer id, agriculture id card, farmer card maharashtra, kisan card online, farmer id card apply, farmer id card status, शेतकरी ओळखपत्र ऑनलाइन, शेतकरी नोंदणी, farmer card download pdf, farmer id card qr code, PM Kisan Maharashtra status, नमो शेतकरी योजना, शेतकरी सन्मान निधी, kisan samman nidhi maharashtra, farmer card free download, शेतकरी ओळखपत्र मोफत">
+<meta property="og:title" content="Farmer ID Card Online Free - शेतकरी ओळखपत्र मोफत डाउनलोड">
+<meta property="og:description" content="Get your Farmer ID Card with QR code instantly — FREE. शेतकरी ओळखपत्र मोफत ऑनलाइन बनवा. No registration required.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="{{ url('/services/farmer-id-card-online') }}">
 <link rel="canonical" href="{{ url('/services/farmer-id-card-online') }}">
+<script type="application/ld+json">
+{"@@context":"https://schema.org","@@type":"FAQPage","mainEntity":[{"@@type":"Question","name":"शेतकरी ओळखपत्र कसे बनवायचे?","acceptedAnswer":{"@@type":"Answer","text":"SETU Suvidha वर शेतकरी ओळखपत्र मोफत बनवा. नाव, पत्ता, आधार क्रमांक आणि फोटो भरा — QR कोडसह ID Card डाउनलोड करा."}},{"@@type":"Question","name":"Farmer ID Card online free कसे मिळवायचे?","acceptedAnswer":{"@@type":"Answer","text":"setusuvidha.com/services/farmer-id-card-online वर जा, माहिती भरा आणि Download बटण दाबा. कोणतेही शुल्क नाही."}},{"@@type":"Question","name":"शेतकरी ओळखपत्राचे फायदे काय?","acceptedAnswer":{"@@type":"Answer","text":"शेतकरी ओळखपत्र PM Kisan, Crop Insurance, बँक कर्ज आणि शासकीय योजनांसाठी ओळख पुरावा म्हणून वापरता येते."}}]}
+</script>
 @endpush
 
 @section('content')

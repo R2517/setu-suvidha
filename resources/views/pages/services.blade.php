@@ -1,5 +1,16 @@
 @extends('layouts.app')
-@section('title', 'सेवा — SETU Suvidha')
+@section('title', 'सेवा — SETU Suvidha | हमीपत्र, उत्पन्नाचा दाखला, जातीचा दाखला, राजपत्र, शेतकरी ओळखपत्र')
+@section('description', 'SETU Suvidha वर उपलब्ध सर्व सरकारी फॉर्म्स — हमीपत्र, स्वयंघोषणापत्र, उत्पन्नाचा दाखला, जातीचा दाखला, राजपत्र नमुना (मराठी/English/7-12), शेतकरी ओळखपत्र, आधार सेवा, पॅन कार्ड CRM, बांधकाम कामगार नोंदणी.')
+
+@push('meta')
+<meta name="keywords" content="setu suvidha services, सेतू सुविधा सेवा, हमीपत्र ऑनलाइन, उत्पन्नाचा दाखला काढणे, जातीचा दाखला कसा काढावा, राजपत्र नमुना मराठी, शेतकरी ओळखपत्र, farmer id card online, income certificate Maharashtra, caste certificate documents, affidavit format marathi, self declaration format, प्रतिज्ञापत्र नमुना मराठी, स्वयं घोषणापत्र नमुना, आधार कार्ड अपडेट, पॅन कार्ड अर्ज, बांधकाम कामगार योजना, passport photo maker, bond formats online">
+<meta property="og:title" content="सेवा — SETU Suvidha | सर्व सरकारी फॉर्म्स एकाच ठिकाणी">
+<meta property="og:description" content="हमीपत्र, उत्पन्नाचा दाखला, जातीचा दाखला, राजपत्र, शेतकरी ओळखपत्र — 20+ सरकारी सेवा एकाच प्लॅटफॉर्मवर.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ url('/services') }}">
+<link rel="canonical" href="{{ url('/services') }}">
+@endpush
+
 @section('content')
 
 {{-- Hero --}}

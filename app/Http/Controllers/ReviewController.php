@@ -11,6 +11,18 @@ class ReviewController extends Controller
     private function articles(): array
     {
         return [
+            'ladki-bahin-yojana-maharashtra-2026' => [
+                'slug'        => 'ladki-bahin-yojana-maharashtra-2026',
+                'title'       => 'मुख्यमंत्री माझी लाडकी बहीण योजना २०२६: संपूर्ण माहिती',
+                'title_en'    => 'Ladki Bahin Yojana Maharashtra 2026: Complete Guide',
+                'excerpt'     => 'लाडकी बहीण योजना पात्रता, कागदपत्रे, अर्ज प्रक्रिया, DBT स्टेटस, आधार सीडिंग, लाभार्थी यादी — फेब्रुवारी २०२६ अद्ययावत.',
+                'icon'        => 'heart',
+                'color'       => 'pink',
+                'category'    => 'महिला कल्याण योजना',
+                'date'        => '१९ फेब्रुवारी २०२६',
+                'read_time'   => '१५ मिनिटे',
+                'view'        => 'reviews.ladki-bahin-yojana',
+            ],
             'mahabocw-bandkam-kamgar-yojana-2026' => [
                 'slug'        => 'mahabocw-bandkam-kamgar-yojana-2026',
                 'title'       => 'महाराष्ट्र बांधकाम कामगार योजना (MAHABOCW) २०२६: संपूर्ण मार्गदर्शक',
