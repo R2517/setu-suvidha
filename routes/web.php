@@ -22,6 +22,7 @@ use App\Http\Controllers\AadhaarController;
 use App\Http\Controllers\VillageInfoController;
 use App\Http\Controllers\FarmerCardPublicController;
 use App\Http\Controllers\BondFormatController;
+use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
 
 // ─── Public Pages ───
@@ -37,6 +38,10 @@ Route::get('/privacy', [PageController::class, 'privacy'])->name('privacy');
 Route::get('/refund', [PageController::class, 'refund'])->name('refund');
 Route::get('/disclaimer', [PageController::class, 'disclaimer'])->name('disclaimer');
 Route::get('/bandkam-kamgar-info', [PageController::class, 'bandkamInfo'])->name('bandkam-info');
+
+// ─── Public: Reviews (SEO Blog) ───
+Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
+Route::get('/reviews/{slug}', [ReviewController::class, 'show'])->name('reviews.show');
 
 // ─── Public: Farmer ID Card Online (Self-Service) ───
 Route::get('/farmer-id-card-online', [FarmerCardPublicController::class, 'index'])->name('farmer-card-public');
