@@ -87,8 +87,6 @@ class DashboardController extends Controller
         return [
             ['id' => 'hamipatra', 'title' => 'हमीपत्र (Disclaimer)', 'icon' => 'file-text', 'iconBg' => 'linear-gradient(135deg, #DBEAFE, #BFDBFE)', 'iconColor' => '#2563EB', 'path' => '/hamipatra', 'ready' => true, 'badge' => 'READY', 'badgeType' => 'ready'],
             ['id' => 'self-declaration', 'title' => 'स्वयंघोषणापत्र', 'icon' => 'shield', 'iconBg' => 'linear-gradient(135deg, #D1FAE5, #A7F3D0)', 'iconColor' => '#059669', 'path' => '/self-declaration', 'ready' => true, 'badge' => 'READY', 'badgeType' => 'ready'],
-            ['id' => 'grievance', 'title' => 'तक्रार नोंदणी (Grievance)', 'icon' => 'alert-triangle', 'iconBg' => 'linear-gradient(135deg, #FEF3C7, #FDE68A)', 'iconColor' => '#D97706', 'path' => '/grievance', 'ready' => true, 'badge' => 'READY', 'badgeType' => 'ready'],
-            ['id' => 'new-application', 'title' => 'नवीन अर्ज (New Application)', 'icon' => 'file-plus', 'iconBg' => 'linear-gradient(135deg, #EDE9FE, #DDD6FE)', 'iconColor' => '#7C3AED', 'path' => '/new-application', 'ready' => true, 'badge' => 'READY', 'badgeType' => 'ready'],
             ['id' => 'farmer-id', 'title' => 'शेतकरी ओळखपत्र (FARMER ID CARD)', 'icon' => 'leaf', 'iconBg' => 'linear-gradient(135deg, #DCFCE7, #BBF7D0)', 'iconColor' => '#16A34A', 'path' => '/farmer-id-card', 'ready' => true, 'badge' => 'NEW', 'badgeType' => 'new'],
             ['id' => 'passport-photo', 'title' => 'पासपोर्ट फोटो मेकर (Photo Maker)', 'icon' => 'camera', 'iconBg' => 'linear-gradient(135deg, #E0E7FF, #C7D2FE)', 'iconColor' => '#4F46E5', 'path' => '/passport-photo-maker', 'ready' => true, 'badge' => 'NEW', 'badgeType' => 'new'],
             ['id' => 'aadhaar-hub', 'title' => 'आधार सेवा केंद्र (Aadhaar Hub)', 'icon' => 'fingerprint', 'iconBg' => 'linear-gradient(135deg, #FFE4E6, #FECDD3)', 'iconColor' => '#E11D48', 'path' => '/aadhaar-hub', 'ready' => true, 'badge' => 'NEW', 'badgeType' => 'new'],
@@ -102,7 +100,6 @@ class DashboardController extends Controller
             ['id' => 'annasaheb', 'title' => 'अण्णासाहेब पाटील योजनेचा अर्ज', 'icon' => 'award', 'iconBg' => 'linear-gradient(135deg, #FFE4E6, #FDA4AF)', 'iconColor' => '#BE123C', 'path' => '/annasaheb', 'ready' => false, 'badge' => '', 'badgeType' => ''],
             ['id' => 'minority', 'title' => 'अल्पभूधारक प्रमाणपत्रासाठी अर्ज', 'icon' => 'file-check', 'iconBg' => 'linear-gradient(135deg, #F3E8FF, #E9D5FF)', 'iconColor' => '#9333EA', 'path' => '/minority', 'ready' => false, 'badge' => '', 'badgeType' => ''],
             ['id' => 'non-creamy', 'title' => 'नॉन क्रिमिलीयर प्रमाणपत्रासाठी शपथपत्र', 'icon' => 'graduation-cap', 'iconBg' => 'linear-gradient(135deg, #FEF9C3, #FDE047)', 'iconColor' => '#A16207', 'path' => '/non-creamy', 'ready' => false, 'badge' => '', 'badgeType' => ''],
-            ['id' => 'caste-validity', 'title' => 'जात पडताळणी', 'icon' => 'badge-check', 'iconBg' => 'linear-gradient(135deg, #CCFBF1, #99F6E4)', 'iconColor' => '#0D9488', 'path' => '/caste-validity', 'ready' => true, 'badge' => 'READY', 'badgeType' => 'ready'],
             ['id' => 'domicile', 'title' => 'अधिवास प्रमाणपत्रासाठी स्वयंघोषणापत्र', 'icon' => 'home', 'iconBg' => 'linear-gradient(135deg, #DBEAFE, #93C5FD)', 'iconColor' => '#1D4ED8', 'path' => '/domicile', 'ready' => false, 'badge' => '', 'badgeType' => ''],
         ];
     }
