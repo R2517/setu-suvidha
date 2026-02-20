@@ -42,7 +42,7 @@ class DocslipController extends Controller
                 $q->whereIn('docslip_services.id', $serviceIds);
             })
             ->orderBy('sort_order')
-            ->get(['id', 'name_mr', 'name_en']);
+            ->get(['id', 'name_mr', 'name_en', 'remark']);
 
         // Already unique by query (each doc appears once)
         return response()->json(['documents' => $documents]);
@@ -165,7 +165,7 @@ class DocslipController extends Controller
         ]);
 
         $doc = DocslipDocument::where('user_id', $request->user()->id)->findOrFail($id);
-        $doc->update($request->only('name_mr', 'name_en', 'is_active'));
+        $doc->update($request->only('name_mr', 'name_en', 'remark', 'is_active'));
 
         return back()->with('success', 'कागदपत्र अपडेट केले!');
     }

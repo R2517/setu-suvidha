@@ -125,10 +125,16 @@
             <form method="POST" action="{{ route('docslip.documents.store') }}" class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-5 mb-5">
                 @csrf
                 <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-1.5"><i data-lucide="plus-circle" class="w-4 h-4 text-green-500"></i> नवीन कागदपत्र जोडा</h3>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" x-data="{ showRemark: false }">
                     <input name="name_mr" required placeholder="मराठी नाव *" class="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500">
                     <input name="name_en" required placeholder="English Name *" class="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500">
-                    <button type="submit" class="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg text-sm font-bold transition">जोडा</button>
+                    <div class="flex gap-2">
+                        <button type="button" @click="showRemark = !showRemark" class="px-3 py-2 rounded-lg text-xs font-medium transition" :class="showRemark ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-600' : 'bg-gray-100 dark:bg-gray-800 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700'"><i data-lucide="message-square-plus" class="w-3.5 h-3.5 inline"></i> Remark</button>
+                        <button type="submit" class="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg text-sm font-bold transition">जोडा</button>
+                    </div>
+                    <div x-show="showRemark" x-transition class="sm:col-span-3">
+                        <input name="remark" placeholder="Remark (e.g. Original + Xerox आवश्यक)" class="w-full px-3 py-2 rounded-lg border border-purple-200 dark:border-purple-700 bg-purple-50 dark:bg-purple-900/10 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500">
+                    </div>
                 </div>
             </form>
 
@@ -140,6 +146,9 @@
                         <div>
                             <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ $doc->name_mr }}</span>
                             <span class="text-xs text-gray-400 ml-1">({{ $doc->name_en }})</span>
+                            @if($doc->remark)
+                            <span class="text-[10px] bg-purple-100 dark:bg-purple-900/30 text-purple-600 px-2 py-0.5 rounded-full ml-1">📝 {{ $doc->remark }}</span>
+                            @endif
                             @if(!$doc->is_active)
                             <span class="text-[10px] bg-red-100 dark:bg-red-900/30 text-red-600 px-2 py-0.5 rounded-full ml-1">Inactive</span>
                             @endif
@@ -152,13 +161,20 @@
                             </form>
                         </div>
                     </div>
-                    <form x-show="editing" method="POST" action="{{ route('docslip.documents.update', $doc->id) }}" class="flex flex-wrap items-end gap-3">
+                    <form x-show="editing" method="POST" action="{{ route('docslip.documents.update', $doc->id) }}" class="space-y-3" x-data="{ showRemark: {{ $doc->remark ? 'true' : 'false' }} }">
                         @csrf @method('PUT')
-                        <div class="flex-1 min-w-[150px]"><label class="text-[10px] text-gray-400">मराठी</label><input name="name_mr" value="{{ $doc->name_mr }}" required class="w-full px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm"></div>
-                        <div class="flex-1 min-w-[150px]"><label class="text-[10px] text-gray-400">English</label><input name="name_en" value="{{ $doc->name_en }}" required class="w-full px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm"></div>
-                        <label class="flex items-center gap-1.5 text-xs"><input type="hidden" name="is_active" value="0"><input type="checkbox" name="is_active" value="1" {{ $doc->is_active ? 'checked' : '' }} class="rounded border-gray-300"> Active</label>
-                        <button type="submit" class="px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded-lg text-xs font-bold transition">Save</button>
-                        <button type="button" @click="editing = false" class="px-3 py-1.5 bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg text-xs font-medium transition">Cancel</button>
+                        <div class="flex flex-wrap items-end gap-3">
+                            <div class="flex-1 min-w-[150px]"><label class="text-[10px] text-gray-400">मराठी</label><input name="name_mr" value="{{ $doc->name_mr }}" required class="w-full px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm"></div>
+                            <div class="flex-1 min-w-[150px]"><label class="text-[10px] text-gray-400">English</label><input name="name_en" value="{{ $doc->name_en }}" required class="w-full px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm"></div>
+                            <button type="button" @click="showRemark = !showRemark" class="px-2.5 py-1.5 rounded-lg text-xs font-medium transition" :class="showRemark ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-600' : 'bg-gray-100 dark:bg-gray-800 text-gray-500'"><i data-lucide="message-square-plus" class="w-3 h-3 inline"></i> Remark</button>
+                            <label class="flex items-center gap-1.5 text-xs"><input type="hidden" name="is_active" value="0"><input type="checkbox" name="is_active" value="1" {{ $doc->is_active ? 'checked' : '' }} class="rounded border-gray-300"> Active</label>
+                            <button type="submit" class="px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded-lg text-xs font-bold transition">Save</button>
+                            <button type="button" @click="editing = false" class="px-3 py-1.5 bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg text-xs font-medium transition">Cancel</button>
+                        </div>
+                        <div x-show="showRemark" x-transition>
+                            <input name="remark" value="{{ $doc->remark }}" placeholder="Remark (e.g. Original + Xerox आवश्यक)" class="w-full px-3 py-1.5 rounded-lg border border-purple-200 dark:border-purple-700 bg-purple-50 dark:bg-purple-900/10 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500">
+                        </div>
+                        <input x-show="!showRemark" type="hidden" name="remark" value="">
                     </form>
                 </div>
                 @empty

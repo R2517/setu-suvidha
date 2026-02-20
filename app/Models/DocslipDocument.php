@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class DocslipDocument extends Model
 {
-    protected $fillable = ['user_id', 'name_mr', 'name_en', 'sort_order', 'is_active'];
+    protected $fillable = ['user_id', 'name_mr', 'name_en', 'remark', 'sort_order', 'is_active'];
 
     protected $casts = [
         'is_active' => 'boolean',

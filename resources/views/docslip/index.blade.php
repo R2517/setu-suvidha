@@ -130,13 +130,16 @@
             {{-- Documents List --}}
             <div x-show="!isLoading" class="space-y-1.5">
                 <template x-for="(doc, idx) in mergedDocuments" :key="doc.id">
-                    <div class="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
-                        <span class="w-6 h-6 rounded-md bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 flex items-center justify-center text-[10px] font-bold text-gray-500" x-text="idx + 1"></span>
+                    <div class="flex items-start gap-3 px-4 py-2.5 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
+                        <span class="w-6 h-6 rounded-md bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 flex items-center justify-center text-[10px] font-bold text-gray-500 shrink-0 mt-0.5" x-text="idx + 1"></span>
                         <div class="flex-1 min-w-0">
                             <span class="text-sm font-medium text-gray-900 dark:text-white" x-text="doc.name_mr"></span>
                             <span class="text-xs text-gray-400 ml-2" x-text="'(' + doc.name_en + ')'"></span>
+                            <template x-if="doc.remark">
+                                <span class="block text-[10px] text-purple-500 mt-0.5" x-text="'📝 ' + doc.remark"></span>
+                            </template>
                         </div>
-                        <span class="text-gray-300 dark:text-gray-600 text-lg">☐</span>
+                        <span class="text-gray-300 dark:text-gray-600 text-lg shrink-0">☐</span>
                     </div>
                 </template>
             </div>
@@ -317,7 +320,7 @@ function docslipApp() {
             ).join('');
 
             const docsHTML = d.documents.map((doc, i) =>
-                `<div class="doc-item"><span class="doc-num">${i + 1}.</span> ${doc.name_mr}</div>`
+                `<div class="doc-item"><span class="doc-num">${i + 1}.</span> ${doc.name_mr}${doc.remark ? '<div style="font-size:9px;color:#555;padding-left:14px;font-style:italic">→ ' + doc.remark + '</div>' : ''}</div>`
             ).join('');
 
             const customerHTML = (d.customerName || d.customerMobile) ? `
