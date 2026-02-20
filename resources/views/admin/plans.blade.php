@@ -38,6 +38,10 @@
                     <input type="number" name="price" step="0.01" min="0" required class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white">
                 </div>
                 <div>
+                    <label class="block text-xs font-medium text-gray-500 mb-1">मेंटेनन्स ₹ (Trial)</label>
+                    <input type="number" name="maintenance_amount" step="0.01" min="0" value="0" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white" placeholder="Trial period charge">
+                </div>
+                <div>
                     <label class="block text-xs font-medium text-gray-500 mb-1">कालावधी (दिवस) *</label>
                     <input type="number" name="duration_days" min="1" required class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white">
                 </div>
@@ -104,6 +108,10 @@
                 {{-- Meta --}}
                 <div class="px-5 py-3 border-t border-gray-100 dark:border-gray-800 space-y-1">
                     <div class="flex items-center justify-between text-[11px]">
+                        <span class="text-gray-400">Maintenance</span>
+                        <span class="font-medium text-gray-700 dark:text-gray-300">₹{{ number_format($plan->maintenance_amount ?? 0) }}</span>
+                    </div>
+                    <div class="flex items-center justify-between text-[11px]">
                         <span class="text-gray-400">Trial</span>
                         <span class="font-medium text-gray-700 dark:text-gray-300">{{ $plan->trial_days }} दिवस</span>
                     </div>
@@ -138,7 +146,8 @@
                                 <option value="{{ $k }}" {{ $plan->plan_type === $k ? 'selected' : '' }}>{{ $v }}</option>
                                 @endforeach
                             </select>
-                            <input type="number" name="price" step="0.01" value="{{ $plan->price }}" class="px-2 py-1.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-xs text-gray-900 dark:text-white" placeholder="₹">
+                            <input type="number" name="price" step="0.01" value="{{ $plan->price }}" class="px-2 py-1.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-xs text-gray-900 dark:text-white" placeholder="₹ किंमत">
+                            <input type="number" name="maintenance_amount" step="0.01" value="{{ $plan->maintenance_amount ?? 0 }}" class="px-2 py-1.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-xs text-gray-900 dark:text-white" placeholder="₹ मेंटेनन्स">
                             <input type="number" name="duration_days" value="{{ $plan->duration_days }}" class="px-2 py-1.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-xs text-gray-900 dark:text-white" placeholder="दिवस">
                         </div>
                         <input type="text" name="features" value="{{ implode(', ', $features) }}" class="w-full px-2 py-1.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-xs text-gray-900 dark:text-white" placeholder="Features (comma-separated)">

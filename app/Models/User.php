@@ -83,4 +83,25 @@ class User extends Authenticatable
     {
         return (float) ($this->profile?->wallet_balance ?? 0);
     }
+
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(VleSubscription::class);
+    }
+
+    public function activeSubscription()
+    {
+        return $this->subscriptions()
+            ->whereIn('status', ['active', 'trial'])
+            ->where(function ($q) {
+                $q->whereNull('end_date')->orWhere('end_date', '>', now());
+            })
+            ->latest('start_date')
+            ->first();
+    }
+
+    public function hasActiveSubscription(): bool
+    {
+        return $this->activeSubscription() !== null;
+    }
 }

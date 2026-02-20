@@ -28,6 +28,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\DocslipController;
 use App\Http\Controllers\BillingController;
+use App\Http\Controllers\SubscriptionController;
 use Illuminate\Support\Facades\Route;
 
 // ─── Public Pages ───
@@ -88,8 +89,14 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/wallet/recharge', [WalletController::class, 'createOrder'])->name('wallet.recharge');
     Route::post('/wallet/verify', [WalletController::class, 'verifyPayment'])->name('wallet.verify');
 
+    // Subscription
+    Route::get('/subscription', [SubscriptionController::class, 'index'])->name('subscription');
+    Route::post('/subscription/activate', [SubscriptionController::class, 'activate'])->name('subscription.activate');
+    Route::post('/subscription/change', [SubscriptionController::class, 'changePlan'])->name('subscription.change');
+
+    // ─── Subscription-Protected Features ───
     // Billing System
-    Route::prefix('billing')->name('billing.')->group(function () {
+    Route::prefix('billing')->name('billing.')->middleware('subscription')->group(function () {
         Route::get('/', [BillingController::class, 'dashboard'])->name('dashboard');
 
         // Sales
@@ -186,43 +193,45 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/forms/{id}', [FormController::class, 'delete'])->name('forms.delete');
     Route::get('/forms/{id}/print', [FormController::class, 'print'])->name('forms.print');
 
-    // Management / CRM Hub
-    Route::get('/management', fn() => view('dashboard.management'))->name('management');
+    // Management / CRM Hub (subscription protected)
+    Route::middleware('subscription')->group(function () {
+        Route::get('/management', fn() => view('dashboard.management'))->name('management');
 
-    // CRM: PAN Card
-    Route::get('/pan-card', [PanCardController::class, 'index'])->name('pan-card');
-    Route::post('/pan-card', [PanCardController::class, 'store'])->name('pan-card.store');
-    Route::put('/pan-card/{id}', [PanCardController::class, 'update'])->name('pan-card.update');
-    Route::delete('/pan-card/{id}', [PanCardController::class, 'destroy'])->name('pan-card.destroy');
+        // CRM: PAN Card
+        Route::get('/pan-card', [PanCardController::class, 'index'])->name('pan-card');
+        Route::post('/pan-card', [PanCardController::class, 'store'])->name('pan-card.store');
+        Route::put('/pan-card/{id}', [PanCardController::class, 'update'])->name('pan-card.update');
+        Route::delete('/pan-card/{id}', [PanCardController::class, 'destroy'])->name('pan-card.destroy');
 
-    // CRM: Voter ID
-    Route::get('/voter-id', [VoterIdController::class, 'index'])->name('voter-id');
-    Route::post('/voter-id', [VoterIdController::class, 'store'])->name('voter-id.store');
-    Route::put('/voter-id/{id}', [VoterIdController::class, 'update'])->name('voter-id.update');
-    Route::delete('/voter-id/{id}', [VoterIdController::class, 'destroy'])->name('voter-id.destroy');
+        // CRM: Voter ID
+        Route::get('/voter-id', [VoterIdController::class, 'index'])->name('voter-id');
+        Route::post('/voter-id', [VoterIdController::class, 'store'])->name('voter-id.store');
+        Route::put('/voter-id/{id}', [VoterIdController::class, 'update'])->name('voter-id.update');
+        Route::delete('/voter-id/{id}', [VoterIdController::class, 'destroy'])->name('voter-id.destroy');
 
-    // CRM: Bandkam Kamgar
-    Route::get('/bandkam', [BandkamController::class, 'index'])->name('bandkam');
-    Route::post('/bandkam', [BandkamController::class, 'store'])->name('bandkam.store');
-    Route::get('/bandkam/{id}', [BandkamController::class, 'show'])->name('bandkam.show');
-    Route::put('/bandkam/{id}', [BandkamController::class, 'update'])->name('bandkam.update');
-    Route::put('/bandkam/{id}/dates', [BandkamController::class, 'updateDates'])->name('bandkam.dates');
-    Route::put('/bandkam/{id}/payment', [BandkamController::class, 'updatePayment'])->name('bandkam.payment');
-    Route::delete('/bandkam/{id}', [BandkamController::class, 'destroy'])->name('bandkam.destroy');
-    Route::post('/bandkam/{id}/schemes', [BandkamController::class, 'storeScheme'])->name('bandkam.schemes.store');
-    Route::put('/bandkam/schemes/{schemeId}', [BandkamController::class, 'updateScheme'])->name('bandkam.schemes.update');
-    Route::delete('/bandkam/schemes/{schemeId}', [BandkamController::class, 'destroyScheme'])->name('bandkam.schemes.destroy');
+        // CRM: Bandkam Kamgar
+        Route::get('/bandkam', [BandkamController::class, 'index'])->name('bandkam');
+        Route::post('/bandkam', [BandkamController::class, 'store'])->name('bandkam.store');
+        Route::get('/bandkam/{id}', [BandkamController::class, 'show'])->name('bandkam.show');
+        Route::put('/bandkam/{id}', [BandkamController::class, 'update'])->name('bandkam.update');
+        Route::put('/bandkam/{id}/dates', [BandkamController::class, 'updateDates'])->name('bandkam.dates');
+        Route::put('/bandkam/{id}/payment', [BandkamController::class, 'updatePayment'])->name('bandkam.payment');
+        Route::delete('/bandkam/{id}', [BandkamController::class, 'destroy'])->name('bandkam.destroy');
+        Route::post('/bandkam/{id}/schemes', [BandkamController::class, 'storeScheme'])->name('bandkam.schemes.store');
+        Route::put('/bandkam/schemes/{schemeId}', [BandkamController::class, 'updateScheme'])->name('bandkam.schemes.update');
+        Route::delete('/bandkam/schemes/{schemeId}', [BandkamController::class, 'destroyScheme'])->name('bandkam.schemes.destroy');
 
-    // Export CSV
-    Route::get('/export/pan-card', [ExportController::class, 'panCard'])->name('export.pan-card');
-    Route::get('/export/voter-id', [ExportController::class, 'voterId'])->name('export.voter-id');
-    Route::get('/export/bandkam', [ExportController::class, 'bandkam'])->name('export.bandkam');
+        // Export CSV
+        Route::get('/export/pan-card', [ExportController::class, 'panCard'])->name('export.pan-card');
+        Route::get('/export/voter-id', [ExportController::class, 'voterId'])->name('export.voter-id');
+        Route::get('/export/bandkam', [ExportController::class, 'bandkam'])->name('export.bandkam');
 
-    // Reports
-    Route::get('/reports', [ReportController::class, 'index'])->name('reports');
+        // Reports
+        Route::get('/reports', [ReportController::class, 'index'])->name('reports');
+    });
 
-    // DocSlip — कागदपत्र पावती
-    Route::prefix('docslip')->name('docslip.')->group(function () {
+    // DocSlip — कागदपत्र पावती (subscription protected)
+    Route::prefix('docslip')->name('docslip.')->middleware('subscription')->group(function () {
         Route::get('/', [DocslipController::class, 'index'])->name('index');
         Route::post('/merge', [DocslipController::class, 'mergeDocuments'])->name('merge');
         Route::post('/print', [DocslipController::class, 'printSlip'])->name('print');

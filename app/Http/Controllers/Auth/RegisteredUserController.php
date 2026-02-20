@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Profile;
 use App\Models\UserRole;
+use App\Models\WalletTransaction;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -35,12 +36,24 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        $signupBonus = 50.00;
+
         Profile::create([
             'user_id' => $user->id,
             'full_name' => $user->name,
             'email' => $user->email,
-            'wallet_balance' => 0.00,
+            'wallet_balance' => $signupBonus,
+            'signup_bonus_given' => true,
             'is_active' => true,
+        ]);
+
+        WalletTransaction::create([
+            'user_id' => $user->id,
+            'type' => 'credit',
+            'amount' => $signupBonus,
+            'balance_after' => $signupBonus,
+            'description' => 'साइन-अप बोनस ₹50',
+            'reference_id' => 'SIGNUP-BONUS-' . $user->id,
         ]);
 
         UserRole::create([

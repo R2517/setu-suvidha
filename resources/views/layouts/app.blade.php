@@ -306,6 +306,58 @@
     @endif
     @endauth
 
+    {{-- Subscription Popup Reminder (3x/day for users without active subscription) --}}
+    @auth
+    @if(!auth()->user()->isAdmin())
+    @php
+        // Process trial expiry on every page load
+        \App\Http\Controllers\SubscriptionController::processTrialExpiry(auth()->user());
+        $hasActiveSub = auth()->user()->hasActiveSubscription();
+    @endphp
+    @if(!$hasActiveSub)
+    <div x-data="subReminder()" x-show="showReminder" x-transition.opacity
+         class="fixed inset-0 z-[100] flex items-center justify-center p-4" style="display:none">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" @click="dismiss()"></div>
+        <div class="relative bg-white dark:bg-gray-900 rounded-2xl w-full max-w-sm shadow-2xl border border-gray-200 dark:border-gray-800 overflow-hidden" @click.stop>
+            <div class="bg-gradient-to-br from-indigo-500 to-purple-600 px-6 py-5 text-white text-center">
+                <i data-lucide="crown" class="w-10 h-10 mx-auto mb-2"></i>
+                <h2 class="text-lg font-black mb-1">सबस्क्रिप्शन सक्रिय करा</h2>
+                <p class="text-xs text-white/80">बिलिंग, CRM आणि DocSlip वापरण्यासाठी प्लॅन आवश्यक आहे</p>
+            </div>
+            <div class="p-5 space-y-3 text-center">
+                <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-3 text-xs text-amber-700">
+                    <i data-lucide="gift" class="w-4 h-4 inline mr-1"></i> 15 दिवसांचा ट्रायल कालावधी — फक्त मेंटेनन्स शुल्क!
+                </div>
+                <a href="{{ route('subscription') }}" class="block w-full py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl font-bold text-sm hover:opacity-90 transition">
+                    प्लॅन पहा आणि सक्रिय करा
+                </a>
+                <button @click="dismiss()" class="text-xs text-gray-400 hover:text-gray-600 transition">
+                    नंतर करा (<span x-text="remaining"></span> रिमाइंडर बाकी)
+                </button>
+            </div>
+        </div>
+    </div>
+    <script>
+    function subReminder() {
+        var today = new Date().toISOString().slice(0,10);
+        var key = 'sub_reminder_' + today;
+        var count = parseInt(localStorage.getItem(key) || '0');
+        var maxPerDay = 3;
+        return {
+            showReminder: count < maxPerDay,
+            remaining: Math.max(0, maxPerDay - count - 1),
+            dismiss() {
+                count++;
+                localStorage.setItem(key, count.toString());
+                this.showReminder = false;
+            }
+        };
+    }
+    </script>
+    @endif
+    @endif
+    @endauth
+
     <script>lucide.createIcons();</script>
     @stack('scripts')
 </body>
