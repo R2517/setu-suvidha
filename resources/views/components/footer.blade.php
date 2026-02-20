@@ -43,6 +43,9 @@
                     <li class="flex items-center gap-2"><i data-lucide="phone" class="w-4 h-4 text-amber-500"></i> +91 XXXXX XXXXX</li>
                     <li class="flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4 text-amber-500"></i> महाराष्ट्र, भारत</li>
                 </ul>
+                <a href="{{ route('author') }}" class="inline-flex items-center gap-2 mt-4 text-sm text-amber-400 hover:text-amber-300 font-medium transition">
+                    <i data-lucide="user-circle" class="w-4 h-4"></i> About the Founder
+                </a>
             </div>
         </div>
         <div class="border-t border-gray-800 pt-6 flex flex-col md:flex-row items-center justify-between text-xs text-gray-500">

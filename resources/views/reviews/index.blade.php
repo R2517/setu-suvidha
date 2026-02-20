@@ -91,6 +91,28 @@
                 </a>
             </div>
         </div>
+
+        {{-- Author Bio --}}
+        <div class="mt-12 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6 sm:p-8">
+            <div class="flex items-start gap-5">
+                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shrink-0 shadow-lg shadow-amber-200/30 dark:shadow-amber-900/20">
+                    <span class="text-2xl font-black text-white">R</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 mb-1">
+                        <h4 class="text-sm font-bold text-gray-900 dark:text-white">Mr. Rajat</h4>
+                        <span class="text-[10px] bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-2 py-0.5 rounded-full font-bold">Author</span>
+                    </div>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">CSC / Maha e-Seva Kendra Sanchalak · Samaj Sevak · Website Developer</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                        सर्व रिव्ह्यू आणि मार्गदर्शक लेख Mr. Rajat यांनी लिहिलेले आहेत — जे स्वतः CSC सांचालक आहेत आणि SETU Suvidha या प्लॅटफॉर्मचे संस्थापक आहेत. त्यांचा उद्देश प्रत्येक सेतू केंद्र संचालकाला शासकीय योजनांची अचूक आणि सोप्या भाषेत माहिती देणे हा आहे.
+                    </p>
+                    <a href="{{ route('author') }}" class="inline-flex items-center gap-1.5 mt-3 text-xs font-bold text-amber-600 dark:text-amber-400 hover:text-amber-700 transition">
+                        <i data-lucide="arrow-right" class="w-3 h-3"></i> Author बद्दल अधिक जाणून घ्या
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 @endsection
