@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\AdminPlanController;
 use App\Http\Controllers\Admin\AdminTransactionController;
 use App\Http\Controllers\Admin\AdminSettingsController;
 use App\Http\Controllers\Admin\AdminFarmerCardController;
+use App\Http\Controllers\Admin\AdminContactRequestController;
 use App\Http\Controllers\PanCardController;
 use App\Http\Controllers\VoterIdController;
 use App\Http\Controllers\BandkamController;
@@ -23,6 +24,7 @@ use App\Http\Controllers\VillageInfoController;
 use App\Http\Controllers\FarmerCardPublicController;
 use App\Http\Controllers\BondFormatController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\DocslipController;
 use App\Http\Controllers\BillingController;
 use Illuminate\Support\Facades\Route;
@@ -40,6 +42,8 @@ Route::get('/privacy', [PageController::class, 'privacy'])->name('privacy');
 Route::get('/refund', [PageController::class, 'refund'])->name('refund');
 Route::get('/disclaimer', [PageController::class, 'disclaimer'])->name('disclaimer');
 Route::get('/bandkam-kamgar-info', [PageController::class, 'bandkamInfo'])->name('bandkam-info');
+Route::get('/author', [AuthorController::class, 'index'])->name('author');
+Route::post('/author/submit-request', [AuthorController::class, 'submitRequest'])->name('author.submit-request');
 
 // ─── Public: Reviews (SEO Blog) ───
 Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
@@ -248,6 +252,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/transactions', [AdminTransactionController::class, 'index'])->name('transactions');
     Route::get('/settings', [AdminSettingsController::class, 'index'])->name('settings');
     Route::get('/farmer-card-orders', [AdminFarmerCardController::class, 'index'])->name('farmer-card-orders');
+    Route::get('/contact-requests', [AdminContactRequestController::class, 'index'])->name('contact-requests');
+    Route::post('/contact-requests/{id}/status', [AdminContactRequestController::class, 'updateStatus'])->name('contact-requests.status');
+    Route::delete('/contact-requests/{id}', [AdminContactRequestController::class, 'destroy'])->name('contact-requests.destroy');
 });
 
 // ─── Razorpay Webhook (no auth, no CSRF) ───
