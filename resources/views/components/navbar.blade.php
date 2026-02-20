@@ -4,7 +4,7 @@
         <div class="flex items-center justify-between h-16">
             {{-- Logo --}}
             <a href="{{ auth()->check() ? route('dashboard') : route('home') }}" class="flex items-center gap-2.5">
-                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
+                <div class="theme-logo w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
                     <i data-lucide="landmark" class="w-5 h-5 text-white"></i>
                 </div>
                 <div>

@@ -7,54 +7,48 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-0">
         <div class="flex flex-wrap items-center gap-3">
             <a href="{{ route('dashboard') }}"
-               class="group relative inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl font-semibold text-sm
-                      bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/25
-                      hover:shadow-xl hover:shadow-amber-500/40 hover:-translate-y-0.5 hover:scale-[1.03]
+               class="theme-nav-btn group relative inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl font-semibold text-sm
+                      text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 hover:scale-[1.03]
                       active:scale-[0.98] transition-all duration-300 ease-out">
                 <i data-lucide="layout-grid" class="w-4 h-4 transition-transform duration-300 group-hover:rotate-12"></i>
                 <span>सेवा</span>
                 <span class="absolute inset-0 rounded-xl bg-white/0 group-hover:bg-white/10 transition-all duration-300"></span>
             </a>
             <a href="{{ route('wallet') }}"
-               class="group relative inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl font-semibold text-sm
-                      bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg shadow-emerald-500/25
-                      hover:shadow-xl hover:shadow-emerald-500/40 hover:-translate-y-0.5 hover:scale-[1.03]
+               class="theme-nav-btn group relative inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl font-semibold text-sm
+                      text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 hover:scale-[1.03]
                       active:scale-[0.98] transition-all duration-300 ease-out">
                 <i data-lucide="wallet" class="w-4 h-4 transition-transform duration-300 group-hover:rotate-12"></i>
                 <span>वॉलेट</span>
                 <span class="absolute inset-0 rounded-xl bg-white/0 group-hover:bg-white/10 transition-all duration-300"></span>
             </a>
             <a href="{{ route('profile') }}"
-               class="group relative inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl font-semibold text-sm
-                      bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg shadow-blue-500/25
-                      hover:shadow-xl hover:shadow-blue-500/40 hover:-translate-y-0.5 hover:scale-[1.03]
+               class="theme-nav-btn group relative inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl font-semibold text-sm
+                      text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 hover:scale-[1.03]
                       active:scale-[0.98] transition-all duration-300 ease-out">
                 <i data-lucide="user-circle" class="w-4 h-4 transition-transform duration-300 group-hover:rotate-12"></i>
                 <span>प्रोफाइल</span>
                 <span class="absolute inset-0 rounded-xl bg-white/0 group-hover:bg-white/10 transition-all duration-300"></span>
             </a>
             <a href="{{ route('billing.dashboard') }}"
-               class="group relative inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl font-semibold text-sm
-                      bg-gradient-to-r from-purple-500 to-violet-500 text-white shadow-lg shadow-purple-500/25
-                      hover:shadow-xl hover:shadow-purple-500/40 hover:-translate-y-0.5 hover:scale-[1.03]
+               class="theme-nav-btn group relative inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl font-semibold text-sm
+                      text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 hover:scale-[1.03]
                       active:scale-[0.98] transition-all duration-300 ease-out">
                 <i data-lucide="receipt" class="w-4 h-4 transition-transform duration-300 group-hover:rotate-12"></i>
                 <span>बिलिंग</span>
                 <span class="absolute inset-0 rounded-xl bg-white/0 group-hover:bg-white/10 transition-all duration-300"></span>
             </a>
             <a href="{{ route('management') }}"
-               class="group relative inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl font-semibold text-sm
-                      bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-lg shadow-rose-500/25
-                      hover:shadow-xl hover:shadow-rose-500/40 hover:-translate-y-0.5 hover:scale-[1.03]
+               class="theme-nav-btn group relative inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl font-semibold text-sm
+                      text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 hover:scale-[1.03]
                       active:scale-[0.98] transition-all duration-300 ease-out">
                 <i data-lucide="database" class="w-4 h-4 transition-transform duration-300 group-hover:rotate-12"></i>
                 <span>CRM</span>
                 <span class="absolute inset-0 rounded-xl bg-white/0 group-hover:bg-white/10 transition-all duration-300"></span>
             </a>
             <a href="{{ route('docslip.index') }}"
-               class="group relative inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl font-semibold text-sm
-                      bg-gradient-to-r from-violet-500 to-purple-600 text-white shadow-lg shadow-violet-500/25
-                      hover:shadow-xl hover:shadow-violet-500/40 hover:-translate-y-0.5 hover:scale-[1.03]
+               class="theme-nav-btn group relative inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl font-semibold text-sm
+                      text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 hover:scale-[1.03]
                       active:scale-[0.98] transition-all duration-300 ease-out">
                 <i data-lucide="clipboard-list" class="w-4 h-4 transition-transform duration-300 group-hover:rotate-12"></i>
                 <span>DocSlip</span>
@@ -108,7 +102,7 @@
         </div>
 
         {{-- News Ticker --}}
-        <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl px-4 py-2.5 mb-8 overflow-hidden flex items-center gap-3">
+        <div class="theme-ticker rounded-xl px-4 py-2.5 mb-8 overflow-hidden flex items-center gap-3">
             <span class="flex-shrink-0 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded animate-pulse">LIVE</span>
             <div class="overflow-hidden whitespace-nowrap flex-1">
                 <div class="animate-ticker-scroll inline-block">
@@ -313,11 +307,31 @@ function dashboardApp() {
         },
         initTheme() {
             this.selectedThemeIdx = parseInt(localStorage.getItem('setuThemeIdx') || '0');
+            this.applyTheme();
         },
         setTheme(idx) {
             this.selectedThemeIdx = idx;
             localStorage.setItem('setuThemeIdx', idx);
+            this.applyTheme();
             this.showThemePicker = false;
+        },
+        applyTheme() {
+            var t = this.themes[this.selectedThemeIdx] || this.themes[0];
+            var r = document.documentElement;
+            r.style.setProperty('--theme-nav', t.nav);
+            r.style.setProperty('--theme-primary', t.primary);
+            r.style.setProperty('--theme-dark-primary', t.dark_primary);
+            r.style.setProperty('--theme-dot', t.dot);
+            // Apply to quick nav buttons
+            document.querySelectorAll('.theme-nav-btn').forEach(function(btn) {
+                btn.style.background = t.nav;
+            });
+            // Apply to ticker
+            var ticker = document.querySelector('.theme-ticker');
+            if (ticker) ticker.style.background = t.nav;
+            // Apply to navbar logo
+            var logo = document.querySelector('.theme-logo');
+            if (logo) logo.style.background = t.nav;
         },
         openCustomize() {
             this.showCustomize = true;
@@ -373,6 +387,8 @@ function dashboardApp() {
 .sortable-ghost { opacity: 0.3; }
 .sortable-chosen { box-shadow: 0 4px 20px rgba(245,158,11,0.4); border-color: #f59e0b !important; }
 .drag-handle { touch-action: none; }
+.theme-nav-btn { background: var(--theme-nav, linear-gradient(135deg,#d97706,#f59e0b)); transition: all 0.3s ease; }
+.theme-ticker { background: var(--theme-nav, linear-gradient(135deg,#2563eb,#4f46e5)); }
 </style>
 @endpush
 @endsection
