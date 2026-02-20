@@ -219,77 +219,76 @@
         </div>
     </div>
     @endif
-</div>
 
-{{-- ═══ CONFIRMATION MODAL ═══ --}}
-<div x-show="showConfirm" x-transition.opacity class="fixed inset-0 z-[100] flex items-center justify-center p-4" style="display:none">
-    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" @click="showConfirm=false"></div>
-    <div class="relative bg-white dark:bg-gray-900 rounded-2xl w-full max-w-sm shadow-2xl border border-gray-200 dark:border-gray-800 overflow-hidden" @click.stop>
-        <div class="bg-gradient-to-br from-indigo-500 to-purple-600 px-6 py-4 text-white">
-            <h2 class="text-base font-black flex items-center gap-2"><i data-lucide="shield-check" class="w-5 h-5"></i> पेमेंट पुष्टी</h2>
-        </div>
-        <div class="p-5 space-y-3">
-            <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 space-y-2">
-                <div class="flex justify-between text-xs">
-                    <span class="text-gray-500">प्लॅन</span>
-                    <span class="font-bold text-gray-900 dark:text-white" x-text="confirmPlan"></span>
-                </div>
-                <div class="flex justify-between text-xs">
-                    <span class="text-gray-500">प्लॅन किंमत</span>
-                    <span class="font-bold text-gray-900 dark:text-white" x-text="'₹' + confirmPrice"></span>
-                </div>
-                <div x-show="confirmAction === 'activate'" class="flex justify-between text-xs">
-                    <span class="text-gray-500">ट्रायल कालावधी</span>
-                    <span class="font-bold text-amber-600" x-text="confirmTrialDays + ' दिवस'"></span>
-                </div>
-                <div class="border-t border-gray-200 dark:border-gray-700 pt-2 flex justify-between text-sm">
-                    <span class="font-bold text-gray-700 dark:text-gray-300" x-text="confirmAction === 'activate' ? 'आता कापले जाईल (मेंटेनन्स):' : 'आता कापले जाईल:'"></span>
-                    <span class="font-black text-red-600 text-base" x-text="'₹' + confirmDebit"></span>
-                </div>
+    {{-- ═══ CONFIRMATION MODAL ═══ --}}
+    <div x-show="showConfirm" x-transition.opacity class="fixed inset-0 z-[100] flex items-center justify-center p-4" style="display:none">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" @click="showConfirm=false"></div>
+        <div class="relative bg-white dark:bg-gray-900 rounded-2xl w-full max-w-sm shadow-2xl border border-gray-200 dark:border-gray-800 overflow-hidden" @click.stop>
+            <div class="bg-gradient-to-br from-indigo-500 to-purple-600 px-6 py-4 text-white">
+                <h2 class="text-base font-black flex items-center gap-2"><i data-lucide="shield-check" class="w-5 h-5"></i> पेमेंट पुष्टी</h2>
             </div>
-
-            <div class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-3 flex items-center justify-between">
-                <span class="text-xs font-bold text-blue-700">वॉलेट शिल्लक</span>
-                <span class="text-sm font-black" :class="walletBalance >= confirmDebit ? 'text-green-600' : 'text-red-600'" x-text="'₹' + walletBalance.toFixed(2)"></span>
-            </div>
-
-            <template x-if="confirmAction === 'activate' && confirmMaint > 0">
-                <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-2.5 text-[11px] text-amber-700 flex items-start gap-1.5">
-                    <i data-lucide="info" class="w-3.5 h-3.5 mt-0.5 shrink-0"></i>
-                    <span>ट्रायल कालावधीत फक्त ₹<span x-text="confirmMaint"></span> मेंटेनन्स कापले जाईल. ट्रायल संपल्यानंतर ₹<span x-text="confirmPrice"></span> कापले जातील.</span>
-                </div>
-            </template>
-
-            <template x-if="walletBalance >= confirmDebit">
-                <div class="space-y-2 pt-1">
-                    <form :action="confirmAction === 'activate' ? '{{ route('subscription.activate') }}' : '{{ route('subscription.change') }}'" method="POST" x-ref="confirmForm">
-                        @csrf
-                        <input type="hidden" name="plan_id" :value="confirmPlanId">
-                        <button type="submit" class="w-full py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-bold text-sm hover:opacity-90 transition flex items-center justify-center gap-2">
-                            <i data-lucide="check-circle" class="w-4 h-4"></i>
-                            <span x-text="'₹' + confirmDebit + ' कापा आणि सक्रिय करा'"></span>
-                        </button>
-                    </form>
-                    <button @click="showConfirm=false" class="w-full py-2.5 bg-gray-100 dark:bg-gray-800 text-gray-600 rounded-xl text-sm font-medium transition">रद्द करा</button>
-                </div>
-            </template>
-
-            <template x-if="walletBalance < confirmDebit">
-                <div class="space-y-2 pt-1">
-                    <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-3 text-center">
-                        <i data-lucide="alert-triangle" class="w-5 h-5 text-red-500 mx-auto mb-1"></i>
-                        <p class="text-xs font-bold text-red-700">अपुरी शिल्लक!</p>
-                        <p class="text-[11px] text-red-600">आवश्यक: ₹<span x-text="confirmDebit"></span> | उपलब्ध: ₹<span x-text="walletBalance.toFixed(2)"></span></p>
+            <div class="p-5 space-y-3">
+                <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 space-y-2">
+                    <div class="flex justify-between text-xs">
+                        <span class="text-gray-500">प्लॅन</span>
+                        <span class="font-bold text-gray-900 dark:text-white" x-text="confirmPlan"></span>
                     </div>
-                    <a href="{{ route('wallet') }}" class="block w-full py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl font-bold text-sm text-center hover:opacity-90 transition">
-                        <i data-lucide="wallet" class="w-4 h-4 inline mr-1"></i> वॉलेट रिचार्ज करा
-                    </a>
-                    <button @click="showConfirm=false" class="w-full py-2.5 bg-gray-100 dark:bg-gray-800 text-gray-600 rounded-xl text-sm font-medium transition">रद्द करा</button>
+                    <div class="flex justify-between text-xs">
+                        <span class="text-gray-500">प्लॅन किंमत</span>
+                        <span class="font-bold text-gray-900 dark:text-white" x-text="'₹' + confirmPrice"></span>
+                    </div>
+                    <div x-show="confirmAction === 'activate'" class="flex justify-between text-xs">
+                        <span class="text-gray-500">ट्रायल कालावधी</span>
+                        <span class="font-bold text-amber-600" x-text="confirmTrialDays + ' दिवस'"></span>
+                    </div>
+                    <div class="border-t border-gray-200 dark:border-gray-700 pt-2 flex justify-between text-sm">
+                        <span class="font-bold text-gray-700 dark:text-gray-300" x-text="confirmAction === 'activate' ? 'आता कापले जाईल (मेंटेनन्स):' : 'आता कापले जाईल:'"></span>
+                        <span class="font-black text-red-600 text-base" x-text="'₹' + confirmDebit"></span>
+                    </div>
                 </div>
-            </template>
+
+                <div class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-3 flex items-center justify-between">
+                    <span class="text-xs font-bold text-blue-700">वॉलेट शिल्लक</span>
+                    <span class="text-sm font-black" :class="walletBalance >= confirmDebit ? 'text-green-600' : 'text-red-600'" x-text="'₹' + walletBalance.toFixed(2)"></span>
+                </div>
+
+                <template x-if="confirmAction === 'activate' && confirmMaint > 0">
+                    <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-2.5 text-[11px] text-amber-700 flex items-start gap-1.5">
+                        <i data-lucide="info" class="w-3.5 h-3.5 mt-0.5 shrink-0"></i>
+                        <span>ट्रायल कालावधीत फक्त ₹<span x-text="confirmMaint"></span> मेंटेनन्स कापले जाईल. ट्रायल संपल्यानंतर ₹<span x-text="confirmPrice"></span> कापले जातील.</span>
+                    </div>
+                </template>
+
+                <template x-if="walletBalance >= confirmDebit">
+                    <div class="space-y-2 pt-1">
+                        <form :action="confirmAction === 'activate' ? '{{ route('subscription.activate') }}' : '{{ route('subscription.change') }}'" method="POST">
+                            @csrf
+                            <input type="hidden" name="plan_id" :value="confirmPlanId">
+                            <button type="submit" class="w-full py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-bold text-sm hover:opacity-90 transition flex items-center justify-center gap-2">
+                                <i data-lucide="check-circle" class="w-4 h-4"></i>
+                                <span x-text="'₹' + confirmDebit + ' कापा आणि सक्रिय करा'"></span>
+                            </button>
+                        </form>
+                        <button @click="showConfirm=false" class="w-full py-2.5 bg-gray-100 dark:bg-gray-800 text-gray-600 rounded-xl text-sm font-medium transition">रद्द करा</button>
+                    </div>
+                </template>
+
+                <template x-if="walletBalance < confirmDebit">
+                    <div class="space-y-2 pt-1">
+                        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-3 text-center">
+                            <i data-lucide="alert-triangle" class="w-5 h-5 text-red-500 mx-auto mb-1"></i>
+                            <p class="text-xs font-bold text-red-700">अपुरी शिल्लक!</p>
+                            <p class="text-[11px] text-red-600">आवश्यक: ₹<span x-text="confirmDebit"></span> | उपलब्ध: ₹<span x-text="walletBalance.toFixed(2)"></span></p>
+                        </div>
+                        <a href="{{ route('wallet') }}" class="block w-full py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl font-bold text-sm text-center hover:opacity-90 transition">
+                            <i data-lucide="wallet" class="w-4 h-4 inline mr-1"></i> वॉलेट रिचार्ज करा
+                        </a>
+                        <button @click="showConfirm=false" class="w-full py-2.5 bg-gray-100 dark:bg-gray-800 text-gray-600 rounded-xl text-sm font-medium transition">रद्द करा</button>
+                    </div>
+                </template>
+            </div>
         </div>
     </div>
-</div>
 </div>
 
 <script>
