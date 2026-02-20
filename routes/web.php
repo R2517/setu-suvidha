@@ -92,7 +92,9 @@ Route::middleware(['auth'])->group(function () {
     // Subscription
     Route::get('/subscription', [SubscriptionController::class, 'index'])->name('subscription');
     Route::post('/subscription/activate', [SubscriptionController::class, 'activate'])->name('subscription.activate');
+    Route::get('/subscription/activate', fn() => redirect()->route('subscription'))->name('subscription.activate.redirect');
     Route::post('/subscription/change', [SubscriptionController::class, 'changePlan'])->name('subscription.change');
+    Route::get('/subscription/change', fn() => redirect()->route('subscription'));
 
     // ─── Subscription-Protected Features ───
     // Billing System
