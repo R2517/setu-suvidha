@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\AdminTransactionController;
 use App\Http\Controllers\Admin\AdminSettingsController;
 use App\Http\Controllers\Admin\AdminFarmerCardController;
 use App\Http\Controllers\Admin\AdminContactRequestController;
+use App\Http\Controllers\VleDirectoryController;
 use App\Http\Controllers\PanCardController;
 use App\Http\Controllers\VoterIdController;
 use App\Http\Controllers\BandkamController;
@@ -44,6 +45,8 @@ Route::get('/disclaimer', [PageController::class, 'disclaimer'])->name('disclaim
 Route::get('/bandkam-kamgar-info', [PageController::class, 'bandkamInfo'])->name('bandkam-info');
 Route::get('/author', [AuthorController::class, 'index'])->name('author');
 Route::post('/author/submit-request', [AuthorController::class, 'submitRequest'])->name('author.submit-request');
+Route::get('/vle-directory', [VleDirectoryController::class, 'index'])->name('vle.directory');
+Route::get('/vle/{id}', [VleDirectoryController::class, 'show'])->name('vle.show');
 
 // ─── Public: Printable Formats ───
 Route::get('/print/nirgam-utara-application', function () {

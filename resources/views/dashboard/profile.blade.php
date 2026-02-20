@@ -125,7 +125,61 @@
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">CSC ID</label>
                         <input type="text" name="csc_id" value="{{ old('csc_id', $profile->csc_id ?? '') }}" maxlength="50" placeholder="CSC केंद्र ID" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition">
                     </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">SETU ID</label>
+                        <input type="text" name="setu_id" value="{{ old('setu_id', $profile->setu_id ?? '') }}" maxlength="50" placeholder="SETU केंद्र ID" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">पूर्ण नाव (मराठी)</label>
+                        <input type="text" name="full_name_mr" value="{{ old('full_name_mr', $profile->full_name_mr ?? '') }}" placeholder="मराठीत नाव" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">WhatsApp नंबर</label>
+                        <div class="flex items-center gap-2">
+                            <input type="text" name="whatsapp_number" value="{{ old('whatsapp_number', $profile->whatsapp_number ?? '') }}" maxlength="15" placeholder="WhatsApp नंबर" class="flex-1 px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition">
+                            <label class="flex items-center gap-1.5 text-xs text-gray-500 shrink-0"><input type="checkbox" name="whatsapp_same" value="1" {{ old('whatsapp_same', $profile->whatsapp_same ?? false) ? 'checked' : '' }} class="rounded text-amber-500"> मोबाईलसारखा</label>
+                        </div>
+                    </div>
                 </div>
+
+                {{-- Bank & Payment Details --}}
+                <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800">
+                    <h3 class="text-sm font-bold text-gray-700 dark:text-gray-300 mb-4 flex items-center gap-2"><i data-lucide="landmark" class="w-4 h-4 text-blue-500"></i> बँक व पेमेंट माहिती</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">बँक नाव</label>
+                            <input type="text" name="bank_name" value="{{ old('bank_name', $profile->bank_name ?? '') }}" placeholder="उदा. SBI" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">खाते क्रमांक</label>
+                            <input type="text" name="account_number" value="{{ old('account_number', $profile->account_number ?? '') }}" placeholder="Account Number" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">IFSC Code</label>
+                            <input type="text" name="ifsc_code" value="{{ old('ifsc_code', $profile->ifsc_code ?? '') }}" maxlength="11" placeholder="SBIN0001234" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition uppercase">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">UPI ID</label>
+                            <input type="text" name="upi_id" value="{{ old('upi_id', $profile->upi_id ?? '') }}" placeholder="name@upi" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition">
+                        </div>
+                    </div>
+                </div>
+
+                {{-- About Center --}}
+                <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800">
+                    <h3 class="text-sm font-bold text-gray-700 dark:text-gray-300 mb-4 flex items-center gap-2"><i data-lucide="info" class="w-4 h-4 text-amber-500"></i> केंद्राबद्दल माहिती</h3>
+                    <div class="grid grid-cols-1 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">केंद्राबद्दल (About Center)</label>
+                            <textarea name="about_center" rows="3" placeholder="तुमच्या सेवा केंद्राबद्दल थोडक्यात लिहा... Public profile वर दिसेल." class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition resize-none">{{ old('about_center', $profile->about_center ?? '') }}</textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Google Map Link</label>
+                            <input type="url" name="google_map_link" value="{{ old('google_map_link', $profile->google_map_link ?? '') }}" placeholder="https://maps.google.com/..." class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition">
+                        </div>
+                    </div>
+                </div>
+
                 <div class="mt-8">
                     <button type="submit" class="btn-primary">💾 सेव्ह करा</button>
                 </div>

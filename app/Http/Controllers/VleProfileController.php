@@ -23,6 +23,7 @@ class VleProfileController extends Controller
     {
         $request->validate([
             'full_name' => 'required|string|max:255',
+            'full_name_mr' => 'nullable|string|max:255',
             'mobile' => 'nullable|string|max:15',
             'shop_name' => 'nullable|string|max:255',
             'shop_type' => 'nullable|in:setu,csc,other',
@@ -31,12 +32,22 @@ class VleProfileController extends Controller
             'taluka' => 'nullable|string|max:100',
             'gst_number' => 'nullable|string|max:20',
             'csc_id' => 'nullable|string|max:50',
+            'setu_id' => 'nullable|string|max:50',
+            'whatsapp_number' => 'nullable|string|max:15',
+            'whatsapp_same' => 'nullable|boolean',
+            'bank_name' => 'nullable|string|max:100',
+            'account_number' => 'nullable|string|max:30',
+            'ifsc_code' => 'nullable|string|max:11',
+            'upi_id' => 'nullable|string|max:100',
+            'about_center' => 'nullable|string|max:500',
+            'google_map_link' => 'nullable|url|max:500',
         ]);
 
         $profile = $request->user()->profile;
         $profile->update($request->only([
-            'full_name', 'mobile', 'shop_name', 'shop_type', 'address', 'district', 'taluka',
-            'gst_number', 'csc_id',
+            'full_name', 'full_name_mr', 'mobile', 'shop_name', 'shop_type', 'address', 'district', 'taluka',
+            'gst_number', 'csc_id', 'setu_id', 'whatsapp_number', 'whatsapp_same',
+            'bank_name', 'account_number', 'ifsc_code', 'upi_id', 'about_center', 'google_map_link',
         ]));
 
         $request->user()->update(['name' => $request->full_name]);
@@ -133,7 +144,7 @@ class VleProfileController extends Controller
     private function calculateCompletion(?Profile $profile): int
     {
         if (!$profile) return 0;
-        $fields = ['full_name', 'mobile', 'shop_name', 'shop_type', 'address', 'district', 'taluka', 'gst_number', 'csc_id', 'logo_url'];
+        $fields = ['full_name', 'mobile', 'shop_name', 'shop_type', 'address', 'district', 'taluka', 'gst_number', 'csc_id', 'logo_url', 'whatsapp_number', 'bank_name', 'upi_id', 'about_center'];
         $filled = 0;
         foreach ($fields as $f) {
             if (!empty($profile->$f)) $filled++;
