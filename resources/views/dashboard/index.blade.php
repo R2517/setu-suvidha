@@ -70,18 +70,37 @@
                            active:scale-[0.98] transition-all duration-300 ease-out">
                     <i data-lucide="palette" class="w-4 h-4 text-amber-500 transition-transform duration-300 group-hover:rotate-12"></i>
                     <span class="hidden sm:inline">थीम</span>
+                    <span class="bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 text-[10px] font-bold px-1.5 py-0.5 rounded-full" x-text="themes.length"></span>
                 </button>
-                <div x-show="showThemePicker" @click.away="showThemePicker = false" x-transition
-                     class="absolute right-0 top-12 w-64 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 p-4 z-50">
-                    <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-3">थीम निवडा</p>
-                    <div class="grid grid-cols-6 gap-2">
-                        <template x-for="(theme, idx) in themes" :key="idx">
-                            <button @click="setTheme(idx)" class="w-8 h-8 rounded-full border-2 transition-all hover:scale-110"
-                                :style="{ backgroundColor: theme.dot }"
-                                :class="selectedThemeIdx === idx ? 'border-gray-900 dark:border-white scale-110 ring-2 ring-offset-2 ring-gray-400' : 'border-transparent'">
-                            </button>
-                        </template>
-                    </div>
+                <div x-show="showThemePicker" @click.away="showThemePicker = false"
+                     x-transition:enter="transition ease-out duration-200"
+                     x-transition:enter-start="opacity-0 scale-95 -translate-y-2"
+                     x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                     x-transition:leave="transition ease-in duration-150"
+                     x-transition:leave-start="opacity-100 scale-100"
+                     x-transition:leave-end="opacity-0 scale-95"
+                     class="absolute right-0 top-12 w-80 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 p-4 z-50 max-h-[70vh] overflow-y-auto">
+                    <p class="text-xs font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                        <i data-lucide="palette" class="w-3.5 h-3.5 text-amber-500"></i> थीम निवडा
+                    </p>
+                    <template x-for="grp in themeGroups" :key="grp.key">
+                        <div class="mb-3 last:mb-0">
+                            <p class="text-[10px] font-bold uppercase tracking-wider mb-1.5 flex items-center gap-1.5"
+                               :class="grp.labelClass" x-text="grp.icon + ' ' + grp.label"></p>
+                            <div class="flex flex-wrap gap-1.5">
+                                <template x-for="t in grp.items" :key="t.idx">
+                                    <button @click="setTheme(t.idx)"
+                                        class="relative h-8 rounded-lg border-2 transition-all duration-200 hover:scale-105 hover:shadow-md flex items-center px-2.5 gap-1.5"
+                                        :style="{ background: t.theme.nav }"
+                                        :class="selectedThemeIdx === t.idx ? 'border-white ring-2 ring-offset-1 ring-gray-400 dark:ring-gray-500 scale-105 shadow-lg' : 'border-transparent'"
+                                        :title="t.theme.name">
+                                        <span class="text-white text-[10px] font-bold drop-shadow-sm" x-text="t.theme.name"></span>
+                                        <span x-show="selectedThemeIdx === t.idx" class="text-white text-[10px]">&#10003;</span>
+                                    </button>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
                 </div>
             </div>
         </div>
@@ -310,6 +329,24 @@ function dashboardApp() {
         themes: @json(config('themes')),
         get currentTheme() {
             return this.themes[this.selectedThemeIdx] || this.themes[0];
+        },
+        get themeGroups() {
+            var groupDefs = [
+                { key: 'fresh', label: 'Fresh', icon: '🌿', labelClass: 'text-emerald-600 dark:text-emerald-400' },
+                { key: 'cool',  label: 'Cool',  icon: '❄️', labelClass: 'text-blue-600 dark:text-blue-400' },
+                { key: 'warm',  label: 'Warm',  icon: '🔥', labelClass: 'text-orange-600 dark:text-orange-400' },
+                { key: 'royal', label: 'Royal', icon: '💜', labelClass: 'text-purple-600 dark:text-purple-400' },
+                { key: 'dark',  label: 'Dark',  icon: '🌑', labelClass: 'text-gray-600 dark:text-gray-400' },
+            ];
+            return groupDefs.map(function(g) {
+                g.items = [];
+                for (var i = 0; i < this.themes.length; i++) {
+                    if (this.themes[i].group === g.key) {
+                        g.items.push({ idx: i, theme: this.themes[i] });
+                    }
+                }
+                return g;
+            }.bind(this));
         },
         initTheme() {
             this.selectedThemeIdx = parseInt(localStorage.getItem('setuThemeIdx') || '0');
