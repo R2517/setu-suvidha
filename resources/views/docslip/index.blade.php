@@ -219,7 +219,7 @@
 </div>
 
 {{-- Hidden Print Frame --}}
-<iframe id="docslip-print-frame" style="position:fixed;top:-9999px;left:-9999px;width:80mm;height:0;border:0;"></iframe>
+<iframe id="docslip-print-frame" style="position:fixed;top:-9999px;left:-9999px;width:80mm;height:1px;border:0;visibility:hidden;"></iframe>
 
 @endsection
 
@@ -353,9 +353,20 @@ function docslipApp() {
                 `<div class="svc-item">${i + 1}. ${s.name_mr} <span style="color:#888;font-size:10px">(${s.name_en})</span></div>`
             ).join('');
 
+            const docsWithRemark = d.documents.filter(doc => doc.remark).length;
             const docsHTML = d.documents.map((doc, i) =>
                 `<div class="doc-item"><span class="doc-num">${i + 1}.</span> ${doc.name_mr}${doc.remark ? '<div style="font-size:9px;color:#555;padding-left:14px;font-style:italic">→ ' + doc.remark + '</div>' : ''}</div>`
             ).join('');
+
+            // Estimate page height in mm to prevent long blank preview
+            let pageH = 30; // header + date
+            pageH += (d.customerName || d.customerMobile) ? 8 : 0;
+            pageH += 6 + (d.services.length * 5); // services section
+            pageH += 6 + (d.documents.length * 5) + (docsWithRemark * 4); // docs section
+            pageH += 8; // total docs line
+            pageH += d.remark ? 15 : 0; // remark box
+            pageH += 20; // footer
+            pageH = Math.max(pageH, 60); // minimum 60mm
 
             const customerHTML = (d.customerName || d.customerMobile) ? `
             <div class="cust-info">
@@ -370,8 +381,9 @@ function docslipApp() {
             <div class="remark-box">${d.remark}</div>` : '';
 
             return `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
-@page{size:${d.paperWidth} auto;margin:0}
+@page{size:${d.paperWidth} ${pageH}mm;margin:0}
 *{margin:0;padding:0;box-sizing:border-box}
+html,body{width:${d.paperWidth};height:${pageH}mm;overflow:hidden}
 body{font-family:'Noto Sans Devanagari','Segoe UI',sans-serif;font-size:12px;line-height:1.5;width:${d.paperWidth};padding:3mm;color:#000;background:#fff}
 .header{text-align:center;border-bottom:2px dashed #000;padding-bottom:6px;margin-bottom:6px}
 .shop-name{font-size:15px;font-weight:bold;letter-spacing:0.5px}
@@ -390,7 +402,7 @@ body{font-family:'Noto Sans Devanagari','Segoe UI',sans-serif;font-size:12px;lin
 .remark-box{border:1px solid #000;padding:3px 4px;font-size:10px;font-style:italic;margin-top:2px}
 .footer{text-align:center;border-top:2px dashed #000;padding-top:5px;margin-top:8px;font-size:9px}
 .footer .brand{font-weight:bold;font-size:10px;margin-top:2px}
-@media print{body{width:${d.paperWidth}}.no-print{display:none!important}}
+@media print{@page{size:${d.paperWidth} ${pageH}mm;margin:0}html,body{width:${d.paperWidth};height:auto;overflow:visible}.no-print{display:none!important}}
 </style></head><body>
 <div class="header">
 <div class="shop-name">${d.shopName}</div>
