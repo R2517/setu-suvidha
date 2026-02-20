@@ -51,6 +51,15 @@
                 <span>CRM</span>
                 <span class="absolute inset-0 rounded-xl bg-white/0 group-hover:bg-white/10 transition-all duration-300"></span>
             </a>
+            <a href="{{ route('docslip.index') }}"
+               class="group relative inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl font-semibold text-sm
+                      bg-gradient-to-r from-violet-500 to-purple-600 text-white shadow-lg shadow-violet-500/25
+                      hover:shadow-xl hover:shadow-violet-500/40 hover:-translate-y-0.5 hover:scale-[1.03]
+                      active:scale-[0.98] transition-all duration-300 ease-out">
+                <i data-lucide="clipboard-list" class="w-4 h-4 transition-transform duration-300 group-hover:rotate-12"></i>
+                <span>DocSlip</span>
+                <span class="absolute inset-0 rounded-xl bg-white/0 group-hover:bg-white/10 transition-all duration-300"></span>
+            </a>
 
             {{-- Theme Picker --}}
             <div class="relative ml-auto">
