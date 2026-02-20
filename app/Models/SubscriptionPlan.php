@@ -10,15 +10,21 @@ class SubscriptionPlan extends Model
 
     protected $fillable = [
         'name',
+        'plan_type',
         'price',
         'duration_days',
         'features',
+        'discount_percent',
+        'trial_days',
+        'razorpay_plan_id',
         'is_active',
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
+        'discount_percent' => 'decimal:2',
         'features' => 'array',
         'is_active' => 'boolean',
+        'trial_days' => 'integer',
     ];
 }

@@ -16,11 +16,16 @@ class VleSubscription extends Model
         'end_date',
         'status',
         'razorpay_payment_id',
+        'razorpay_subscription_id',
+        'trial_ends_at',
+        'auto_renew',
     ];
 
     protected $casts = [
         'start_date' => 'datetime',
         'end_date' => 'datetime',
+        'trial_ends_at' => 'datetime',
+        'auto_renew' => 'boolean',
     ];
 
     public function user(): BelongsTo

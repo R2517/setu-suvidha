@@ -13,6 +13,7 @@ class FormPricing extends Model
         'form_name',
         'price',
         'is_active',
+        'audience',
     ];
 
     protected $casts = [
