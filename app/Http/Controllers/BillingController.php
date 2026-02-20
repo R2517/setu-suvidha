@@ -736,6 +736,14 @@ class BillingController extends Controller
         return response()->json(['success' => true]);
     }
 
+    public function servicesJson(Request $request)
+    {
+        $services = BillingService::where('user_id', $request->user()->id)
+            ->where('is_active', true)->orderBy('name')
+            ->select('id', 'name', 'default_price', 'cost_price')->get();
+        return response()->json($services);
+    }
+
     public function csvUploadServices(Request $request)
     {
         $request->validate([

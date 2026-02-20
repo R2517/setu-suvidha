@@ -135,6 +135,7 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/services/{id}', [BillingController::class, 'updateService'])->name('services.update');
         Route::delete('/services/{id}', [BillingController::class, 'destroyService'])->name('services.delete');
         Route::post('/services/csv-upload', [BillingController::class, 'csvUploadServices'])->name('services.csv-upload');
+        Route::get('/services-json', [BillingController::class, 'servicesJson'])->name('services.json');
     });
 
     // Forms — Generic Engine (C4: proper controller routing)
