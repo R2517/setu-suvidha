@@ -207,13 +207,18 @@
                         </div>
                         <div x-show="expanded" x-collapse class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                             @foreach($documents as $doc)
-                            <label class="flex items-center gap-2 px-3 py-2 rounded-lg border cursor-pointer transition text-sm"
+                            <label class="flex items-start gap-2 px-3 py-2 rounded-lg border cursor-pointer transition text-sm"
                                 :class="selectedDocs.includes({{ $doc->id }}) ? 'border-orange-300 bg-orange-50 dark:border-orange-700 dark:bg-orange-900/20' : 'border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800'">
                                 <input type="checkbox" value="{{ $doc->id }}"
                                     :checked="selectedDocs.includes({{ $doc->id }})"
                                     @change="toggleDoc({{ $doc->id }})"
-                                    class="rounded border-gray-300 text-orange-500 focus:ring-orange-500/20">
-                                <span class="text-gray-700 dark:text-gray-300">{{ $doc->name_mr }}</span>
+                                    class="rounded border-gray-300 text-orange-500 focus:ring-orange-500/20 mt-0.5">
+                                <div>
+                                    <span class="text-gray-700 dark:text-gray-300">{{ $doc->name_mr }}</span>
+                                    @if($doc->remark)
+                                    <span class="block text-[10px] text-purple-500 mt-0.5">📝 {{ $doc->remark }}</span>
+                                    @endif
+                                </div>
                             </label>
                             @endforeach
                         </div>

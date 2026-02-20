@@ -412,7 +412,6 @@ ${remarkHTML}
 <div class="brand">🏛️ SETU Suvidha</div>
 <div style="font-size:8px">www.setusuvidha.com</div>
 </div>
-<div style="page-break-after:always"></div>
 </body></html>`;
         },
 

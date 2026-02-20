@@ -153,6 +153,7 @@ class DocslipController extends Controller
             'user_id' => $request->user()->id,
             'name_mr' => $request->name_mr,
             'name_en' => $request->name_en,
+            'remark' => $request->remark,
             'sort_order' => $maxSort + 1,
         ]);
 
