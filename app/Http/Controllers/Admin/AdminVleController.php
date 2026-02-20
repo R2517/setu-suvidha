@@ -48,7 +48,7 @@ class AdminVleController extends Controller
         $subscription = VleSubscription::where('user_id', $profile->user_id)
             ->where('status', 'active')->with('plan')->first();
         $salesCount = DB::table('billing_sales')->where('user_id', $profile->user_id)->count();
-        $salesTotal = DB::table('billing_sales')->where('user_id', $profile->user_id)->sum('total');
+        $salesTotal = DB::table('billing_sales')->where('user_id', $profile->user_id)->sum('total_amount');
 
         return view('admin.vle-profile', compact(
             'profile', 'transactions', 'formCount', 'subscription', 'salesCount', 'salesTotal'
