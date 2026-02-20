@@ -12,9 +12,9 @@
             <p class="text-sm text-gray-500 mt-1">आजचे व्यवसाय सारांश</p>
         </div>
         <div class="flex flex-wrap gap-2">
-            <a href="{{ route('billing.sales') }}" class="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-sm font-bold transition flex items-center gap-1.5"><i data-lucide="plus" class="w-4 h-4"></i> Add Sale</a>
-            <a href="{{ route('billing.expenses') }}" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl text-sm font-bold transition flex items-center gap-1.5"><i data-lucide="minus" class="w-4 h-4"></i> Add Expense</a>
-            <a href="{{ route('billing.kiosk-book') }}" class="px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-xl text-sm font-bold transition flex items-center gap-1.5"><i data-lucide="landmark" class="w-4 h-4"></i> Kiosk</a>
+            <button @click="showSaleModal = true" class="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-sm font-bold transition flex items-center gap-1.5"><i data-lucide="plus" class="w-4 h-4"></i> Add Sale</button>
+            <button @click="showExpenseModal = true" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl text-sm font-bold transition flex items-center gap-1.5"><i data-lucide="minus" class="w-4 h-4"></i> Add Expense</button>
+            <button @click="showKioskModal = true" class="px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-xl text-sm font-bold transition flex items-center gap-1.5"><i data-lucide="landmark" class="w-4 h-4"></i> Kiosk</button>
             <a href="{{ route('billing.reports') }}" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-xl text-sm font-bold transition flex items-center gap-1.5"><i data-lucide="bar-chart-3" class="w-4 h-4"></i> Reports</a>
         </div>
     </div>
@@ -162,6 +162,151 @@
         @endif
     </div>
 
+    {{-- ═══════════ ADD SALE MODAL ═══════════ --}}
+    <div x-show="showSaleModal" x-transition.opacity class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display:none">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="showSaleModal = false"></div>
+        <div class="relative bg-white dark:bg-gray-900 rounded-2xl w-full max-w-lg shadow-2xl border border-gray-200 dark:border-gray-800 max-h-[90vh] overflow-y-auto" @click.stop>
+            <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 sticky top-0 bg-white dark:bg-gray-900 rounded-t-2xl z-10">
+                <h2 class="text-lg font-bold flex items-center gap-2"><i data-lucide="plus-circle" class="w-5 h-5 text-emerald-500"></i> Quick Sale</h2>
+            </div>
+            <div class="p-6">
+                <div class="grid grid-cols-2 gap-3 mb-4">
+                    <input x-model="saleForm.customer_name" type="text" placeholder="Customer Name" class="px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm">
+                    <input x-model="saleForm.customer_phone" type="text" placeholder="Mobile" maxlength="10" class="px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm">
+                </div>
+                <div class="flex items-center justify-between mb-2">
+                    <label class="text-sm font-bold text-gray-700 dark:text-gray-300">Services</label>
+                    <button type="button" @click="saleForm.items.push({service_name:'',quantity:1,unit_price:0,cost_price:0})" class="text-xs text-emerald-500 font-bold">+ Add Item</button>
+                </div>
+                <template x-for="(item, i) in saleForm.items" :key="i">
+                    <div class="flex items-center gap-2 mb-2">
+                        <div class="flex-1 relative" x-data="{ open: false, q: item.service_name }">
+                            <input type="text" x-model="q" @focus="open = true" @click.away="open = false"
+                                @input="open = true; item.service_name = q"
+                                placeholder="Search service..." class="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm">
+                            <div x-show="open && q.length >= 1" class="absolute z-30 left-0 right-0 top-full mt-1 bg-white dark:bg-gray-900 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 max-h-40 overflow-y-auto">
+                                @foreach($services as $svc)
+                                <button type="button"
+                                    x-show="'{{ strtolower($svc->name) }}'.includes(q.toLowerCase()) || q === ''"
+                                    @click="q = '{{ $svc->name }}'; item.service_name = '{{ $svc->name }}'; item.unit_price = {{ $svc->default_price }}; item.cost_price = {{ $svc->cost_price }}; open = false"
+                                    class="block w-full text-left px-3 py-2 text-xs hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition">
+                                    <span class="font-medium text-gray-900 dark:text-white">{{ $svc->name }}</span>
+                                    <span class="text-gray-400 ml-1">₹{{ number_format($svc->default_price, 0) }}</span>
+                                </button>
+                                @endforeach
+                            </div>
+                        </div>
+                        <input x-model.number="item.quantity" type="number" min="1" class="w-14 px-2 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm text-center" placeholder="Qty">
+                        <input x-model.number="item.unit_price" type="number" min="0" class="w-20 px-2 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm" placeholder="₹">
+                        <span class="text-xs font-bold text-gray-600 w-16 text-right" x-text="'₹' + (item.quantity * item.unit_price)"></span>
+                        <button type="button" @click="saleForm.items.splice(i, 1)" x-show="saleForm.items.length > 1" class="p-1 text-red-400"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+                    </div>
+                </template>
+                <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-3 mb-4 space-y-1.5 mt-3">
+                    <div class="flex justify-between text-sm"><span class="text-gray-500">Subtotal:</span><span class="font-bold" x-text="'₹' + saleSubtotal()"></span></div>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-gray-500">Discount:</span>
+                        <input x-model.number="saleForm.discount_amount" type="number" min="0" class="w-20 px-2 py-1 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-right">
+                    </div>
+                    <div class="flex justify-between text-sm font-bold border-t border-gray-200 dark:border-gray-700 pt-1.5"><span>Total:</span><span class="text-emerald-600" x-text="'₹' + saleTotal()"></span></div>
+                </div>
+                <div class="grid grid-cols-3 gap-2 mb-3">
+                    <template x-for="mode in ['cash', 'online', 'split']" :key="mode">
+                        <button type="button" @click="saleForm.payment_mode = mode"
+                            :class="saleForm.payment_mode === mode ? 'bg-emerald-500 text-white ring-2 ring-emerald-500/30' : 'bg-gray-100 dark:bg-gray-800 text-gray-600'"
+                            class="px-3 py-2 rounded-xl text-sm font-bold transition capitalize" x-text="mode"></button>
+                    </template>
+                </div>
+                <div x-show="saleForm.payment_mode === 'split'" class="grid grid-cols-2 gap-3 mb-3">
+                    <div><label class="text-[10px] text-gray-500">Cash</label><input x-model.number="saleForm.cash_amount" type="number" class="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm"></div>
+                    <div><label class="text-[10px] text-gray-500">Online</label><input x-model.number="saleForm.online_amount" type="number" class="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm"></div>
+                </div>
+                <div class="mb-3">
+                    <label class="text-[10px] text-gray-500">Received Amount</label>
+                    <input x-model.number="saleForm.received_amount" type="number" min="0" :placeholder="saleTotal()" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm">
+                </div>
+                <div class="flex gap-3">
+                    <button @click="submitSale()" :disabled="saleSubmitting" class="flex-1 py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-bold transition disabled:opacity-50">
+                        <span x-show="!saleSubmitting">Save Sale</span><span x-show="saleSubmitting">Saving...</span>
+                    </button>
+                    <button @click="showSaleModal = false" class="px-5 py-3 bg-gray-100 dark:bg-gray-800 text-gray-600 rounded-xl font-medium">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- ═══════════ ADD EXPENSE MODAL ═══════════ --}}
+    <div x-show="showExpenseModal" x-transition.opacity class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display:none">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="showExpenseModal = false"></div>
+        <div class="relative bg-white dark:bg-gray-900 rounded-2xl w-full max-w-md shadow-2xl border border-gray-200 dark:border-gray-800" @click.stop>
+            <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-800">
+                <h2 class="text-lg font-bold flex items-center gap-2"><i data-lucide="minus-circle" class="w-5 h-5 text-red-500"></i> Quick Expense</h2>
+            </div>
+            <div class="p-6 space-y-3">
+                <select x-model="expForm.category" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm">
+                    <option value="">Category *</option>
+                    @foreach(['Rent', 'Salary', 'Electricity', 'Internet', 'Phone', 'Travel', 'Food', 'Supplies', 'Maintenance', 'Other'] as $cat)
+                    <option value="{{ $cat }}">{{ $cat }}</option>
+                    @endforeach
+                </select>
+                <textarea x-model="expForm.description" rows="2" placeholder="Description" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm resize-none"></textarea>
+                <input x-model.number="expForm.amount" type="number" step="0.01" placeholder="Amount ₹ *" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm">
+                <div class="grid grid-cols-3 gap-2">
+                    <template x-for="mode in ['cash', 'upi', 'online']" :key="mode">
+                        <button type="button" @click="expForm.payment_mode = mode"
+                            :class="expForm.payment_mode === mode ? 'bg-red-500 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600'"
+                            class="px-3 py-2 rounded-xl text-sm font-bold transition capitalize" x-text="mode"></button>
+                    </template>
+                </div>
+                <input x-model="expForm.expense_date" type="date" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm">
+                <div class="flex gap-3 pt-2">
+                    <button @click="submitExpense()" :disabled="expSubmitting" class="flex-1 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold transition disabled:opacity-50">
+                        <span x-show="!expSubmitting">Save Expense</span><span x-show="expSubmitting">Saving...</span>
+                    </button>
+                    <button @click="showExpenseModal = false" class="px-5 py-3 bg-gray-100 dark:bg-gray-800 text-gray-600 rounded-xl font-medium">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- ═══════════ ADD KIOSK MODAL ═══════════ --}}
+    <div x-show="showKioskModal" x-transition.opacity class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display:none">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="showKioskModal = false"></div>
+        <div class="relative bg-white dark:bg-gray-900 rounded-2xl w-full max-w-md shadow-2xl border border-gray-200 dark:border-gray-800" @click.stop>
+            <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-800">
+                <h2 class="text-lg font-bold flex items-center gap-2"><i data-lucide="landmark" class="w-5 h-5 text-purple-500"></i> Quick Kiosk Entry</h2>
+            </div>
+            <div class="p-6 space-y-3">
+                <select x-model="kioskForm.transaction_type" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm">
+                    <option value="withdraw">Withdraw</option>
+                    <option value="deposit">Deposit</option>
+                    <option value="balance">Balance Enquiry</option>
+                    <option value="mini_statement">Mini Statement</option>
+                </select>
+                <div class="grid grid-cols-2 gap-3">
+                    <input x-model="kioskForm.customer_name" type="text" placeholder="Customer Name" class="px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm">
+                    <input x-model="kioskForm.customer_mobile" type="text" placeholder="Mobile" maxlength="10" class="px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <input x-model="kioskForm.aadhaar_last_four" type="text" placeholder="Aadhaar last 4" maxlength="4" class="px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm">
+                    <input x-model="kioskForm.bank_name" type="text" placeholder="Bank Name" class="px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm">
+                </div>
+                <input x-model.number="kioskForm.amount" type="number" min="0" placeholder="Amount ₹" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm">
+                <div class="grid grid-cols-2 gap-3">
+                    <input x-model.number="kioskForm.manual_commission" type="number" min="0" placeholder="Cash Commission ₹" class="px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm">
+                    <input x-model.number="kioskForm.portal_commission" type="number" min="0" placeholder="Portal Commission ₹" class="px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm">
+                </div>
+                <input x-model="kioskForm.transaction_date" type="date" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm">
+                <div class="flex gap-3 pt-2">
+                    <button @click="submitKiosk()" :disabled="kioskSubmitting" class="flex-1 py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-xl font-bold transition disabled:opacity-50">
+                        <span x-show="!kioskSubmitting">Save Kiosk</span><span x-show="kioskSubmitting">Saving...</span>
+                    </button>
+                    <button @click="showKioskModal = false" class="px-5 py-3 bg-gray-100 dark:bg-gray-800 text-gray-600 rounded-xl font-medium">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 @endsection
 
@@ -170,6 +315,75 @@
 <script>
 function billingDashboard() {
     return {
+        // Modals
+        showSaleModal: false,
+        showExpenseModal: false,
+        showKioskModal: false,
+        saleSubmitting: false,
+        expSubmitting: false,
+        kioskSubmitting: false,
+
+        // Sale Form
+        saleForm: {
+            customer_name: '', customer_phone: '',
+            items: [{ service_name: '', quantity: 1, unit_price: 0, cost_price: 0 }],
+            discount_amount: 0, payment_mode: 'cash',
+            cash_amount: 0, online_amount: 0, received_amount: '', remarks: '',
+        },
+        saleSubtotal() { return this.saleForm.items.reduce((s, i) => s + (i.quantity * i.unit_price), 0); },
+        saleTotal() { return Math.max(0, this.saleSubtotal() - (this.saleForm.discount_amount || 0)); },
+        async submitSale() {
+            if (!this.saleForm.items[0]?.service_name) { alert('कमीत कमी एक सेवा निवडा'); return; }
+            this.saleSubmitting = true;
+            try {
+                const res = await fetch('{{ route("billing.sales.store") }}', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' },
+                    body: JSON.stringify({ ...this.saleForm, received_amount: this.saleForm.received_amount || this.saleTotal() })
+                });
+                const data = await res.json();
+                if (data.success) window.location.reload();
+                else alert(data.message || 'Error');
+            } catch(e) { alert('Network error'); }
+            this.saleSubmitting = false;
+        },
+
+        // Expense Form
+        expForm: { category: '', description: '', amount: '', payment_mode: 'cash', expense_date: new Date().toISOString().slice(0, 10) },
+        async submitExpense() {
+            if (!this.expForm.category || !this.expForm.amount) { alert('Category आणि Amount भरा'); return; }
+            this.expSubmitting = true;
+            try {
+                const res = await fetch('{{ route("billing.expenses.store") }}', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' },
+                    body: JSON.stringify(this.expForm)
+                });
+                if ((await res.json()).success) window.location.reload();
+            } catch(e) { alert('Error'); }
+            this.expSubmitting = false;
+        },
+
+        // Kiosk Form
+        kioskForm: {
+            transaction_type: 'withdraw', customer_name: '', customer_mobile: '',
+            aadhaar_last_four: '', bank_name: '', amount: '', manual_commission: '',
+            portal_commission: '', transaction_date: new Date().toISOString().slice(0, 10),
+        },
+        async submitKiosk() {
+            this.kioskSubmitting = true;
+            try {
+                const res = await fetch('{{ route("billing.kiosk.store") }}', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' },
+                    body: JSON.stringify(this.kioskForm)
+                });
+                if ((await res.json()).success) window.location.reload();
+            } catch(e) { alert('Error'); }
+            this.kioskSubmitting = false;
+        },
+
+        // Chart
         init() {
             this.$nextTick(() => this.renderChart());
         },

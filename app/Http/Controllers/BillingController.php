@@ -102,9 +102,11 @@ class BillingController extends Controller
             ->take(8)
             ->get();
 
+        $services = BillingService::where('user_id', $userId)->where('is_active', true)->orderBy('name')->get();
+
         return view('billing.dashboard', compact(
             'salesTotal', 'expensesTotal', 'pendingPayments', 'totalProfit',
-            'kioskSummary', 'recentSales', 'chartData', 'categoryData', 'period', 'profile'
+            'kioskSummary', 'recentSales', 'chartData', 'categoryData', 'period', 'profile', 'services'
         ));
     }
 
