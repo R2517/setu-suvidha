@@ -1,8 +1,8 @@
-@extends('layouts.app')
+@extends('layouts.billing')
 @section('title', $customer->name . ' — Customer Detail')
 
-@section('content')
-<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+@section('billing-content')
+<div class="p-6 lg:p-8">
     <a href="{{ route('billing.customers') }}" class="inline-flex items-center gap-1 text-xs text-gray-500 hover:text-blue-600 mb-4"><i data-lucide="arrow-left" class="w-3 h-3"></i> Customers</a>
 
     {{-- Customer Info Card --}}

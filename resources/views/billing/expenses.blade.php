@@ -1,8 +1,8 @@
-@extends('layouts.app')
+@extends('layouts.billing')
 @section('title', 'Expenses — SETU Suvidha Billing')
 
-@section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" x-data="expensesPage()">
+@section('billing-content')
+<div class="p-6 lg:p-8" x-data="expensesPage()">
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
         <div>
             <a href="{{ route('billing.dashboard') }}" class="inline-flex items-center gap-1 text-xs text-gray-500 hover:text-emerald-600 mb-1"><i data-lucide="arrow-left" class="w-3 h-3"></i> Dashboard</a>

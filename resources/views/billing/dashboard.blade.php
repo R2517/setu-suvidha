@@ -1,8 +1,8 @@
-@extends('layouts.app')
+@extends('layouts.billing')
 @section('title', 'बिलिंग Dashboard — SETU Suvidha')
 
-@section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" x-data="billingDashboard()">
+@section('billing-content')
+<div class="p-6 lg:p-8" x-data="billingDashboard()">
     {{-- Header --}}
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
         <div>
@@ -161,25 +161,6 @@
         @endif
     </div>
 
-    {{-- Quick Navigation Grid --}}
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-        @php
-        $navItems = [
-            ['route' => 'billing.sales', 'icon' => 'receipt', 'label' => 'Sales', 'color' => 'emerald'],
-            ['route' => 'billing.customers', 'icon' => 'users', 'label' => 'Customers', 'color' => 'blue'],
-            ['route' => 'billing.services', 'icon' => 'settings', 'label' => 'Services', 'color' => 'amber'],
-            ['route' => 'billing.daily-book', 'icon' => 'book-open', 'label' => 'Daily Book', 'color' => 'purple'],
-            ['route' => 'billing.kiosk-book', 'icon' => 'landmark', 'label' => 'Kiosk Book', 'color' => 'indigo'],
-            ['route' => 'billing.reports', 'icon' => 'bar-chart-3', 'label' => 'Reports', 'color' => 'rose'],
-        ];
-        @endphp
-        @foreach($navItems as $nav)
-        <a href="{{ route($nav['route']) }}" class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all group">
-            <i data-lucide="{{ $nav['icon'] }}" class="w-6 h-6 mx-auto mb-2 text-{{ $nav['color'] }}-500 group-hover:scale-110 transition-transform"></i>
-            <span class="text-xs font-bold text-gray-700 dark:text-gray-300">{{ $nav['label'] }}</span>
-        </a>
-        @endforeach
-    </div>
 </div>
 @endsection
 
