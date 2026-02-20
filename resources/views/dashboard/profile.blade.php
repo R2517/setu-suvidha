@@ -271,6 +271,24 @@
         ['is_open' => false, 'start' => '09:00', 'end' => '13:00'],
     ];
     $workingHoursData = $profile->working_hours ?: $defaultHours;
+
+    $defaultSlabs = [
+        ['amount_from' => '0', 'amount_to' => '5000', 'commission_percent' => '1'],
+        ['amount_from' => '5001', 'amount_to' => '10000', 'commission_percent' => '0.8'],
+    ];
+    $slabsMapped = $commissionSlabs->map(function($s) {
+        return [
+            'amount_from' => $s->amount_from,
+            'amount_to' => $s->amount_to,
+            'commission_percent' => $s->commission_percent,
+        ];
+    })->values()->toArray();
+    $commissionSlabsData = !empty($slabsMapped) ? $slabsMapped : $defaultSlabs;
+
+    $balanceEnquiry = $profile->kiosk_rates['balance_enquiry'] ?? 5;
+    $miniStatement = $profile->kiosk_rates['mini_statement'] ?? 5;
+    $holidayModeVal = !empty($profile->holiday_mode) ? 'true' : 'false';
+    $kioskEnabledVal = !empty($profile->kiosk_enabled) ? 'true' : 'false';
 @endphp
 @push('scripts')
 <script>
@@ -288,15 +306,15 @@ function profilePage() {
         // Working Hours
         dayNames: ['सोमवार', 'मंगळवार', 'बुधवार', 'गुरुवार', 'शुक्रवार', 'शनिवार', 'रविवार'],
         workingHours: @json($workingHoursData),
-        holidayMode: {{ ($profile->holiday_mode ?? false) ? 'true' : 'false' }},
+        holidayMode: {{ $holidayModeVal }},
         savingHours: false,
         hoursMsg: '',
 
         // Kiosk
-        kioskEnabled: {{ ($profile->kiosk_enabled ?? false) ? 'true' : 'false' }},
-        commissionSlabs: @json($commissionSlabs->map(fn($s) => ['amount_from' => $s->amount_from, 'amount_to' => $s->amount_to, 'commission_percent' => $s->commission_percent])->values()->toArray() ?: [['amount_from' => '0', 'amount_to' => '5000', 'commission_percent' => '1'], ['amount_from' => '5001', 'amount_to' => '10000', 'commission_percent' => '0.8']]),
-        balanceEnquiryRate: {{ $profile->kiosk_rates['balance_enquiry'] ?? 5 }},
-        miniStatementRate: {{ $profile->kiosk_rates['mini_statement'] ?? 5 }},
+        kioskEnabled: {{ $kioskEnabledVal }},
+        commissionSlabs: @json($commissionSlabsData),
+        balanceEnquiryRate: {{ $balanceEnquiry }},
+        miniStatementRate: {{ $miniStatement }},
         savingKiosk: false,
         kioskMsg: '',
 
