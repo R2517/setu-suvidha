@@ -47,6 +47,18 @@ class ReviewController extends Controller
                 'read_time'   => '२५ मिनिटे',
                 'view'        => 'reviews.mahabocw-bandkam-kamgar',
             ],
+            'nirgam-utara-meaning-application-format-2026' => [
+                'slug'        => 'nirgam-utara-meaning-application-format-2026',
+                'title'       => 'निर्गम उतारा अर्ज व वापर — संपूर्ण मार्गदर्शक २०२६',
+                'title_en'    => 'Nirgam Utara Meaning, Application & Use 2026',
+                'excerpt'     => 'निर्गम उतारा म्हणजे काय, कसा मिळवायचा, अर्ज कसा लिहावा, TC/LC शी फरक — शाळा निर्गम दाखला संपूर्ण माहिती. Application format PDF download.',
+                'icon'        => 'file-text',
+                'color'       => 'amber',
+                'category'    => 'शैक्षणिक कागदपत्रे',
+                'date'        => '२१ फेब्रुवारी २०२६',
+                'read_time'   => '१४ मिनिटे',
+                'view'        => 'reviews.nirgam-utara-guide',
+            ],
         ];
     }
 

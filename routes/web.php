@@ -45,6 +45,11 @@ Route::get('/bandkam-kamgar-info', [PageController::class, 'bandkamInfo'])->name
 Route::get('/author', [AuthorController::class, 'index'])->name('author');
 Route::post('/author/submit-request', [AuthorController::class, 'submitRequest'])->name('author.submit-request');
 
+// ─── Public: Printable Formats ───
+Route::get('/print/nirgam-utara-application', function () {
+    return view('print.nirgam-utara-application');
+})->name('print.nirgam-utara-application');
+
 // ─── Public: Reviews (SEO Blog) ───
 Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
 Route::get('/reviews/{slug}', [ReviewController::class, 'show'])->name('reviews.show');
