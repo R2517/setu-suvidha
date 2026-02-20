@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Nirgam Utara Online 2026: निर्गम उतारा अर्ज, अर्थ, वापर व PDF Format Guide')
+@section('title', 'Nirgam Utara Download 2026: निर्गम उतारा म्हणजे काय — अर्ज, वापर व PDF Format Guide')
 @section('description', 'Understand Nirgam Utara meaning, use, application format, and how to get it from school. निर्गम उतारा म्हणजे काय, अर्ज कसा लिहावा संपूर्ण माहिती.')
 @push('meta')
 <meta name="keywords" content="nirgam utara, nirgam utara meaning, nirgam utara in english, nirgam utara application, nirgam utara use, pravesh nirgam utara, duplicate tc nirgam utara, nirgam utara mhanje kay, निर्गम उतारा, निर्गम उतारा अर्ज, निर्गम उतारा म्हणजे काय, शाळा निर्गम दाखला, school leaving record, nirgam utara kya hota hai, nirgam utara kaise nikale, nirgam utara kaha milta hai, school nirgam utara in marathi, nirgam utara format pdf, nirgam dakhla">
@@ -44,7 +44,7 @@
     <span class="text-[11px] text-gray-400 flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i> २१ फेब्रुवारी २०२६</span>
     <span class="text-[11px] text-gray-400 flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> १४ मिनिटे वाचन</span>
 </div>
-<h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 dark:text-white leading-tight mb-3">Nirgam Utara Meaning, Application & Use 2026:<br>निर्गम उतारा म्हणजे काय?</h1>
+<h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 dark:text-white leading-tight mb-3">Nirgam Utara Download:<br>निर्गम उतारा म्हणजे काय?</h1>
 <p class="text-base sm:text-lg text-gray-500 dark:text-gray-400 font-medium">School Leaving Record Certificate — अर्ज, अर्थ, वापर, TC/LC फरक व PDF Format</p>
 </div>
 </section>
