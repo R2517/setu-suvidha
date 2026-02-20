@@ -17,6 +17,13 @@ class Profile extends Model
         'address',
         'district',
         'taluka',
+        'gst_number',
+        'csc_id',
+        'logo_url',
+        'working_hours',
+        'kiosk_enabled',
+        'kiosk_rates',
+        'holiday_mode',
         'wallet_balance',
         'is_active',
         'dashboard_config',
@@ -25,7 +32,11 @@ class Profile extends Model
     protected $casts = [
         'wallet_balance' => 'decimal:2',
         'is_active' => 'boolean',
+        'kiosk_enabled' => 'boolean',
+        'holiday_mode' => 'boolean',
         'dashboard_config' => 'array',
+        'working_hours' => 'array',
+        'kiosk_rates' => 'array',
     ];
 
     public function user(): BelongsTo

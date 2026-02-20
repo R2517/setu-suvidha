@@ -24,6 +24,7 @@ use App\Http\Controllers\FarmerCardPublicController;
 use App\Http\Controllers\BondFormatController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\DocslipController;
+use App\Http\Controllers\BillingController;
 use Illuminate\Support\Facades\Route;
 
 // ─── Public Pages ───
@@ -64,6 +65,9 @@ Route::middleware(['auth'])->group(function () {
     // Profile
     Route::get('/profile', [VleProfileController::class, 'index'])->name('profile');
     Route::post('/profile', [VleProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/logo', [VleProfileController::class, 'uploadLogo'])->name('profile.logo');
+    Route::post('/profile/working-hours', [VleProfileController::class, 'updateWorkingHours'])->name('profile.working-hours');
+    Route::post('/profile/kiosk-rates', [VleProfileController::class, 'updateKioskRates'])->name('profile.kiosk-rates');
     Route::get('/api/talukas', [VleProfileController::class, 'getTalukas'])->name('api.talukas');
     Route::post('/api/parse-farmer-pdf', [FormController::class, 'parseFarmerPdf'])->name('api.parse-farmer-pdf');
 
@@ -72,8 +76,53 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/wallet/recharge', [WalletController::class, 'createOrder'])->name('wallet.recharge');
     Route::post('/wallet/verify', [WalletController::class, 'verifyPayment'])->name('wallet.verify');
 
-    // Billing
-    Route::get('/billing', [PageController::class, 'billing'])->name('billing');
+    // Billing System
+    Route::prefix('billing')->name('billing.')->group(function () {
+        Route::get('/', [BillingController::class, 'dashboard'])->name('dashboard');
+
+        // Sales
+        Route::get('/sales', [BillingController::class, 'sales'])->name('sales');
+        Route::post('/sales', [BillingController::class, 'storeSale'])->name('sales.store');
+        Route::put('/sales/{id}', [BillingController::class, 'updateSale'])->name('sales.update');
+        Route::delete('/sales/{id}', [BillingController::class, 'softDeleteSale'])->name('sales.delete');
+        Route::post('/sales/{id}/restore', [BillingController::class, 'restoreSale'])->name('sales.restore');
+
+        // Expenses
+        Route::get('/expenses', [BillingController::class, 'expenses'])->name('expenses');
+        Route::post('/expenses', [BillingController::class, 'storeExpense'])->name('expenses.store');
+        Route::put('/expenses/{id}', [BillingController::class, 'updateExpense'])->name('expenses.update');
+        Route::delete('/expenses/{id}', [BillingController::class, 'destroyExpense'])->name('expenses.delete');
+        Route::post('/monthly-expenses', [BillingController::class, 'storeMonthlyExpense'])->name('monthly.store');
+        Route::put('/monthly-expenses/{id}', [BillingController::class, 'updateMonthlyExpense'])->name('monthly.update');
+        Route::delete('/monthly-expenses/{id}', [BillingController::class, 'destroyMonthlyExpense'])->name('monthly.delete');
+
+        // Customers
+        Route::get('/customers', [BillingController::class, 'customers'])->name('customers');
+        Route::post('/customers', [BillingController::class, 'storeCustomer'])->name('customers.store');
+        Route::get('/customers/{id}', [BillingController::class, 'showCustomer'])->name('customers.show');
+        Route::delete('/customers/{id}', [BillingController::class, 'destroyCustomer'])->name('customers.delete');
+
+        // Daily Book
+        Route::get('/daily-book', [BillingController::class, 'dailyBook'])->name('daily-book');
+        Route::post('/daily-book/start', [BillingController::class, 'startDay'])->name('daily-book.start');
+        Route::post('/daily-book/close', [BillingController::class, 'closeDay'])->name('daily-book.close');
+        Route::post('/daily-book/reopen', [BillingController::class, 'reopenDay'])->name('daily-book.reopen');
+        Route::post('/daily-book/adjust', [BillingController::class, 'addCashAdjustment'])->name('daily-book.adjust');
+
+        // Kiosk Book
+        Route::get('/kiosk-book', [BillingController::class, 'kioskBook'])->name('kiosk-book');
+        Route::post('/kiosk-book', [BillingController::class, 'storeKioskTransaction'])->name('kiosk.store');
+        Route::delete('/kiosk-book/{id}', [BillingController::class, 'destroyKioskTransaction'])->name('kiosk.delete');
+
+        // Reports
+        Route::get('/reports', [BillingController::class, 'reports'])->name('reports');
+
+        // Services
+        Route::get('/services', [BillingController::class, 'services'])->name('services');
+        Route::post('/services', [BillingController::class, 'storeService'])->name('services.store');
+        Route::put('/services/{id}', [BillingController::class, 'updateService'])->name('services.update');
+        Route::delete('/services/{id}', [BillingController::class, 'destroyService'])->name('services.delete');
+    });
 
     // Forms — Generic Engine (C4: proper controller routing)
     Route::get('/hamipatra', [FormController::class, 'showHamipatra'])->name('hamipatra');
