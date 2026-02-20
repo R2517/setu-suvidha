@@ -49,9 +49,9 @@ class ReviewController extends Controller
             ],
             'nirgam-utara-download' => [
                 'slug'        => 'nirgam-utara-download',
-                'title'       => 'निर्गम उतारा अर्ज व वापर — संपूर्ण मार्गदर्शक २०२६',
-                'title_en'    => 'Nirgam Utara Download: Application & Use 2026',
-                'excerpt'     => 'निर्गम उतारा म्हणजे काय, कसा मिळवायचा, अर्ज कसा लिहावा, TC/LC शी फरक — शाळा निर्गम दाखला संपूर्ण माहिती. Application format PDF download.',
+                'title'       => 'निर्गम उतारा Download — अर्ज नमुना व संपूर्ण माहिती',
+                'title_en'    => 'Nirgam Utara: Meaning, Application Format & PDF Download',
+                'excerpt'     => 'निर्गम उतारा म्हणजे काय? शाळेकडून कसा मिळवायचा? TC/LC शी फरक काय? मराठी अर्ज नमुना PDF डाउनलोड करा — जात प्रमाणपत्र, जात वैधता, नोकरी पडताळणीसाठी.',
                 'icon'        => 'file-text',
                 'color'       => 'amber',
                 'category'    => 'शैक्षणिक कागदपत्रे',
