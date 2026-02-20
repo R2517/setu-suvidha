@@ -260,6 +260,18 @@
     </div>
 </div>
 
+@php
+    $defaultHours = [
+        ['is_open' => true, 'start' => '09:00', 'end' => '20:00'],
+        ['is_open' => true, 'start' => '09:00', 'end' => '20:00'],
+        ['is_open' => true, 'start' => '09:00', 'end' => '20:00'],
+        ['is_open' => true, 'start' => '09:00', 'end' => '20:00'],
+        ['is_open' => true, 'start' => '09:00', 'end' => '20:00'],
+        ['is_open' => true, 'start' => '09:00', 'end' => '18:00'],
+        ['is_open' => false, 'start' => '09:00', 'end' => '13:00'],
+    ];
+    $workingHoursData = $profile->working_hours ?: $defaultHours;
+@endphp
 @push('scripts')
 <script>
 function profilePage() {
@@ -275,15 +287,7 @@ function profilePage() {
 
         // Working Hours
         dayNames: ['सोमवार', 'मंगळवार', 'बुधवार', 'गुरुवार', 'शुक्रवार', 'शनिवार', 'रविवार'],
-        workingHours: @json($profile->working_hours ?: [
-            ['is_open' => true, 'start' => '09:00', 'end' => '20:00'],
-            ['is_open' => true, 'start' => '09:00', 'end' => '20:00'],
-            ['is_open' => true, 'start' => '09:00', 'end' => '20:00'],
-            ['is_open' => true, 'start' => '09:00', 'end' => '20:00'],
-            ['is_open' => true, 'start' => '09:00', 'end' => '20:00'],
-            ['is_open' => true, 'start' => '09:00', 'end' => '18:00'],
-            ['is_open' => false, 'start' => '09:00', 'end' => '13:00'],
-        ]),
+        workingHours: @json($workingHoursData),
         holidayMode: {{ ($profile->holiday_mode ?? false) ? 'true' : 'false' }},
         savingHours: false,
         hoursMsg: '',
