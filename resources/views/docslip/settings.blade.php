@@ -161,8 +161,9 @@
                             </form>
                         </div>
                     </div>
-                    <form x-show="editing" method="POST" action="{{ route('docslip.documents.update', $doc->id) }}" class="space-y-3" x-data="{ showRemark: {{ $doc->remark ? 'true' : 'false' }} }">
+                    <form x-show="editing" method="POST" action="{{ route('docslip.documents.update', $doc->id) }}" class="space-y-3" x-data="{ showRemark: {{ $doc->remark ? 'true' : 'false' }}, remarkVal: '{{ addslashes($doc->remark) }}' }">
                         @csrf @method('PUT')
+                        <input type="hidden" name="remark" :value="showRemark ? remarkVal : ''">
                         <div class="flex flex-wrap items-end gap-3">
                             <div class="flex-1 min-w-[150px]"><label class="text-[10px] text-gray-400">मराठी</label><input name="name_mr" value="{{ $doc->name_mr }}" required class="w-full px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm"></div>
                             <div class="flex-1 min-w-[150px]"><label class="text-[10px] text-gray-400">English</label><input name="name_en" value="{{ $doc->name_en }}" required class="w-full px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm"></div>
@@ -172,9 +173,8 @@
                             <button type="button" @click="editing = false" class="px-3 py-1.5 bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg text-xs font-medium transition">Cancel</button>
                         </div>
                         <div x-show="showRemark" x-transition>
-                            <input name="remark" value="{{ $doc->remark }}" placeholder="Remark (e.g. Original + Xerox आवश्यक)" class="w-full px-3 py-1.5 rounded-lg border border-purple-200 dark:border-purple-700 bg-purple-50 dark:bg-purple-900/10 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500">
+                            <input x-model="remarkVal" placeholder="Remark (e.g. Original + Xerox आवश्यक)" class="w-full px-3 py-1.5 rounded-lg border border-purple-200 dark:border-purple-700 bg-purple-50 dark:bg-purple-900/10 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500">
                         </div>
-                        <input x-show="!showRemark" type="hidden" name="remark" value="">
                     </form>
                 </div>
                 @empty

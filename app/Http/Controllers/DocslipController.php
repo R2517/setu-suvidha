@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\DocslipService;
 use App\Models\DocslipDocument;
 use App\Models\DocslipPrint;
+use App\Models\DocslipSavedRemark;
 use Illuminate\Http\Request;
 
 class DocslipController extends Controller
@@ -21,8 +22,9 @@ class DocslipController extends Controller
 
         $hasData = DocslipService::where('user_id', $userId)->exists();
         $profile = $request->user()->profile;
+        $savedRemarks = DocslipSavedRemark::where('user_id', $userId)->orderBy('sort_order')->get();
 
-        return view('docslip.index', compact('services', 'hasData', 'profile'));
+        return view('docslip.index', compact('services', 'hasData', 'profile', 'savedRemarks'));
     }
 
     public function mergeDocuments(Request $request)
@@ -313,6 +315,41 @@ class DocslipController extends Controller
         DocslipPrint::where('user_id', $userId)->delete();
 
         return back()->with('success', 'सर्व DocSlip डेटा रीसेट केला!');
+    }
+
+    // ==================== SAVED REMARKS ====================
+
+    public function storeSavedRemark(Request $request)
+    {
+        $request->validate(['text' => 'required|string|max:255']);
+        $userId = $request->user()->id;
+
+        // Max 25 saved remarks
+        $count = DocslipSavedRemark::where('user_id', $userId)->count();
+        if ($count >= 25) {
+            return response()->json(['error' => 'जास्तीत जास्त 25 remarks सेव्ह करता येतात!'], 422);
+        }
+
+        // Don't duplicate
+        $exists = DocslipSavedRemark::where('user_id', $userId)->where('text', $request->text)->exists();
+        if ($exists) {
+            return response()->json(['error' => 'हा remark आधीच सेव्ह आहे!'], 422);
+        }
+
+        $maxSort = DocslipSavedRemark::where('user_id', $userId)->max('sort_order') ?? 0;
+        $remark = DocslipSavedRemark::create([
+            'user_id' => $userId,
+            'text' => $request->text,
+            'sort_order' => $maxSort + 1,
+        ]);
+
+        return response()->json(['success' => true, 'remark' => $remark]);
+    }
+
+    public function destroySavedRemark(Request $request, $id)
+    {
+        DocslipSavedRemark::where('user_id', $request->user()->id)->findOrFail($id)->delete();
+        return response()->json(['success' => true]);
     }
 
     // ==================== HISTORY ====================

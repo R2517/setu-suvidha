@@ -145,20 +145,49 @@
             </div>
 
             <p x-show="!isLoading && mergedDocuments.length > 0" class="text-[10px] text-gray-400 mt-3 text-center italic">* डुप्लिकेट कागदपत्रे स्वयंचलितपणे काढली आहेत (Duplicates removed automatically)</p>
+
+            {{-- Manual Doc Add --}}
+            <div x-show="!isLoading && mergedDocuments.length > 0" class="mt-3 flex items-center gap-2">
+                <input x-model="manualDocName" type="text" placeholder="+ अतिरिक्त कागदपत्र जोडा (manually)..." @keydown.enter.prevent="addManualDoc()" class="flex-1 px-3 py-2 rounded-lg border border-dashed border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition">
+                <button type="button" @click="addManualDoc()" class="px-3 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg text-xs font-bold transition shrink-0"><i data-lucide="plus" class="w-3.5 h-3.5 inline"></i> जोडा</button>
+            </div>
         </div>
 
-        {{-- Section 5: Remark --}}
+        {{-- Section 5: Remark with Save System --}}
         <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-5" x-show="selectedServices.length > 0" x-transition>
             <h3 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-1.5">
                 <i data-lucide="message-square" class="w-3.5 h-3.5"></i> टीप / Remark
             </h3>
-            <textarea x-model="remark" rows="2" placeholder="ग्राहकासाठी अतिरिक्त सूचना लिहा..." class="w-full px-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition resize-none"></textarea>
-            <div class="flex flex-wrap gap-2 mt-2">
+            <div class="flex items-start gap-2">
+                <textarea x-model="remark" rows="2" placeholder="ग्राहकासाठी अतिरिक्त सूचना लिहा..." class="flex-1 px-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition resize-none"></textarea>
+                <button type="button" @click="saveRemark()" x-show="remark.trim().length > 0" x-transition :disabled="isSavingRemark"
+                    class="px-3 py-2.5 bg-purple-500 hover:bg-purple-600 text-white rounded-lg text-xs font-bold transition shrink-0 disabled:opacity-50" title="Save for future use">
+                    <i data-lucide="bookmark-plus" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <div x-show="remarkMsg" x-transition class="text-[11px] mt-1.5" :class="remarkMsgType === 'error' ? 'text-red-500' : 'text-green-500'" x-text="remarkMsg"></div>
+
+            {{-- Saved + Default Remarks --}}
+            <div class="flex flex-wrap gap-2 mt-3">
+                {{-- Default 3 --}}
                 <button type="button" @click="remark = 'सर्व कागदपत्रे Original + 2 Xerox copies आणा'" class="text-[11px] px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition font-medium">Original + 2 Xerox</button>
                 <button type="button" @click="remark = 'सर्व कागदपत्रांच्या Original प्रती आणा'" class="text-[11px] px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition font-medium">सर्व Original</button>
                 <button type="button" @click="remark = 'फोटोकॉपी (Xerox) पुरेसे आहेत'" class="text-[11px] px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition font-medium">फोटोकॉपी पुरेसे</button>
+
+                {{-- User-saved remarks --}}
+                <template x-for="sr in savedRemarks" :key="sr.id">
+                    <span class="inline-flex items-center gap-1">
+                        <button type="button" @click="remark = sr.text" class="text-[11px] px-3 py-1.5 rounded-lg bg-purple-50 dark:bg-purple-900/20 text-purple-600 hover:bg-purple-100 dark:hover:bg-purple-900/30 transition font-medium" x-text="sr.text"></button>
+                        <button type="button" @click="deleteRemark(sr.id)" class="p-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition" title="हटवा">
+                            <i data-lucide="x" class="w-3 h-3 text-red-400"></i>
+                        </button>
+                    </span>
+                </template>
+
+                {{-- Clear --}}
                 <button type="button" @click="remark = ''" class="text-[11px] px-3 py-1.5 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-500 hover:bg-red-100 dark:hover:bg-red-900/30 transition font-medium">Clear</button>
             </div>
+            <p class="text-[10px] text-gray-400 mt-2" x-show="savedRemarks.length > 0" x-text="savedRemarks.length + '/25 saved remarks'"></p>
         </div>
 
         {{-- Section 6: Print Actions --}}
@@ -203,9 +232,14 @@ function docslipApp() {
         customerName: '',
         customerMobile: '',
         remark: '',
+        manualDocName: '',
         isLoading: false,
         isPrinting: false,
+        isSavingRemark: false,
+        remarkMsg: '',
+        remarkMsgType: '',
         paperWidth: localStorage.getItem('docslip_paper_width') || '80mm',
+        savedRemarks: @json($savedRemarks),
 
         shopName: @json($profile->shop_name ?? auth()->user()->name ?? 'SETU Suvidha'),
         shopAddress: @json(trim(($profile->address ?? '') . ' ' . ($profile->district ?? ''))),
@@ -382,12 +416,69 @@ ${remarkHTML}
 </body></html>`;
         },
 
+        addManualDoc() {
+            const name = this.manualDocName.trim();
+            if (!name) return;
+            const manualId = 'manual_' + Date.now();
+            this.mergedDocuments.push({ id: manualId, name_mr: name, name_en: '', remark: null });
+            this.manualDocName = '';
+        },
+
+        async saveRemark() {
+            const text = this.remark.trim();
+            if (!text) return;
+            this.isSavingRemark = true;
+            this.remarkMsg = '';
+            try {
+                const res = await fetch('{{ route("docslip.saved-remarks.store") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({ text })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    this.savedRemarks.push(data.remark);
+                    this.remarkMsg = 'Remark saved!';
+                    this.remarkMsgType = 'success';
+                } else {
+                    this.remarkMsg = data.error || 'Error saving';
+                    this.remarkMsgType = 'error';
+                }
+            } catch (e) {
+                this.remarkMsg = 'Network error';
+                this.remarkMsgType = 'error';
+            }
+            this.isSavingRemark = false;
+            setTimeout(() => this.remarkMsg = '', 3000);
+        },
+
+        async deleteRemark(id) {
+            if (!confirm('हा remark हटवायचा?')) return;
+            try {
+                await fetch('/docslip/saved-remarks/' + id, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json',
+                    }
+                });
+                this.savedRemarks = this.savedRemarks.filter(r => r.id !== id);
+            } catch (e) {
+                console.error('Delete remark error:', e);
+            }
+        },
+
         clearAll() {
             this.selectedServices = [];
             this.mergedDocuments = [];
             this.customerName = '';
             this.customerMobile = '';
             this.remark = '';
+            this.manualDocName = '';
         }
     }
 }

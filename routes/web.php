@@ -174,6 +174,8 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/documents/{id}', [DocslipController::class, 'destroyDocument'])->name('documents.destroy');
         Route::post('/services/{id}/documents', [DocslipController::class, 'syncDocuments'])->name('services.documents');
         Route::get('/history', [DocslipController::class, 'history'])->name('history');
+        Route::post('/saved-remarks', [DocslipController::class, 'storeSavedRemark'])->name('saved-remarks.store');
+        Route::delete('/saved-remarks/{id}', [DocslipController::class, 'destroySavedRemark'])->name('saved-remarks.destroy');
     });
 
     // Bond Formats
