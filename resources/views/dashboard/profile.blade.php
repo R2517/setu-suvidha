@@ -275,7 +275,7 @@ function profilePage() {
 
         // Working Hours
         dayNames: ['सोमवार', 'मंगळवार', 'बुधवार', 'गुरुवार', 'शुक्रवार', 'शनिवार', 'रविवार'],
-        workingHours: @json($profile->working_hours ?? [
+        workingHours: @json($profile->working_hours ?: [
             ['is_open' => true, 'start' => '09:00', 'end' => '20:00'],
             ['is_open' => true, 'start' => '09:00', 'end' => '20:00'],
             ['is_open' => true, 'start' => '09:00', 'end' => '20:00'],
