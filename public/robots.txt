@@ -1,16 +1,26 @@
+# setusuvidha.com — robots.txt
+# Updated: 20 Feb 2026
+
 User-agent: *
 Allow: /
+Allow: /print/
+
+# VLE Dashboard & Auth Pages (Private)
 Disallow: /dashboard
 Disallow: /profile
 Disallow: /wallet
 Disallow: /billing
-Disallow: /admin
-Disallow: /pan-card
-Disallow: /voter-id
-Disallow: /bandkam
 Disallow: /management
 Disallow: /reports
 Disallow: /export
+
+# Admin Panel
+Disallow: /admin
+
+# VLE Services (Private — behind auth)
+Disallow: /pan-card
+Disallow: /voter-id
+Disallow: /bandkam
 Disallow: /hamipatra
 Disallow: /self-declaration
 Disallow: /income-cert
@@ -26,6 +36,9 @@ Disallow: /bond-formats
 Disallow: /grievance
 Disallow: /new-application
 Disallow: /caste-validity
+Disallow: /docslip
+
+# API & Webhooks
 Disallow: /api/
 Disallow: /webhook/
 
