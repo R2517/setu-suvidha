@@ -14,6 +14,7 @@
         <div class="flex flex-wrap gap-2">
             <a href="{{ route('billing.sales') }}" class="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-sm font-bold transition flex items-center gap-1.5"><i data-lucide="plus" class="w-4 h-4"></i> Add Sale</a>
             <a href="{{ route('billing.expenses') }}" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl text-sm font-bold transition flex items-center gap-1.5"><i data-lucide="minus" class="w-4 h-4"></i> Add Expense</a>
+            <a href="{{ route('billing.kiosk-book') }}" class="px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-xl text-sm font-bold transition flex items-center gap-1.5"><i data-lucide="landmark" class="w-4 h-4"></i> Kiosk</a>
             <a href="{{ route('billing.reports') }}" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-xl text-sm font-bold transition flex items-center gap-1.5"><i data-lucide="bar-chart-3" class="w-4 h-4"></i> Reports</a>
         </div>
     </div>
