@@ -6,11 +6,11 @@
 <meta property="og:title" content="Nirgam Utara 2026: निर्गम उतारा अर्ज, अर्थ व वापर — संपूर्ण मार्गदर्शक">
 <meta property="og:description" content="Nirgam Utara meaning, application format, use & procedure. निर्गम उतारा म्हणजे काय, अर्ज कसा लिहावा, TC/LC शी फरक.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="{{ url('/reviews/nirgam-utara-meaning-application-format-2026') }}">
+<meta property="og:url" content="{{ url('/reviews/nirgam-utara-download') }}">
 <meta property="article:published_time" content="2026-02-21">
-<link rel="canonical" href="{{ url('/reviews/nirgam-utara-meaning-application-format-2026') }}">
+<link rel="canonical" href="{{ url('/reviews/nirgam-utara-download') }}">
 <script type="application/ld+json">
-{"@@context":"https://schema.org","@@type":"Article","headline":"Nirgam Utara Online 2026: निर्गम उतारा अर्ज, अर्थ, वापर व PDF Format Guide","datePublished":"2026-02-21","dateModified":"2026-02-21","author":{"@@type":"Person","name":"Mr. Rajat","url":"https://setusuvidha.com/author"},"publisher":{"@@type":"Organization","name":"SETU Suvidha","url":"https://setusuvidha.com"},"mainEntityOfPage":{"@@type":"WebPage","@@id":"{{ url('/reviews/nirgam-utara-meaning-application-format-2026') }}"}}
+{"@@context":"https://schema.org","@@type":"Article","headline":"Nirgam Utara Online 2026: निर्गम उतारा अर्ज, अर्थ, वापर व PDF Format Guide","datePublished":"2026-02-21","dateModified":"2026-02-21","author":{"@@type":"Person","name":"Mr. Rajat","url":"https://setusuvidha.com/author"},"publisher":{"@@type":"Organization","name":"SETU Suvidha","url":"https://setusuvidha.com"},"mainEntityOfPage":{"@@type":"WebPage","@@id":"{{ url('/reviews/nirgam-utara-download') }}"}}
 </script>
 <script type="application/ld+json">
 {"@@context":"https://schema.org","@@type":"FAQPage","mainEntity":[

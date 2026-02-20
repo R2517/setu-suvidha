@@ -92,7 +92,7 @@
 {{-- Print Controls --}}
 <div class="no-print">
     <button class="print-btn" onclick="window.print()">🖨️ Print / PDF</button>
-    <a href="{{ url('/reviews/nirgam-utara-meaning-application-format-2026') }}" class="back-btn">← Back to Guide</a>
+    <a href="{{ url('/reviews/nirgam-utara-download') }}" class="back-btn">← Back to Guide</a>
     <span class="ctrl-note">2 pages — Application + Nirgam Utara Format</span>
 </div>
 
@@ -173,7 +173,7 @@
 {{-- Page 1 Footer --}}
 <div class="page-footer">
     <p class="brand">
-        Format by <a href="https://setusuvidha.com/reviews/nirgam-utara-meaning-application-format-2026">setusuvidha.com</a> — SETU Suvidha | सेतू सुविधा ई-सेवा पोर्टल
+        Format by <a href="https://setusuvidha.com/reviews/nirgam-utara-download">setusuvidha.com</a> — SETU Suvidha | सेतू सुविधा ई-सेवा पोर्टल
     </p>
     <p class="note">हा अर्ज नमुना मार्गदर्शनासाठी आहे. शाळेनुसार स्वरूपात फरक असू शकतो.</p>
 </div>
@@ -297,7 +297,7 @@
 {{-- Page 2 Footer --}}
 <div class="page-footer">
     <p class="brand">
-        Format by <a href="https://setusuvidha.com/reviews/nirgam-utara-meaning-application-format-2026">setusuvidha.com</a> — SETU Suvidha | सेतू सुविधा ई-सेवा पोर्टल
+        Format by <a href="https://setusuvidha.com/reviews/nirgam-utara-download">setusuvidha.com</a> — SETU Suvidha | सेतू सुविधा ई-सेवा पोर्टल
     </p>
     <p class="note">हा निर्गम उतारा नमुना मार्गदर्शनासाठी आहे. प्रत्यक्ष निर्गम उतारा फक्त शाळेच्या मुख्याध्यापकांकडूनच मिळतो.</p>
 </div>
