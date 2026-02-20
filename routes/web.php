@@ -246,13 +246,19 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::get('/vles', [AdminVleController::class, 'index'])->name('vles');
+    Route::get('/vles/{id}', [AdminVleController::class, 'show'])->name('vles.show');
     Route::post('/vles/{id}/toggle', [AdminVleController::class, 'toggleActive'])->name('vles.toggle');
+    Route::post('/vles/{id}/balance', [AdminVleController::class, 'adjustBalance'])->name('vles.balance');
+    Route::post('/vles/{id}/approval', [AdminVleController::class, 'toggleApproval'])->name('vles.approval');
     Route::get('/pricing', [AdminPricingController::class, 'index'])->name('pricing');
+    Route::post('/pricing', [AdminPricingController::class, 'store'])->name('pricing.store');
     Route::post('/pricing/{id}', [AdminPricingController::class, 'update'])->name('pricing.update');
     Route::post('/pricing/{id}/toggle', [AdminPricingController::class, 'toggleActive'])->name('pricing.toggle');
+    Route::delete('/pricing/{id}', [AdminPricingController::class, 'destroy'])->name('pricing.destroy');
     Route::get('/plans', [AdminPlanController::class, 'index'])->name('plans');
     Route::post('/plans', [AdminPlanController::class, 'store'])->name('plans.store');
     Route::put('/plans/{id}', [AdminPlanController::class, 'update'])->name('plans.update');
+    Route::post('/plans/{id}/toggle', [AdminPlanController::class, 'toggle'])->name('plans.toggle');
     Route::delete('/plans/{id}', [AdminPlanController::class, 'destroy'])->name('plans.destroy');
     Route::get('/transactions', [AdminTransactionController::class, 'index'])->name('transactions');
     Route::get('/settings', [AdminSettingsController::class, 'index'])->name('settings');
