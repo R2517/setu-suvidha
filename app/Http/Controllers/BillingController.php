@@ -658,8 +658,14 @@ class BillingController extends Controller
     {
         $userId = $request->user()->id;
 
-        // Auto-seed default CSC services on first visit
-        if (BillingService::where('user_id', $userId)->count() === 0) {
+        // Auto-seed default CSC services if no system defaults with name_mr exist
+        $hasDefaults = BillingService::where('user_id', $userId)
+            ->where('is_system_default', true)
+            ->whereNotNull('name_mr')
+            ->where('name_mr', '!=', '')
+            ->exists();
+
+        if (!$hasDefaults) {
             $this->seedDefaultServices($userId);
         }
 
@@ -672,21 +678,22 @@ class BillingController extends Controller
     private function seedDefaultServices(int $userId): void
     {
         $cscServices = config('csc_services', []);
-        $order = 1;
+        $order = BillingService::where('user_id', $userId)->max('display_order') ?? 0;
 
         foreach ($cscServices as $category => $items) {
             foreach ($items as $item) {
-                BillingService::create([
-                    'user_id' => $userId,
-                    'name' => $item['name'],
-                    'name_mr' => $item['name_mr'],
-                    'category' => $category,
-                    'default_price' => $item['default_price'],
-                    'cost_price' => $item['cost_price'],
-                    'is_active' => true,
-                    'is_system_default' => true,
-                    'display_order' => $order++,
-                ]);
+                BillingService::updateOrCreate(
+                    ['user_id' => $userId, 'name' => $item['name']],
+                    [
+                        'name_mr' => $item['name_mr'],
+                        'category' => $category,
+                        'default_price' => $item['default_price'],
+                        'cost_price' => $item['cost_price'],
+                        'is_active' => true,
+                        'is_system_default' => true,
+                        'display_order' => ++$order,
+                    ]
+                );
             }
         }
     }
