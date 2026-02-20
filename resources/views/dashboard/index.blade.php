@@ -7,49 +7,55 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-0">
         <div class="flex flex-wrap items-center gap-3">
             <a href="{{ route('dashboard') }}"
-               class="theme-nav-btn group relative inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl font-semibold text-sm
+               class="group relative inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl font-semibold text-sm
                       text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 hover:scale-[1.03]
-                      active:scale-[0.98] transition-all duration-300 ease-out">
+                      active:scale-[0.98] transition-all duration-300 ease-out"
+               style="background: linear-gradient(135deg, #d97706, #f59e0b, #fbbf24)">
                 <i data-lucide="layout-grid" class="w-4 h-4 transition-transform duration-300 group-hover:rotate-12"></i>
                 <span>सेवा</span>
                 <span class="absolute inset-0 rounded-xl bg-white/0 group-hover:bg-white/10 transition-all duration-300"></span>
             </a>
             <a href="{{ route('wallet') }}"
-               class="theme-nav-btn group relative inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl font-semibold text-sm
+               class="group relative inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl font-semibold text-sm
                       text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 hover:scale-[1.03]
-                      active:scale-[0.98] transition-all duration-300 ease-out">
+                      active:scale-[0.98] transition-all duration-300 ease-out"
+               style="background: linear-gradient(135deg, #059669, #10b981, #34d399)">
                 <i data-lucide="wallet" class="w-4 h-4 transition-transform duration-300 group-hover:rotate-12"></i>
                 <span>वॉलेट</span>
                 <span class="absolute inset-0 rounded-xl bg-white/0 group-hover:bg-white/10 transition-all duration-300"></span>
             </a>
             <a href="{{ route('profile') }}"
-               class="theme-nav-btn group relative inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl font-semibold text-sm
+               class="group relative inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl font-semibold text-sm
                       text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 hover:scale-[1.03]
-                      active:scale-[0.98] transition-all duration-300 ease-out">
+                      active:scale-[0.98] transition-all duration-300 ease-out"
+               style="background: linear-gradient(135deg, #2563eb, #3b82f6, #60a5fa)">
                 <i data-lucide="user-circle" class="w-4 h-4 transition-transform duration-300 group-hover:rotate-12"></i>
                 <span>प्रोफाइल</span>
                 <span class="absolute inset-0 rounded-xl bg-white/0 group-hover:bg-white/10 transition-all duration-300"></span>
             </a>
             <a href="{{ route('billing.dashboard') }}"
-               class="theme-nav-btn group relative inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl font-semibold text-sm
+               class="group relative inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl font-semibold text-sm
                       text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 hover:scale-[1.03]
-                      active:scale-[0.98] transition-all duration-300 ease-out">
+                      active:scale-[0.98] transition-all duration-300 ease-out"
+               style="background: linear-gradient(135deg, #7c3aed, #8b5cf6, #a78bfa)">
                 <i data-lucide="receipt" class="w-4 h-4 transition-transform duration-300 group-hover:rotate-12"></i>
                 <span>बिलिंग</span>
                 <span class="absolute inset-0 rounded-xl bg-white/0 group-hover:bg-white/10 transition-all duration-300"></span>
             </a>
             <a href="{{ route('management') }}"
-               class="theme-nav-btn group relative inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl font-semibold text-sm
+               class="group relative inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl font-semibold text-sm
                       text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 hover:scale-[1.03]
-                      active:scale-[0.98] transition-all duration-300 ease-out">
+                      active:scale-[0.98] transition-all duration-300 ease-out"
+               style="background: linear-gradient(135deg, #0f766e, #0d9488, #14b8a6)">
                 <i data-lucide="database" class="w-4 h-4 transition-transform duration-300 group-hover:rotate-12"></i>
                 <span>CRM</span>
                 <span class="absolute inset-0 rounded-xl bg-white/0 group-hover:bg-white/10 transition-all duration-300"></span>
             </a>
             <a href="{{ route('docslip.index') }}"
-               class="theme-nav-btn group relative inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl font-semibold text-sm
+               class="group relative inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl font-semibold text-sm
                       text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 hover:scale-[1.03]
-                      active:scale-[0.98] transition-all duration-300 ease-out">
+                      active:scale-[0.98] transition-all duration-300 ease-out"
+               style="background: linear-gradient(135deg, #4338ca, #6366f1, #818cf8)">
                 <i data-lucide="clipboard-list" class="w-4 h-4 transition-transform duration-300 group-hover:rotate-12"></i>
                 <span>DocSlip</span>
                 <span class="absolute inset-0 rounded-xl bg-white/0 group-hover:bg-white/10 transition-all duration-300"></span>
@@ -322,10 +328,6 @@ function dashboardApp() {
             r.style.setProperty('--theme-primary', t.primary);
             r.style.setProperty('--theme-dark-primary', t.dark_primary);
             r.style.setProperty('--theme-dot', t.dot);
-            // Apply to quick nav buttons
-            document.querySelectorAll('.theme-nav-btn').forEach(function(btn) {
-                btn.style.background = t.nav;
-            });
             // Apply to ticker
             var ticker = document.querySelector('.theme-ticker');
             if (ticker) ticker.style.background = t.nav;
@@ -387,7 +389,6 @@ function dashboardApp() {
 .sortable-ghost { opacity: 0.3; }
 .sortable-chosen { box-shadow: 0 4px 20px rgba(245,158,11,0.4); border-color: #f59e0b !important; }
 .drag-handle { touch-action: none; }
-.theme-nav-btn { background: var(--theme-nav, linear-gradient(135deg,#d97706,#f59e0b)); transition: all 0.3s ease; }
 .theme-ticker { background: var(--theme-nav, linear-gradient(135deg,#2563eb,#4f46e5)); }
 </style>
 @endpush
