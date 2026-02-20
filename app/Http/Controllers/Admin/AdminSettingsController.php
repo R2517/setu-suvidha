@@ -40,7 +40,45 @@ class AdminSettingsController extends Controller
 
         // Razorpay config
         $razorpayKeyId = config('razorpay.key_id', env('RAZORPAY_KEY_ID', ''));
+        $razorpayKeySecret = config('razorpay.key_secret', env('RAZORPAY_KEY_SECRET', ''));
+        $razorpayWebhookSecret = config('razorpay.webhook_secret', env('RAZORPAY_WEBHOOK_SECRET', ''));
 
-        return view('admin.settings', compact('logLines', 'health', 'razorpayKeyId'));
+        return view('admin.settings', compact('logLines', 'health', 'razorpayKeyId', 'razorpayKeySecret', 'razorpayWebhookSecret'));
+    }
+
+    public function updateRazorpay(Request $request)
+    {
+        $request->validate([
+            'razorpay_key_id' => 'nullable|string|max:255',
+            'razorpay_key_secret' => 'nullable|string|max:255',
+            'razorpay_webhook_secret' => 'nullable|string|max:255',
+        ]);
+
+        $envPath = base_path('.env');
+        $envContent = File::get($envPath);
+
+        $updates = [
+            'RAZORPAY_KEY_ID' => $request->razorpay_key_id ?? '',
+            'RAZORPAY_KEY_SECRET' => $request->razorpay_key_secret ?? '',
+            'RAZORPAY_WEBHOOK_SECRET' => $request->razorpay_webhook_secret ?? '',
+        ];
+
+        foreach ($updates as $key => $value) {
+            if (preg_match("/^{$key}=.*/m", $envContent)) {
+                $envContent = preg_replace("/^{$key}=.*/m", "{$key}={$value}", $envContent);
+            } else {
+                $envContent .= "\n{$key}={$value}";
+            }
+        }
+
+        File::put($envPath, $envContent);
+
+        // Clear config cache so new values take effect
+        if (function_exists('opcache_reset')) {
+            opcache_reset();
+        }
+        Cache::flush();
+
+        return redirect()->route('admin.settings')->with('success', 'Razorpay configuration updated successfully!');
     }
 }

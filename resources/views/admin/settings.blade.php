@@ -31,21 +31,53 @@
             </div>
 
             {{-- Razorpay Config --}}
-            <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-800">
+            <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden" x-data="{ editing: false }">
+                <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
                     <h2 class="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2"><i data-lucide="credit-card" class="w-4 h-4 text-indigo-500"></i> Razorpay Configuration</h2>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full {{ $razorpayKeyId ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">{{ $razorpayKeyId ? 'Active' : 'Not Set' }}</span>
+                        <button @click="editing = !editing" class="text-xs text-indigo-500 hover:text-indigo-600 font-bold" x-text="editing ? 'Cancel' : 'Edit'"></button>
+                    </div>
                 </div>
-                <div class="p-6 space-y-4">
-                    <div class="flex items-center justify-between">
+                {{-- Read-only view --}}
+                <div x-show="!editing" class="p-6 space-y-3">
+                    <div class="flex items-center justify-between py-2 border-b border-gray-50 dark:border-gray-800">
                         <span class="text-xs text-gray-500">Key ID</span>
-                        <span class="text-xs font-mono text-gray-700 dark:text-gray-300">{{ $razorpayKeyId ? Str::mask($razorpayKeyId, '*', 8) : 'Not configured' }}</span>
+                        <span class="text-xs font-mono text-gray-700 dark:text-gray-300">{{ $razorpayKeyId ? Str::mask($razorpayKeyId, '*', 8) : '—' }}</span>
                     </div>
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs text-gray-500">Status</span>
-                        <span class="text-xs font-bold {{ $razorpayKeyId ? 'text-green-600' : 'text-red-600' }}">{{ $razorpayKeyId ? 'Configured' : 'Missing' }}</span>
+                    <div class="flex items-center justify-between py-2 border-b border-gray-50 dark:border-gray-800">
+                        <span class="text-xs text-gray-500">Key Secret</span>
+                        <span class="text-xs font-mono text-gray-700 dark:text-gray-300">{{ $razorpayKeySecret ? Str::mask($razorpayKeySecret, '*', 4) : '—' }}</span>
                     </div>
-                    <p class="text-[11px] text-gray-400 bg-gray-50 dark:bg-gray-800 p-3 rounded-lg">Razorpay keys are managed via <code class="font-mono">.env</code> file. Update <code>RAZORPAY_KEY_ID</code> and <code>RAZORPAY_KEY_SECRET</code> in the server environment.</p>
+                    <div class="flex items-center justify-between py-2">
+                        <span class="text-xs text-gray-500">Webhook Secret</span>
+                        <span class="text-xs font-mono text-gray-700 dark:text-gray-300">{{ $razorpayWebhookSecret ? Str::mask($razorpayWebhookSecret, '*', 4) : '—' }}</span>
+                    </div>
                 </div>
+                {{-- Edit form --}}
+                <form x-show="editing" x-transition method="POST" action="{{ route('admin.settings.razorpay') }}" class="p-6 space-y-4">
+                    @csrf
+                    <div>
+                        <label class="text-xs font-bold text-gray-700 dark:text-gray-300 mb-1 block">Razorpay Key ID</label>
+                        <input type="text" name="razorpay_key_id" value="{{ $razorpayKeyId }}" placeholder="rzp_live_xxxxxxxxxx" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm font-mono">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-gray-700 dark:text-gray-300 mb-1 block">Razorpay Key Secret</label>
+                        <input type="password" name="razorpay_key_secret" value="{{ $razorpayKeySecret }}" placeholder="xxxxxxxxxxxxxxxx" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm font-mono">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-gray-700 dark:text-gray-300 mb-1 block">Webhook Secret</label>
+                        <input type="password" name="razorpay_webhook_secret" value="{{ $razorpayWebhookSecret }}" placeholder="whsec_xxxxxxx" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm font-mono">
+                    </div>
+                    <div class="flex gap-3 pt-1">
+                        <button type="submit" class="px-5 py-2.5 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl text-sm font-bold transition">Save Razorpay Config</button>
+                        <button type="button" @click="editing = false" class="px-5 py-2.5 bg-gray-100 dark:bg-gray-800 text-gray-600 rounded-xl text-sm font-medium transition">Cancel</button>
+                    </div>
+                    <p class="text-[10px] text-gray-400 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 p-2.5 rounded-lg flex items-start gap-1.5">
+                        <i data-lucide="alert-triangle" class="w-3 h-3 text-amber-500 mt-0.5 shrink-0"></i>
+                        <span>This will update the <code class="font-mono">.env</code> file directly. Config cache will be cleared automatically.</span>
+                    </p>
+                </form>
             </div>
 
             {{-- Quick Links --}}

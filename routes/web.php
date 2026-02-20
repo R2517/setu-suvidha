@@ -267,6 +267,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::delete('/plans/{id}', [AdminPlanController::class, 'destroy'])->name('plans.destroy');
     Route::get('/transactions', [AdminTransactionController::class, 'index'])->name('transactions');
     Route::get('/settings', [AdminSettingsController::class, 'index'])->name('settings');
+    Route::post('/settings/razorpay', [AdminSettingsController::class, 'updateRazorpay'])->name('settings.razorpay');
     Route::get('/farmer-card-orders', [AdminFarmerCardController::class, 'index'])->name('farmer-card-orders');
     Route::get('/contact-requests', [AdminContactRequestController::class, 'index'])->name('contact-requests');
     Route::post('/contact-requests/{id}/status', [AdminContactRequestController::class, 'updateStatus'])->name('contact-requests.status');
