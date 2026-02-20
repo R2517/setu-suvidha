@@ -11,7 +11,7 @@
                 <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-1">{{ $plan->name }}</h3>
                 <p class="text-2xl font-bold text-amber-600 mb-3">₹{{ number_format($plan->price, 2) }} <span class="text-sm text-gray-500 font-normal">/ {{ $plan->duration_days }} दिवस</span></p>
                 <ul class="space-y-1 mb-4">
-                    @foreach($plan->features ?? [] as $f)
+                    @foreach(is_array($plan->features) ? $plan->features : (is_string($plan->features) ? json_decode($plan->features, true) ?? [] : []) as $f)
                     <li class="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-1"><i data-lucide="check" class="w-3 h-3 text-green-500"></i> {{ $f }}</li>
                     @endforeach
                 </ul>

@@ -27,7 +27,7 @@ class AdminPlanController extends Controller
             'name' => $request->name,
             'price' => $request->price,
             'duration_days' => $request->duration_days,
-            'features' => $request->features ? json_encode(array_map('trim', explode(',', $request->features))) : '[]',
+            'features' => $request->features ? array_map('trim', explode(',', $request->features)) : [],
         ]);
 
         return redirect()->back()->with('success', 'प्लॅन तयार झाला!');
@@ -40,7 +40,7 @@ class AdminPlanController extends Controller
             'name' => $request->name,
             'price' => $request->price,
             'duration_days' => $request->duration_days,
-            'features' => $request->features ? json_encode(array_map('trim', explode(',', $request->features))) : '[]',
+            'features' => $request->features ? array_map('trim', explode(',', $request->features)) : [],
         ]);
 
         return redirect()->back()->with('success', 'प्लॅन अपडेट झाला!');
