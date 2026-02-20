@@ -113,12 +113,22 @@
                 </div>
                 <template x-for="(item, i) in form.items" :key="i">
                     <div class="flex items-center gap-2 mb-2">
-                        <select x-model="item.service_name" @change="autoFillPrice(i)" class="flex-1 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm">
-                            <option value="">-- Select Service --</option>
-                            @foreach($services as $svc)
-                            <option value="{{ $svc->name }}" data-price="{{ $svc->default_price }}" data-cost="{{ $svc->cost_price }}">{{ $svc->name }} (₹{{ number_format($svc->default_price, 0) }})</option>
-                            @endforeach
-                        </select>
+                        <div class="flex-1 relative" x-data="{ open: false, q: item.service_name }">
+                            <input type="text" x-model="q" @focus="open = true" @click.away="open = false"
+                                @input="open = true; item.service_name = q"
+                                placeholder="Search service..." class="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm">
+                            <div x-show="open && q.length >= 1" class="absolute z-30 left-0 right-0 top-full mt-1 bg-white dark:bg-gray-900 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 max-h-40 overflow-y-auto">
+                                @foreach($services as $svc)
+                                <button type="button"
+                                    x-show="'{{ strtolower($svc->name) }}'.includes(q.toLowerCase()) || q === ''"
+                                    @click="q = '{{ $svc->name }}'; item.service_name = '{{ $svc->name }}'; item.unit_price = {{ $svc->default_price }}; item.cost_price = {{ $svc->cost_price }}; open = false"
+                                    class="block w-full text-left px-3 py-2 text-xs hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition">
+                                    <span class="font-medium text-gray-900 dark:text-white">{{ $svc->name }}</span>
+                                    <span class="text-gray-400 ml-1">₹{{ number_format($svc->default_price, 0) }}</span>
+                                </button>
+                                @endforeach
+                            </div>
+                        </div>
                         <input x-model.number="item.quantity" type="number" min="1" class="w-16 px-2 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm text-center" placeholder="Qty">
                         <input x-model.number="item.unit_price" type="number" min="0" class="w-24 px-2 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm" placeholder="Price">
                         <span class="text-sm font-bold text-gray-700 w-20 text-right" x-text="'₹' + (item.quantity * item.unit_price)"></span>
@@ -139,7 +149,7 @@
 
             {{-- Payment --}}
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
-                <template x-for="mode in ['cash', 'upi', 'online', 'split']" :key="mode">
+                <template x-for="mode in ['cash', 'online', 'split']" :key="mode">
                     <button type="button" @click="form.payment_mode = mode"
                         :class="form.payment_mode === mode ? 'bg-emerald-500 text-white ring-2 ring-emerald-500/30' : 'bg-gray-100 dark:bg-gray-800 text-gray-600'"
                         class="px-3 py-2 rounded-xl text-sm font-bold transition capitalize" x-text="mode"></button>

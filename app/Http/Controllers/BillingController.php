@@ -733,4 +733,36 @@ class BillingController extends Controller
         $svc->delete();
         return response()->json(['success' => true]);
     }
+
+    public function csvUploadServices(Request $request)
+    {
+        $request->validate([
+            'csv_file' => 'required|file|mimes:csv,txt|max:2048',
+        ]);
+
+        $file = $request->file('csv_file');
+        $rows = array_map('str_getcsv', file($file->getRealPath()));
+        $imported = 0;
+        $skipped = 0;
+
+        foreach ($rows as $row) {
+            if (count($row) < 5) { $skipped++; continue; }
+            $name = trim($row[0]);
+            if (!$name || strtolower($name) === 'name') { $skipped++; continue; }
+
+            BillingService::updateOrCreate(
+                ['user_id' => $request->user()->id, 'name' => $name],
+                [
+                    'name_mr' => trim($row[1]) ?: null,
+                    'category' => trim($row[2]) ?: 'Other',
+                    'cost_price' => (float) trim($row[3]),
+                    'default_price' => (float) trim($row[4]),
+                    'is_active' => true,
+                ]
+            );
+            $imported++;
+        }
+
+        return redirect()->back()->with('success', "{$imported} services imported, {$skipped} skipped.");
+    }
 }

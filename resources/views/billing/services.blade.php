@@ -12,9 +12,14 @@
             </h1>
             <p class="text-xs text-gray-500 mt-0.5">CSC & Maha e-Seva services — English + मराठी</p>
         </div>
-        <button @click="showAddModal = true" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-sm font-bold transition flex items-center gap-1.5">
-            <i data-lucide="plus" class="w-4 h-4"></i> Add Service
-        </button>
+        <div class="flex items-center gap-2">
+            <button @click="showCsvModal = true" class="px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl text-sm font-bold transition flex items-center gap-1.5">
+                <i data-lucide="upload" class="w-4 h-4"></i> CSV Upload
+            </button>
+            <button @click="showAddModal = true" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-sm font-bold transition flex items-center gap-1.5">
+                <i data-lucide="plus" class="w-4 h-4"></i> Add Service
+            </button>
+        </div>
     </div>
 
     {{-- Stats Bar --}}
@@ -147,6 +152,34 @@
     </div>
     @endif
 
+    {{-- CSV Upload Modal --}}
+    <div x-show="showCsvModal" x-transition.opacity class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display:none">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="showCsvModal = false"></div>
+        <div class="relative bg-white dark:bg-gray-900 rounded-2xl w-full max-w-md shadow-2xl border border-gray-200 dark:border-gray-800" @click.stop>
+            <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-800">
+                <h2 class="text-lg font-bold flex items-center gap-2">
+                    <i data-lucide="upload" class="w-5 h-5 text-blue-500"></i> CSV Upload
+                </h2>
+            </div>
+            <div class="p-6">
+                <p class="text-xs text-gray-500 mb-3">CSV format: <code class="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-[10px]">name,name_mr,category,cost_price,default_price</code></p>
+                <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-3 mb-4">
+                    <p class="text-[10px] text-gray-400 mb-1">Example:</p>
+                    <pre class="text-[10px] font-mono text-gray-600 dark:text-gray-400">PAN Card,पॅन कार्ड,Government,90,150
+Voter ID,मतदार ओळखपत्र,Government,50,100</pre>
+                </div>
+                <form method="POST" action="{{ route('billing.services.csv-upload') }}" enctype="multipart/form-data">
+                    @csrf
+                    <input type="file" name="csv_file" accept=".csv,.txt" required class="w-full text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 mb-4">
+                    <div class="flex gap-3">
+                        <button type="submit" class="flex-1 py-2.5 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-bold text-sm transition">Upload & Import</button>
+                        <button type="button" @click="showCsvModal = false" class="px-5 py-2.5 bg-gray-100 dark:bg-gray-800 text-gray-600 rounded-xl text-sm font-medium">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     {{-- Add Service Modal --}}
     <div x-show="showAddModal" x-transition.opacity class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display:none">
         <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="showAddModal = false"></div>
@@ -196,6 +229,7 @@
 function servicesPage() {
     return {
         showAddModal: false,
+        showCsvModal: false,
         svcSubmitting: false,
         search: '',
         filterCat: '',
