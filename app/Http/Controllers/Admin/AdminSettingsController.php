@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Artisan;
 
 class AdminSettingsController extends Controller
 {
@@ -64,21 +65,28 @@ class AdminSettingsController extends Controller
         ];
 
         foreach ($updates as $key => $value) {
-            if (preg_match("/^{$key}=.*/m", $envContent)) {
-                $envContent = preg_replace("/^{$key}=.*/m", "{$key}={$value}", $envContent);
+            // Match key= with optional quotes, any value (handles KEY=val, KEY="val", KEY='val')
+            if (preg_match("/^{$key}\s*=.*/m", $envContent)) {
+                $envContent = preg_replace("/^{$key}\s*=.*/m", "{$key}=\"{$value}\"", $envContent);
             } else {
-                $envContent .= "\n{$key}={$value}";
+                $envContent .= "\n{$key}=\"{$value}\"";
             }
         }
 
         File::put($envPath, $envContent);
 
-        // Clear config cache so new values take effect
+        // Clear ALL caches so new .env values take effect
+        try {
+            Artisan::call('config:clear');
+            Artisan::call('cache:clear');
+        } catch (\Exception $e) {
+            // Silently fail if artisan calls have issues
+        }
+
         if (function_exists('opcache_reset')) {
             opcache_reset();
         }
-        Cache::flush();
 
-        return redirect()->route('admin.settings')->with('success', 'Razorpay configuration updated successfully!');
+        return redirect()->route('admin.settings')->with('success', 'Razorpay config updated! Keys saved to .env');
     }
 }
