@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class BillingService extends Model
 {
     protected $fillable = [
-        'user_id', 'name', 'category', 'default_price', 'cost_price',
+        'user_id', 'name', 'name_mr', 'category', 'default_price', 'cost_price',
         'is_active', 'is_system_default', 'display_order', 'override_id',
     ];
 

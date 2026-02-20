@@ -657,10 +657,38 @@ class BillingController extends Controller
     public function services(Request $request)
     {
         $userId = $request->user()->id;
-        $services = BillingService::where('user_id', $userId)->orderBy('display_order')->get();
-        $categories = $services->pluck('category')->unique()->sort()->values();
+
+        // Auto-seed default CSC services on first visit
+        if (BillingService::where('user_id', $userId)->count() === 0) {
+            $this->seedDefaultServices($userId);
+        }
+
+        $services = BillingService::where('user_id', $userId)->orderBy('category')->orderBy('display_order')->get();
+        $categories = $services->pluck('category')->unique()->values();
 
         return view('billing.services', compact('services', 'categories'));
+    }
+
+    private function seedDefaultServices(int $userId): void
+    {
+        $cscServices = config('csc_services', []);
+        $order = 1;
+
+        foreach ($cscServices as $category => $items) {
+            foreach ($items as $item) {
+                BillingService::create([
+                    'user_id' => $userId,
+                    'name' => $item['name'],
+                    'name_mr' => $item['name_mr'],
+                    'category' => $category,
+                    'default_price' => $item['default_price'],
+                    'cost_price' => $item['cost_price'],
+                    'is_active' => true,
+                    'is_system_default' => true,
+                    'display_order' => $order++,
+                ]);
+            }
+        }
     }
 
     public function storeService(Request $request)
@@ -675,6 +703,7 @@ class BillingController extends Controller
         BillingService::create([
             'user_id' => $request->user()->id,
             'name' => $request->name,
+            'name_mr' => $request->name_mr ?? '',
             'category' => $request->category ?? 'General',
             'default_price' => $request->default_price,
             'cost_price' => $request->cost_price ?? 0,
@@ -687,16 +716,13 @@ class BillingController extends Controller
     public function updateService(Request $request, $id)
     {
         $svc = BillingService::where('user_id', $request->user()->id)->findOrFail($id);
-        $svc->update($request->only(['name', 'category', 'default_price', 'cost_price', 'is_active', 'display_order']));
+        $svc->update($request->only(['name', 'name_mr', 'category', 'default_price', 'cost_price', 'is_active', 'display_order']));
         return response()->json(['success' => true]);
     }
 
     public function destroyService(Request $request, $id)
     {
         $svc = BillingService::where('user_id', $request->user()->id)->findOrFail($id);
-        if ($svc->is_system_default) {
-            return response()->json(['error' => 'System default services cannot be deleted'], 422);
-        }
         $svc->delete();
         return response()->json(['success' => true]);
     }
