@@ -23,6 +23,7 @@ use App\Http\Controllers\VillageInfoController;
 use App\Http\Controllers\FarmerCardPublicController;
 use App\Http\Controllers\BondFormatController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\DocslipController;
 use Illuminate\Support\Facades\Route;
 
 // ─── Public Pages ───
@@ -156,6 +157,24 @@ Route::middleware(['auth'])->group(function () {
 
     // Reports
     Route::get('/reports', [ReportController::class, 'index'])->name('reports');
+
+    // DocSlip — कागदपत्र पावती
+    Route::prefix('docslip')->name('docslip.')->group(function () {
+        Route::get('/', [DocslipController::class, 'index'])->name('index');
+        Route::post('/merge', [DocslipController::class, 'mergeDocuments'])->name('merge');
+        Route::post('/print', [DocslipController::class, 'printSlip'])->name('print');
+        Route::get('/settings', [DocslipController::class, 'settings'])->name('settings');
+        Route::post('/load-defaults', [DocslipController::class, 'loadDefaults'])->name('load-defaults');
+        Route::post('/reset', [DocslipController::class, 'reset'])->name('reset');
+        Route::post('/services', [DocslipController::class, 'storeService'])->name('services.store');
+        Route::put('/services/{id}', [DocslipController::class, 'updateService'])->name('services.update');
+        Route::delete('/services/{id}', [DocslipController::class, 'destroyService'])->name('services.destroy');
+        Route::post('/documents', [DocslipController::class, 'storeDocument'])->name('documents.store');
+        Route::put('/documents/{id}', [DocslipController::class, 'updateDocument'])->name('documents.update');
+        Route::delete('/documents/{id}', [DocslipController::class, 'destroyDocument'])->name('documents.destroy');
+        Route::post('/services/{id}/documents', [DocslipController::class, 'syncDocuments'])->name('services.documents');
+        Route::get('/history', [DocslipController::class, 'history'])->name('history');
+    });
 
     // Bond Formats
     Route::get('/bond-formats', [BondFormatController::class, 'index'])->name('bonds.index');
