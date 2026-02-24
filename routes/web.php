@@ -91,8 +91,11 @@ Route::middleware(['auth'])->group(function () {
     // Subscription
     Route::get('/subscription', [SubscriptionController::class, 'index'])->name('subscription');
     Route::post('/subscription/activate', [SubscriptionController::class, 'activate'])->name('subscription.activate');
+    Route::post('/subscription/activate-now', [SubscriptionController::class, 'activateNow'])->name('subscription.activate-now');
     Route::get('/subscription/activate', fn() => redirect()->route('subscription'))->name('subscription.activate.redirect');
     Route::post('/subscription/change', [SubscriptionController::class, 'changePlan'])->name('subscription.change');
+    Route::post('/subscription/payment-order', [SubscriptionController::class, 'createPaymentOrder'])->name('subscription.payment-order');
+    Route::post('/subscription/payment-verify', [SubscriptionController::class, 'verifyPayment'])->name('subscription.payment-verify');
     Route::get('/subscription/change', fn() => redirect()->route('subscription'));
 
     // ─── Subscription-Protected Features ───
