@@ -704,7 +704,11 @@ function farmerPublic() {
                     try {
                         const vResp = await fetch('{{ route("farmer-card-public.verify") }}', {
                             method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Accept': 'application/json',
+                            },
                             body: JSON.stringify({
                                 transaction_no: data.transaction_no,
                                 razorpay_payment_id: response.razorpay_payment_id,

@@ -2,24 +2,39 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\User;
 use App\Models\Profile;
+use App\Models\User;
 use App\Models\UserRole;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class AdminUserSeeder extends Seeder
 {
     public function run(): void
     {
-        $admin = User::updateOrCreate(
+        $configuredPassword = env('ADMIN_DEFAULT_PASSWORD');
+        $generatedPassword = null;
+
+        if (!$configuredPassword) {
+            $generatedPassword = Str::random(24);
+        }
+
+        $admin = User::firstOrCreate(
             ['email' => 'admin@setusuvidha.com'],
             [
                 'name' => 'Admin',
-                'password' => Hash::make(env('ADMIN_DEFAULT_PASSWORD', 'admin123')),
+                'password' => Hash::make($configuredPassword ?: $generatedPassword),
                 'is_active' => true,
             ]
         );
+
+        if ($configuredPassword && !Hash::check($configuredPassword, $admin->password)) {
+            $admin->update([
+                'password' => Hash::make($configuredPassword),
+                'is_active' => true,
+            ]);
+        }
 
         Profile::updateOrCreate(
             ['user_id' => $admin->id],
@@ -36,29 +51,9 @@ class AdminUserSeeder extends Seeder
             []
         );
 
-        // Test User
-        $user = User::updateOrCreate(
-            ['email' => 'user@setusuvidha.com'],
-            [
-                'name' => 'Test User',
-                'password' => Hash::make('user123'),
-                'is_active' => true,
-            ]
-        );
-
-        Profile::updateOrCreate(
-            ['user_id' => $user->id],
-            [
-                'full_name' => 'Test User',
-                'email' => 'user@setusuvidha.com',
-                'wallet_balance' => 500.00,
-                'is_active' => true,
-            ]
-        );
-
-        UserRole::updateOrCreate(
-            ['user_id' => $user->id, 'role' => 'vle'],
-            []
-        );
+        if ($generatedPassword && $admin->wasRecentlyCreated) {
+            $this->command?->warn("Generated admin password for admin@setusuvidha.com: {$generatedPassword}");
+            $this->command?->warn('Set ADMIN_DEFAULT_PASSWORD in .env before production usage.');
+        }
     }
 }

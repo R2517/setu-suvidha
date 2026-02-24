@@ -62,8 +62,7 @@ Route::get('/reviews/{slug}', [ReviewController::class, 'show'])->name('reviews.
 Route::get('/services/farmer-id-card-online', [FarmerCardPublicController::class, 'index'])->name('farmer-card-public');
 Route::post('/services/farmer-id-card-online/store', [FarmerCardPublicController::class, 'store'])->name('farmer-card-public.store');
 Route::post('/services/farmer-id-card-online/verify-payment', [FarmerCardPublicController::class, 'verifyPayment'])
-    ->name('farmer-card-public.verify')
-    ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
+    ->name('farmer-card-public.verify');
 Route::post('/services/farmer-id-card-online/lookup', [FarmerCardPublicController::class, 'lookup'])->name('farmer-card-public.lookup');
 Route::get('/services/farmer-id-card-online/download/{txn}', [FarmerCardPublicController::class, 'download'])->name('farmer-card-public.download');
 

@@ -4,15 +4,16 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class AdminSettingsController extends Controller
 {
     public function index()
     {
+        $diskProbePath = DIRECTORY_SEPARATOR === '\\' ? base_path() : '/';
+
         // Error logs (last 30 lines from laravel.log)
         $logFile = storage_path('logs/laravel.log');
         $logLines = [];
@@ -29,7 +30,9 @@ class AdminSettingsController extends Controller
             'db_status' => 'OK',
             'cache_driver' => config('cache.default'),
             'queue_driver' => config('queue.default'),
-            'disk_free' => function_exists('disk_free_space') ? round(disk_free_space('/') / 1073741824, 2) . ' GB' : 'N/A',
+            'disk_free' => function_exists('disk_free_space')
+                ? round(disk_free_space($diskProbePath) / 1073741824, 2) . ' GB'
+                : 'N/A',
         ];
 
         try {

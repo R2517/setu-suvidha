@@ -1,4 +1,4 @@
-name: Pull Requests
+git add -Aname: Pull Requests
 
 on:
   pull_request_target:

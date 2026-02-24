@@ -69,6 +69,11 @@ class User extends Authenticatable
         return $this->hasMany(WalletTransaction::class);
     }
 
+    public function walletRechargeOrders(): HasMany
+    {
+        return $this->hasMany(WalletRechargeOrder::class);
+    }
+
     public function hasRole(string $role): bool
     {
         return $this->roles()->where('role', $role)->exists();

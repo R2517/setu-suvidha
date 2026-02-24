@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\WalletRechargeOrder;
 use App\Models\WalletTransaction;
 use App\Services\WalletService;
 use Illuminate\Http\Request;
@@ -32,27 +33,43 @@ class WalletController extends Controller
     public function createOrder(Request $request)
     {
         $request->validate([
-            'amount' => 'required|numeric|min:1|max:50000',
+            'amount' => 'required|numeric|min:50|max:50000',
         ]);
 
-        $amount = (int) ($request->amount * 100); // Convert to paise
+        $amountPaise = (int) round($request->amount * 100); // Convert to paise
 
         try {
             $api = new Api(config('razorpay.key_id'), config('razorpay.key_secret'));
 
             $order = $api->order->create([
                 'receipt' => 'w_' . Str::uuid()->toString(),
-                'amount' => $amount,
+                'amount' => $amountPaise,
                 'currency' => 'INR',
+                'notes' => [
+                    'type' => 'wallet_recharge',
+                    'user_id' => (string) $request->user()->id,
+                ],
+            ]);
+
+            WalletRechargeOrder::create([
+                'user_id' => $request->user()->id,
+                'razorpay_order_id' => $order['id'],
+                'amount_paise' => $amountPaise,
+                'status' => 'pending',
             ]);
 
             return response()->json([
                 'success' => true,
                 'order_id' => $order['id'],
                 'key_id' => config('razorpay.key_id'),
-                'amount' => $amount,
+                'amount' => $amountPaise,
             ]);
         } catch (\Exception $e) {
+            Log::error('Wallet Razorpay order creation failed', [
+                'user_id' => $request->user()->id,
+                'amount' => $request->amount,
+                'error' => $e->getMessage(),
+            ]);
             return response()->json(['success' => false, 'message' => 'Razorpay ऑर्डर तयार करता आली नाही'], 500);
         }
     }
@@ -63,8 +80,24 @@ class WalletController extends Controller
             'razorpay_order_id' => 'required',
             'razorpay_payment_id' => 'required',
             'razorpay_signature' => 'required',
-            'amount' => 'required|numeric|min:1',
         ]);
+
+        $user = $request->user();
+        $rechargeOrder = WalletRechargeOrder::where('user_id', $user->id)
+            ->where('razorpay_order_id', $request->razorpay_order_id)
+            ->first();
+
+        if (!$rechargeOrder) {
+            return response()->json(['success' => false, 'message' => 'ऑर्डर सापडला नाही'], 404);
+        }
+
+        if ($rechargeOrder->status === 'paid') {
+            return response()->json([
+                'success' => true,
+                'message' => 'पेमेंट आधीच सत्यापित झाले आहे',
+                'balance' => $user->fresh()->getWalletBalance(),
+            ]);
+        }
 
         $expectedSignature = hash_hmac(
             'sha256',
@@ -72,17 +105,38 @@ class WalletController extends Controller
             config('razorpay.key_secret')
         );
 
-        if ($expectedSignature !== $request->razorpay_signature) {
+        if (!hash_equals($expectedSignature, $request->razorpay_signature)) {
             return response()->json(['success' => false, 'message' => 'पेमेंट सत्यापन अयशस्वी'], 400);
         }
 
         try {
+            $api = new Api(config('razorpay.key_id'), config('razorpay.key_secret'));
+            $payment = $api->payment->fetch($request->razorpay_payment_id);
+
+            if (($payment['order_id'] ?? null) !== $rechargeOrder->razorpay_order_id) {
+                return response()->json(['success' => false, 'message' => 'ऑर्डर जुळत नाही'], 400);
+            }
+
+            if ((int) ($payment['amount'] ?? 0) !== (int) $rechargeOrder->amount_paise) {
+                return response()->json(['success' => false, 'message' => 'पेमेंट रक्कम जुळत नाही'], 400);
+            }
+
+            $paymentStatus = strtolower((string) ($payment['status'] ?? ''));
+            if ($paymentStatus !== 'captured') {
+                return response()->json(['success' => false, 'message' => 'पेमेंट कॅप्चर झालेले नाही'], 400);
+            }
+
             $result = $this->walletService->credit(
-                $request->user(),
-                (float) $request->amount,
+                $user,
+                (float) ($rechargeOrder->amount_paise / 100),
                 'Razorpay वॉलेट रिचार्ज',
                 $request->razorpay_payment_id
             );
+
+            $rechargeOrder->update([
+                'status' => 'paid',
+                'razorpay_payment_id' => $request->razorpay_payment_id,
+            ]);
 
             return response()->json([
                 'success' => true,
@@ -91,9 +145,9 @@ class WalletController extends Controller
             ]);
         } catch (\Exception $e) {
             Log::error('Wallet credit failed after payment verification', [
-                'user_id' => $request->user()->id,
+                'user_id' => $user->id,
                 'payment_id' => $request->razorpay_payment_id,
-                'amount' => $request->amount,
+                'order_id' => $request->razorpay_order_id,
                 'error' => $e->getMessage(),
             ]);
             return response()->json(['success' => false, 'message' => 'वॉलेट ऑपरेशन अयशस्वी'], 500);
@@ -131,18 +185,40 @@ class WalletController extends Controller
             $paymentId = $payment['id'];
             $amountInRupees = $payment['amount'] / 100;
             $orderId = $payment['order_id'] ?? null;
+            $rechargeOrder = $orderId
+                ? WalletRechargeOrder::where('razorpay_order_id', $orderId)->first()
+                : null;
 
             // Skip if already credited (idempotency)
-            $existing = WalletTransaction::where('reference_id', $paymentId)->first();
+            $existing = WalletTransaction::where('type', 'credit')
+                ->where('reference_id', $paymentId)
+                ->first();
             if ($existing) {
+                if ($rechargeOrder && $rechargeOrder->status !== 'paid') {
+                    $rechargeOrder->update([
+                        'status' => 'paid',
+                        'razorpay_payment_id' => $paymentId,
+                    ]);
+                }
                 return response()->json(['status' => 'already_processed']);
             }
 
-            // Find user from notes or order
-            $userId = $payment['notes']['user_id'] ?? null;
-            if (!$userId) {
-                Log::warning('Razorpay webhook: no user_id in payment notes', [
+            if ($rechargeOrder && (int) $payment['amount'] !== (int) $rechargeOrder->amount_paise) {
+                Log::warning('Razorpay webhook: amount mismatch', [
                     'payment_id' => $paymentId,
+                    'order_id' => $orderId,
+                    'payload_amount' => $payment['amount'],
+                    'expected_amount' => $rechargeOrder->amount_paise,
+                ]);
+                return response()->json(['status' => 'amount_mismatch'], 400);
+            }
+
+            // Find user from notes, fallback to local recharge order.
+            $userId = $payment['notes']['user_id'] ?? $rechargeOrder?->user_id;
+            if (!$userId) {
+                Log::warning('Razorpay webhook: no user mapping', [
+                    'payment_id' => $paymentId,
+                    'order_id' => $orderId,
                 ]);
                 return response()->json(['status' => 'no_user_id'], 400);
             }
@@ -159,6 +235,13 @@ class WalletController extends Controller
                     'Razorpay वॉलेट रिचार्ज (webhook)',
                     $paymentId
                 );
+
+                if ($rechargeOrder && $rechargeOrder->status !== 'paid') {
+                    $rechargeOrder->update([
+                        'status' => 'paid',
+                        'razorpay_payment_id' => $paymentId,
+                    ]);
+                }
 
                 Log::info('Razorpay webhook: payment credited', [
                     'user_id' => $userId,

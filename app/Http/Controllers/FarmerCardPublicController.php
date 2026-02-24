@@ -159,13 +159,44 @@ class FarmerCardPublicController extends Controller
 
         $order = FarmerCardOrder::where('transaction_no', $request->transaction_no)->firstOrFail();
 
+        if ($order->status === 'paid' && $order->razorpay_payment_id === $request->razorpay_payment_id) {
+            return response()->json([
+                'success' => true,
+                'transaction_no' => $order->transaction_no,
+                'message' => 'Payment already verified.',
+            ]);
+        }
+
+        if ($order->status === 'paid' && $order->razorpay_payment_id !== $request->razorpay_payment_id) {
+            return response()->json(['success' => false, 'message' => 'Order is already paid.'], 409);
+        }
+
+        if (!$order->razorpay_order_id || $order->razorpay_order_id !== $request->razorpay_order_id) {
+            return response()->json(['success' => false, 'message' => 'Order mismatch.'], 400);
+        }
+
         // Verify signature
         try {
             $keySecret = config('razorpay.key_secret');
             $expectedSignature = hash_hmac('sha256', $request->razorpay_order_id . '|' . $request->razorpay_payment_id, $keySecret);
 
-            if ($expectedSignature !== $request->razorpay_signature) {
+            if (!hash_equals($expectedSignature, $request->razorpay_signature)) {
                 return response()->json(['success' => false, 'message' => 'Payment verification failed.'], 400);
+            }
+
+            $api = new \Razorpay\Api\Api(config('razorpay.key_id'), $keySecret);
+            $payment = $api->payment->fetch($request->razorpay_payment_id);
+
+            if (($payment['order_id'] ?? null) !== $order->razorpay_order_id) {
+                return response()->json(['success' => false, 'message' => 'Payment/order mismatch.'], 400);
+            }
+
+            if ((int) ($payment['amount'] ?? 0) !== (int) $order->amount) {
+                return response()->json(['success' => false, 'message' => 'Payment amount mismatch.'], 400);
+            }
+
+            if (strtolower((string) ($payment['status'] ?? '')) !== 'captured') {
+                return response()->json(['success' => false, 'message' => 'Payment is not captured yet.'], 400);
             }
 
             $order->update([

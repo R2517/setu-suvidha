@@ -3,7 +3,7 @@
 SaaS platform for Maharashtra VLE (Village Level Entrepreneur) centers — government forms, wallet, CRM, and admin panel.
 
 ## Tech Stack
-- **Backend:** Laravel 11, PHP 8.2+, MySQL 8.0
+- **Backend:** Laravel 12, PHP 8.2+, MySQL 8.0
 - **Frontend:** Tailwind CSS v3.4, Alpine.js, Lucide Icons
 - **Auth:** Laravel Breeze
 - **Payments:** Razorpay
@@ -29,9 +29,10 @@ npm run build
 php artisan serve --port=8080
 ```
 
-## Default Admin Login
-- **Email:** admin@setusuvidha.com
-- **Password:** admin123
+## Admin Seeding
+- `AdminUserSeeder` runs automatically in non-production environments.
+- Set `ADMIN_DEFAULT_PASSWORD` in `.env` before running the seeder.
+- Production seeding is disabled by default; enable explicitly with `SEED_ADMIN_USER=true`.
 
 ## Features
 - 11 public pages (Home, About, Services, FAQ, Contact, etc.)

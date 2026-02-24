@@ -15,8 +15,14 @@ APP_DIR="$HOME_DIR/setu-suvidha"
 REPO_URL="https://github.com/R2517/setu-suvidha.git"
 DB_NAME="u515436084_setu_suvidha"
 DB_USER="u515436084_setu_suvidha"
-DB_PASS='Rajat@19941996'
+DB_PASS="${DB_PASS:-}"
 PHP_BIN="/opt/alt/php83/usr/bin/php"
+
+if [ -z "$DB_PASS" ]; then
+    echo "ERROR: DB_PASS is not set. Export DB_PASS before running deploy.sh"
+    echo "Example: export DB_PASS='your_database_password'"
+    exit 1
+fi
 
 echo ""
 echo "═══════════════════════════════════════════════════"
@@ -157,7 +163,11 @@ echo ">>> Step 8: Laravel setup..."
 $PHP_BIN artisan key:generate --force
 $PHP_BIN artisan storage:link 2>/dev/null || echo "Storage link may already exist"
 $PHP_BIN artisan migrate --force
-$PHP_BIN artisan db:seed --force 2>/dev/null || echo "Seeders run (or already seeded)"
+if [ "${RUN_SEEDERS:-false}" = "true" ]; then
+    $PHP_BIN artisan db:seed --force
+else
+    echo "Skipping db:seed (set RUN_SEEDERS=true to enable)."
+fi
 $PHP_BIN artisan config:cache
 $PHP_BIN artisan route:cache
 $PHP_BIN artisan view:cache

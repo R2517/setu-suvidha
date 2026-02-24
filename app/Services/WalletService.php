@@ -47,6 +47,21 @@ class WalletService
         return DB::transaction(function () use ($user, $amount, $description, $referenceId) {
             $profile = Profile::where('user_id', $user->id)->lockForUpdate()->first();
 
+            // Idempotency: avoid double-crediting the same payment reference.
+            if ($referenceId) {
+                $alreadyCredited = WalletTransaction::where('type', 'credit')
+                    ->where('reference_id', $referenceId)
+                    ->exists();
+
+                if ($alreadyCredited) {
+                    return [
+                        'credited' => 0,
+                        'balance_after' => (float) $profile->wallet_balance,
+                        'already_credited' => true,
+                    ];
+                }
+            }
+
             $newBalance = $profile->wallet_balance + $amount;
             $profile->update(['wallet_balance' => $newBalance]);
 
@@ -59,7 +74,11 @@ class WalletService
                 'reference_id' => $referenceId,
             ]);
 
-            return ['credited' => $amount, 'balance_after' => $newBalance];
+            return [
+                'credited' => $amount,
+                'balance_after' => $newBalance,
+                'already_credited' => false,
+            ];
         });
     }
 

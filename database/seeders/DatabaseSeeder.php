@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -15,11 +14,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call([
+        $seeders = [
             FormPricingSeeder::class,
             SubscriptionPlanSeeder::class,
-            AdminUserSeeder::class,
             BondFormatSeeder::class,
-        ]);
+        ];
+
+        $allowAdminSeeder = !app()->environment('production')
+            || filter_var(env('SEED_ADMIN_USER', false), FILTER_VALIDATE_BOOL);
+
+        if ($allowAdminSeeder) {
+            $seeders[] = AdminUserSeeder::class;
+        }
+
+        $this->call($seeders);
     }
 }
