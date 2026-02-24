@@ -45,6 +45,13 @@
                     <i data-lucide="wallet" class="w-3.5 h-3.5"></i>
                     <span>₹{{ number_format(auth()->user()->getWalletBalance(), 2) }}</span>
                 </a>
+                {{-- Subscription --}}
+                <a href="{{ route('subscription') }}"
+                   class="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm transition-all duration-200 hover:scale-[1.03] {{ request()->routeIs('subscription*') ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white' : 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-indigo-900/40' }}"
+                   title="Subscription">
+                    <i data-lucide="crown" class="w-3.5 h-3.5"></i>
+                    <span class="hidden sm:inline">Plan</span>
+                </a>
                 {{-- Dashboard --}}
                 <a href="{{ route('dashboard') }}" class="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 hover:text-amber-600 dark:hover:text-amber-400 transition" title="डॅशबोर्ड">
                     <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
@@ -89,3 +96,5 @@
     </div>
     @endguest
 </nav>
+
+
