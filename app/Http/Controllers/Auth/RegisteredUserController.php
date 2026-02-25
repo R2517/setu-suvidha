@@ -7,6 +7,7 @@ use App\Models\Profile;
 use App\Models\SubscriptionPlan;
 use App\Models\User;
 use App\Models\UserRole;
+use App\Models\VillageInfo;
 use App\Models\VleSubscription;
 use App\Models\WalletTransaction;
 use Illuminate\Auth\Events\Registered;
@@ -15,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
@@ -22,15 +24,53 @@ class RegisteredUserController extends Controller
 {
     public function create(): View
     {
-        return view('auth.register');
+        $districts = config('maharashtra.districts', []);
+        $villageRows = collect();
+        if (Schema::hasTable('village_infos')) {
+            $villageRows = VillageInfo::query()
+                ->select('district', 'taluka', 'village')
+                ->whereNotNull('district')
+                ->whereNotNull('taluka')
+                ->whereNotNull('village')
+                ->distinct()
+                ->orderBy('district')
+                ->orderBy('taluka')
+                ->orderBy('village')
+                ->get();
+        }
+
+        $villageMap = [];
+        foreach ($villageRows as $row) {
+            $district = (string) $row->district;
+            $taluka = (string) $row->taluka;
+            $village = (string) $row->village;
+            $villageMap[$district][$taluka][] = $village;
+        }
+
+        foreach ($villageMap as $district => $talukas) {
+            foreach ($talukas as $taluka => $villages) {
+                $villages = array_values(array_unique($villages));
+                sort($villages, SORT_NATURAL | SORT_FLAG_CASE);
+                $villageMap[$district][$taluka] = $villages;
+            }
+        }
+
+        return view('auth.register', compact('districts', 'villageMap'));
     }
 
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'state' => ['required', 'string', 'max:100'],
+            'district' => ['required', 'string', 'max:120'],
+            'taluka' => ['required', 'string', 'max:120'],
+            'village' => ['required', 'string', 'max:150'],
+            'address_line1' => ['required', 'string', 'max:500'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'mobile' => ['required', 'digits:10'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'promo_code' => ['nullable', 'string', 'max:50'],
         ]);
 
         $signupBonus = 50.00;
@@ -46,6 +86,13 @@ class RegisteredUserController extends Controller
                 'user_id' => $createdUser->id,
                 'full_name' => $createdUser->name,
                 'email' => $createdUser->email,
+                'mobile' => $request->mobile,
+                'address' => $request->address_line1,
+                'state' => $request->state,
+                'district' => $request->district,
+                'taluka' => $request->taluka,
+                'village' => $request->village,
+                'promo_code' => $request->promo_code,
                 'wallet_balance' => $signupBonus,
                 'signup_bonus_given' => true,
                 'is_active' => true,

@@ -20,9 +20,16 @@ class RegistrationTest extends TestCase
     {
         $response = $this->post('/register', [
             'name' => 'Test User',
+            'state' => 'महाराष्ट्र (Maharashtra)',
+            'district' => 'पुणे (Pune)',
+            'taluka' => 'पुणे शहर',
+            'village' => 'कसबा पुणे',
+            'address_line1' => 'Shop No 1, Main Road',
             'email' => 'test@example.com',
+            'mobile' => '9876543210',
             'password' => 'password',
             'password_confirmation' => 'password',
+            'promo_code' => 'TEST50',
         ]);
 
         $this->assertAuthenticated();
