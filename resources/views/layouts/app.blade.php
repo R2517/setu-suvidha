@@ -26,7 +26,7 @@
             $slug = (string) request()->route('slug');
             $seoOgImage = (string) data_get(config('service_pages.pages', []), $slug . '.og_image', '');
         }
-        if ($seoOgImage === '') {
+        if ($seoOgImage === '' && $routeName !== null) {
             $seoOgImage = (string) data_get(config('seo.route_og_images', []), $routeName, '');
         }
         if ($seoOgImage === '') {
