@@ -1,14 +1,14 @@
 import './bootstrap';
 
 import Alpine from 'alpinejs';
-import { createIcons } from 'lucide';
+import { createIcons, icons } from 'lucide';
 
 window.Alpine = Alpine;
 
 Alpine.start();
 
 const renderLucideIcons = () => {
-    createIcons();
+    createIcons({ icons });
 };
 
 if (document.readyState === 'loading') {

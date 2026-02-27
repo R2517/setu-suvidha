@@ -130,78 +130,119 @@
 </section>
 
 {{-- Subscription Plans Section --}}
-<section class="py-20 bg-gray-50 dark:bg-gray-900">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center max-w-3xl mx-auto mb-12">
-            <p class="inline-flex items-center gap-2 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 px-3 py-1 rounded-full text-xs font-semibold mb-4">
-                <i data-lucide="crown" class="w-3.5 h-3.5"></i> Subscription Plans
-            </p>
-            <h2 class="text-3xl lg:text-4xl font-black text-gray-900 dark:text-white mb-3">Admin Configured Plans</h2>
-            <p class="text-sm sm:text-base text-gray-500 dark:text-gray-400">Yahaan wahi plans dikh rahe hain jo admin panel me active kiye gaye hain.</p>
+<section class="py-20 relative overflow-hidden bg-gradient-to-b from-gray-50 via-white to-gray-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
+    <div class="absolute inset-0 opacity-40 dark:opacity-10" style="background-image: radial-gradient(circle at 25% 25%, rgba(99,102,241,0.08) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(245,158,11,0.08) 0%, transparent 50%);"></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-14">
+            <div class="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-100 to-purple-100 dark:from-indigo-900/30 dark:to-purple-900/30 text-indigo-700 dark:text-indigo-300 px-4 py-1.5 rounded-full text-xs font-bold mb-5">
+                <i data-lucide="crown" class="w-3.5 h-3.5"></i> प्रीमियम प्लॅन्स
+            </div>
+            <h2 class="text-3xl lg:text-4xl font-black text-gray-900 dark:text-white mb-4">तुमच्यासाठी योग्य प्लॅन निवडा</h2>
+            <p class="text-sm sm:text-base text-gray-500 dark:text-gray-400">सर्व सरकारी सेवांचा पूर्ण ॲक्सेस मिळवा — किफायतशीर दरात, कोणतीही लपलेली फी नाही</p>
         </div>
 
         @php
-            $planColors = [
-                'monthly' => ['from-blue-500', 'to-blue-600'],
-                'quarterly' => ['from-emerald-500', 'to-emerald-600'],
-                'half_yearly' => ['from-purple-500', 'to-purple-600'],
-                'yearly' => ['from-amber-500', 'to-amber-600'],
+            $planGradients = [
+                'monthly' => ['from-blue-500 to-cyan-500', 'blue'],
+                'quarterly' => ['from-emerald-500 to-teal-500', 'emerald'],
+                'half_yearly' => ['from-purple-500 to-violet-500', 'purple'],
+                'yearly' => ['from-amber-500 to-orange-500', 'amber'],
+            ];
+            $planIcons = [
+                'monthly' => 'zap',
+                'quarterly' => 'trending-up',
+                'half_yearly' => 'star',
+                'yearly' => 'gem',
+            ];
+            $planLabels = [
+                'monthly' => 'मासिक',
+                'quarterly' => 'त्रैमासिक',
+                'half_yearly' => 'सहामाही',
+                'yearly' => 'वार्षिक',
             ];
         @endphp
 
         @if($plans->isNotEmpty())
-        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
-            @foreach($plans as $plan)
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-{{ min($plans->count(), 4) }} gap-6 max-w-5xl mx-auto">
+            @foreach($plans as $index => $plan)
             @php
-                $colors = $planColors[$plan->plan_type] ?? $planColors['monthly'];
+                $grad = $planGradients[$plan->plan_type] ?? $planGradients['monthly'];
+                $iconName = $planIcons[$plan->plan_type] ?? 'zap';
+                $label = $planLabels[$plan->plan_type] ?? str_replace('_', ' ', (string) $plan->plan_type);
                 $features = is_array($plan->features) ? array_slice(array_values(array_filter($plan->features)), 0, 6) : [];
-                $typeLabel = str_replace('_', ' ', (string) $plan->plan_type);
+                $isPopular = $plans->count() > 1 && $index === 1;
+                $price = (float) $plan->price;
             @endphp
-            <article class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden relative flex flex-col">
-                @if((float) $plan->discount_percent > 0)
-                <div class="absolute top-3 left-3 text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-600">
-                    {{ (int) $plan->discount_percent }}% OFF
+            <article class="group relative bg-white dark:bg-gray-900 rounded-3xl border {{ $isPopular ? 'border-indigo-300 dark:border-indigo-700 shadow-xl shadow-indigo-500/10 scale-[1.02]' : 'border-gray-200 dark:border-gray-800 shadow-lg shadow-gray-200/50 dark:shadow-gray-900/50' }} overflow-hidden flex flex-col transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
+
+                {{-- Popular Badge --}}
+                @if($isPopular)
+                <div class="absolute -top-0 left-1/2 -translate-x-1/2 z-10">
+                    <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-[10px] font-black uppercase tracking-wider px-4 py-1 rounded-b-lg shadow-lg">
+                        ⭐ सर्वात लोकप्रिय
+                    </div>
                 </div>
                 @endif
 
-                <div class="bg-gradient-to-br {{ $colors[0] }} {{ $colors[1] }} px-5 py-4 text-white">
-                    <div class="text-xs font-bold uppercase tracking-wider opacity-85 mb-1">{{ $typeLabel }}</div>
-                    <div class="text-2xl font-black">Rs {{ number_format((float) $plan->price, 0) }}</div>
-                    <div class="text-xs opacity-80">/ {{ (int) $plan->duration_days }} days</div>
+                {{-- Discount Badge --}}
+                @if((float) $plan->discount_percent > 0)
+                <div class="absolute top-4 right-4 z-10">
+                    <div class="bg-red-500 text-white text-[10px] font-black px-2.5 py-1 rounded-full shadow-md animate-pulse">
+                        {{ (int) $plan->discount_percent }}% OFF
+                    </div>
+                </div>
+                @endif
+
+                {{-- Header --}}
+                <div class="relative px-6 pt-8 pb-6 text-center">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br {{ $grad[0] }} flex items-center justify-center mx-auto mb-4 shadow-lg">
+                        <i data-lucide="{{ $iconName }}" class="w-7 h-7 text-white"></i>
+                    </div>
+                    <div class="text-xs font-bold uppercase tracking-widest text-{{ $grad[1] }}-600 dark:text-{{ $grad[1] }}-400 mb-2">{{ $label }}</div>
+                    <h3 class="text-base font-bold text-gray-900 dark:text-white mb-3">{{ $plan->name }}</h3>
+                    <div class="flex items-baseline justify-center gap-1">
+                        <span class="text-4xl font-black text-gray-900 dark:text-white">₹{{ number_format($price, 0) }}</span>
+                        <span class="text-sm text-gray-400 font-medium">/ {{ (int) $plan->duration_days }} दिवस</span>
+                    </div>
                 </div>
 
-                <div class="p-5 flex-1 flex flex-col">
-                    <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-3">{{ $plan->name }}</h3>
+                {{-- Divider --}}
+                <div class="mx-6 border-t border-gray-100 dark:border-gray-800"></div>
 
+                {{-- Body --}}
+                <div class="px-6 py-5 flex-1 flex flex-col">
                     @if((float) $plan->maintenance_amount > 0)
-                    <div class="flex items-center justify-between bg-amber-50 dark:bg-amber-900/20 rounded-lg px-3 py-2 mb-3">
-                        <span class="text-[10px] font-bold text-amber-700 dark:text-amber-300">Maintenance</span>
-                        <span class="text-xs font-black text-amber-700 dark:text-amber-300">Rs {{ number_format((float) $plan->maintenance_amount, 0) }}</span>
+                    <div class="flex items-center justify-between bg-amber-50/80 dark:bg-amber-900/20 rounded-xl px-4 py-2.5 mb-4 border border-amber-100 dark:border-amber-800/30">
+                        <span class="text-xs font-semibold text-amber-700 dark:text-amber-300">मेंटेनन्स शुल्क</span>
+                        <span class="text-sm font-black text-amber-700 dark:text-amber-300">₹{{ number_format((float) $plan->maintenance_amount, 0) }}</span>
                     </div>
                     @endif
 
                     @if((int) $plan->trial_days > 0)
-                    <div class="text-xs text-gray-500 dark:text-gray-400 mb-3 flex items-center gap-1">
-                        <i data-lucide="clock" class="w-3 h-3"></i> {{ (int) $plan->trial_days }} days trial
+                    <div class="flex items-center gap-2 bg-green-50/80 dark:bg-green-900/20 rounded-xl px-4 py-2.5 mb-4 border border-green-100 dark:border-green-800/30">
+                        <i data-lucide="gift" class="w-4 h-4 text-green-600 dark:text-green-400"></i>
+                        <span class="text-xs font-bold text-green-700 dark:text-green-300">{{ (int) $plan->trial_days }} दिवस मोफत ट्रायल</span>
                     </div>
                     @endif
 
                     @if(count($features) > 0)
-                    <ul class="space-y-1.5 mb-4 flex-1">
+                    <ul class="space-y-2.5 mb-5 flex-1">
                         @foreach($features as $feature)
-                        <li class="text-xs text-gray-600 dark:text-gray-400 flex items-start gap-1.5">
-                            <i data-lucide="check" class="w-3 h-3 text-green-500 mt-0.5 shrink-0"></i>
-                            <span>{{ $feature }}</span>
+                        <li class="flex items-start gap-2.5">
+                            <div class="w-5 h-5 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center shrink-0 mt-0.5">
+                                <i data-lucide="check" class="w-3 h-3 text-green-600 dark:text-green-400"></i>
+                            </div>
+                            <span class="text-sm text-gray-600 dark:text-gray-400">{{ $feature }}</span>
                         </li>
                         @endforeach
                     </ul>
                     @else
-                    <div class="text-xs text-gray-500 dark:text-gray-400 mb-4 flex-1">Full access as per current admin plan configuration.</div>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-5 flex-1">सर्व प्रीमियम सेवांचा पूर्ण ॲक्सेस मिळवा.</p>
                     @endif
 
-                    <div class="mt-auto pt-3">
-                        <a href="{{ route('register') }}" class="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold bg-gradient-to-r {{ $colors[0] }} {{ $colors[1] }} text-white hover:opacity-90 transition">
-                            <i data-lucide="rocket" class="w-4 h-4"></i> Activate
+                    <div class="mt-auto">
+                        <a href="{{ route('register') }}" class="w-full inline-flex items-center justify-center gap-2 py-3.5 rounded-2xl text-sm font-bold {{ $isPopular ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30' : 'bg-gradient-to-r ' . $grad[0] . ' text-white shadow-md hover:shadow-lg' }} transition-all duration-300 hover:opacity-95">
+                            <i data-lucide="rocket" class="w-4 h-4"></i> सुरुवात करा
                         </a>
                     </div>
                 </div>
@@ -209,12 +250,14 @@
             @endforeach
         </div>
         @else
-        <div class="max-w-2xl mx-auto text-center rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 px-6 py-10">
-            <i data-lucide="badge-alert" class="w-8 h-8 text-amber-500 mx-auto mb-3"></i>
-            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">No active plans found</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Please add or activate subscription plans from the admin panel.</p>
-            <a href="{{ route('register') }}" class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-2.5 rounded-xl transition">
-                <i data-lucide="user-plus" class="w-4 h-4"></i> Go to Register
+        <div class="max-w-2xl mx-auto text-center rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 px-8 py-12 shadow-lg">
+            <div class="w-16 h-16 rounded-2xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="badge-alert" class="w-8 h-8 text-amber-500"></i>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">कोणतेही प्लॅन सध्या उपलब्ध नाहीत</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">लवकरच नवीन प्लॅन्स उपलब्ध होतील. तोपर्यंत मोफत नोंदणी करा!</p>
+            <a href="{{ route('register') }}" class="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold px-6 py-3 rounded-xl hover:opacity-90 transition shadow-lg">
+                <i data-lucide="user-plus" class="w-4 h-4"></i> मोफत नोंदणी करा
             </a>
         </div>
         @endif
