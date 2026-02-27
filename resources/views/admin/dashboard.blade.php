@@ -127,19 +127,19 @@
                     <h2 class="text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2"><i data-lucide="zap" class="w-4 h-4 text-amber-500"></i> Quick Actions</h2>
                     <div class="grid grid-cols-2 gap-3">
                         <a href="{{ route('admin.vles') }}" class="flex flex-col items-center gap-2 p-3 rounded-xl bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition text-center">
-                            <i data-lucide="users" class="w-5 h-5 text-blue-600"></i>
+                            <i data-lucide="users" class="w-5 h-5 text-blue-600 pointer-events-none"></i>
                             <span class="text-[11px] font-medium text-blue-700 dark:text-blue-400">VLEs</span>
                         </a>
                         <a href="{{ route('admin.plans') }}" class="flex flex-col items-center gap-2 p-3 rounded-xl bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 transition text-center">
-                            <i data-lucide="crown" class="w-5 h-5 text-indigo-600"></i>
+                            <i data-lucide="crown" class="w-5 h-5 text-indigo-600 pointer-events-none"></i>
                             <span class="text-[11px] font-medium text-indigo-700 dark:text-indigo-400">प्लॅन्स</span>
                         </a>
                         <a href="{{ route('admin.pricing') }}" class="flex flex-col items-center gap-2 p-3 rounded-xl bg-amber-50 dark:bg-amber-900/20 hover:bg-amber-100 dark:hover:bg-amber-900/30 transition text-center">
-                            <i data-lucide="indian-rupee" class="w-5 h-5 text-amber-600"></i>
+                            <i data-lucide="indian-rupee" class="w-5 h-5 text-amber-600 pointer-events-none"></i>
                             <span class="text-[11px] font-medium text-amber-700 dark:text-amber-400">Pricing</span>
                         </a>
                         <a href="{{ route('admin.settings') }}" class="flex flex-col items-center gap-2 p-3 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition text-center">
-                            <i data-lucide="settings" class="w-5 h-5 text-gray-600"></i>
+                            <i data-lucide="settings" class="w-5 h-5 text-gray-600 pointer-events-none"></i>
                             <span class="text-[11px] font-medium text-gray-700 dark:text-gray-400">Settings</span>
                         </a>
                     </div>
