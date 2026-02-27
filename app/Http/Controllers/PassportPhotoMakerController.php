@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Profile;
 use App\Models\WalletTransaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -41,6 +42,7 @@ class PassportPhotoMakerController extends Controller
 
                 $newBalance = $profile->wallet_balance - $cost;
                 $profile->update(['wallet_balance' => $newBalance]);
+                Cache::forget("wallet_balance:{$user->id}");
 
                 $layoutLabels = [
                     '12' => '12 Photos (4×6)',

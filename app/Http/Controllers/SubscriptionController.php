@@ -8,6 +8,7 @@ use App\Models\SubscriptionPlan;
 use App\Models\VleSubscription;
 use App\Models\WalletTransaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -49,11 +50,6 @@ class SubscriptionController extends Controller
         $user = auth()->user();
         $plan = SubscriptionPlan::findOrFail($request->plan_id);
 
-        $existingSub = $user->activeSubscription();
-        if ($existingSub) {
-            return redirect()->route('subscription')->with('error', 'You already have an active subscription. Use Change Plan instead.');
-        }
-
         $maintenanceAmount = (float) $plan->maintenance_amount;
         $walletBalance = $user->getWalletBalance();
 
@@ -62,6 +58,18 @@ class SubscriptionController extends Controller
         }
 
         return DB::transaction(function () use ($user, $plan, $maintenanceAmount) {
+            $existingSub = VleSubscription::where('user_id', $user->id)
+                ->whereIn('status', ['active', 'trial'])
+                ->where(function ($q) {
+                    $q->whereNull('end_date')->orWhere('end_date', '>', now());
+                })
+                ->lockForUpdate()
+                ->first();
+
+            if ($existingSub) {
+                throw new \Exception('You already have an active subscription. Use Change Plan instead.');
+            }
+
             $trialDays = (int) ($plan->trial_days ?? 15);
             $trialEndsAt = now()->addDays($trialDays);
 
@@ -91,6 +99,8 @@ class SubscriptionController extends Controller
                     'description' => "Subscription maintenance - {$plan->name}",
                     'reference_id' => 'SUB-MAINT-' . $sub->id,
                 ]);
+
+                Cache::forget("wallet_balance:{$user->id}");
             }
 
             return redirect()->route('subscription')->with('success', "{$plan->name} trial started for {$trialDays} days.");
@@ -140,6 +150,8 @@ class SubscriptionController extends Controller
                     'description' => "Subscription activation - {$plan->name}",
                     'reference_id' => 'SUB-ACTIVATE-NOW-' . $currentSub->id,
                 ]);
+
+                Cache::forget("wallet_balance:{$user->id}");
             }
 
             $currentSub->update([
@@ -617,6 +629,7 @@ class SubscriptionController extends Controller
             if ($walletBalance >= $planPrice) {
                 $newBalance = $walletBalance - $planPrice;
                 $profile->update(['wallet_balance' => $newBalance]);
+                Cache::forget("wallet_balance:{$user->id}");
 
                 WalletTransaction::create([
                     'user_id' => $user->id,

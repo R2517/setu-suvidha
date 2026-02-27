@@ -6,6 +6,7 @@ use App\Models\Profile;
 use App\Models\VillageInfo;
 use App\Models\WalletTransaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -66,6 +67,7 @@ class AadhaarController extends Controller
 
                 $newBalance = $profile->wallet_balance - $cost;
                 $profile->update(['wallet_balance' => $newBalance]);
+                Cache::forget("wallet_balance:{$user->id}");
 
                 $formLabels = [
                     'adult'  => 'Adult Form (18+)',

@@ -11,6 +11,7 @@ use App\Models\VleSubscription;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class AdminVleController extends Controller
 {
@@ -63,40 +64,45 @@ class AdminVleController extends Controller
             'reason' => 'required|string|max:255',
         ]);
 
-        $profile = Profile::findOrFail($id);
         $amount = (float) $request->amount;
         $type = $request->type;
 
-        if ($type === 'reduce' && $profile->wallet_balance < $amount) {
-            return redirect()->back()->with('error', 'अपुरी शिल्लक! सध्याची शिल्लक: ₹' . number_format($profile->wallet_balance, 2));
-        }
+        return DB::transaction(function () use ($request, $id, $amount, $type) {
+            $profile = Profile::where('id', $id)->lockForUpdate()->firstOrFail();
 
-        $newBalance = $type === 'add'
-            ? $profile->wallet_balance + $amount
-            : $profile->wallet_balance - $amount;
+            if ($type === 'reduce' && $profile->wallet_balance < $amount) {
+                return redirect()->back()->with('error', 'अपुरी शिल्लक! सध्याची शिल्लक: ₹' . number_format($profile->wallet_balance, 2));
+            }
 
-        $profile->update(['wallet_balance' => $newBalance]);
+            $newBalance = $type === 'add'
+                ? $profile->wallet_balance + $amount
+                : $profile->wallet_balance - $amount;
 
-        WalletTransaction::create([
-            'user_id' => $profile->user_id,
-            'amount' => $amount,
-            'type' => $type === 'add' ? 'credit' : 'debit',
-            'balance_after' => $newBalance,
-            'description' => 'Admin: ' . $request->reason,
-            'reference_id' => 'ADM-' . $request->user()->id . '-' . time(),
-        ]);
+            $profile->update(['wallet_balance' => $newBalance]);
 
-        Log::info('Admin: VLE balance adjusted', [
-            'admin_id' => $request->user()->id,
-            'vle_user_id' => $profile->user_id,
-            'vle_name' => $profile->full_name,
-            'type' => $type,
-            'amount' => $amount,
-            'new_balance' => $newBalance,
-            'reason' => $request->reason,
-        ]);
+            WalletTransaction::create([
+                'user_id' => $profile->user_id,
+                'amount' => $amount,
+                'type' => $type === 'add' ? 'credit' : 'debit',
+                'balance_after' => $newBalance,
+                'description' => 'Admin: ' . $request->reason,
+                'reference_id' => 'ADM-' . $request->user()->id . '-' . time(),
+            ]);
 
-        return redirect()->back()->with('success', ($type === 'add' ? '₹' . $amount . ' जोडले!' : '₹' . $amount . ' कमी केले!'));
+            Cache::forget("wallet_balance:{$profile->user_id}");
+
+            Log::info('Admin: VLE balance adjusted', [
+                'admin_id' => $request->user()->id,
+                'vle_user_id' => $profile->user_id,
+                'vle_name' => $profile->full_name,
+                'type' => $type,
+                'amount' => $amount,
+                'new_balance' => $newBalance,
+                'reason' => $request->reason,
+            ]);
+
+            return redirect()->back()->with('success', ($type === 'add' ? '₹' . $amount . ' जोडले!' : '₹' . $amount . ' कमी केले!'));
+        });
     }
 
     public function toggleActive(Request $request, $id)
