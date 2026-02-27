@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\AdminTransactionController;
 use App\Http\Controllers\Admin\AdminSettingsController;
 use App\Http\Controllers\Admin\AdminFarmerCardController;
 use App\Http\Controllers\Admin\AdminContactRequestController;
+use App\Http\Controllers\Admin\AdminErrorLogController;
 use App\Http\Controllers\VleDirectoryController;
 use App\Http\Controllers\PanCardController;
 use App\Http\Controllers\VoterIdController;
@@ -311,6 +312,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/contact-requests', [AdminContactRequestController::class, 'index'])->name('contact-requests');
     Route::post('/contact-requests/{id}/status', [AdminContactRequestController::class, 'updateStatus'])->name('contact-requests.status');
     Route::delete('/contact-requests/{id}', [AdminContactRequestController::class, 'destroy'])->name('contact-requests.destroy');
+    Route::get('/error-logs', [AdminErrorLogController::class, 'index'])->name('error-logs');
+    Route::patch('/error-logs/{id}/resolve', [AdminErrorLogController::class, 'resolve'])->name('error-logs.resolve');
+    Route::delete('/error-logs/{id}', [AdminErrorLogController::class, 'destroy'])->name('error-logs.destroy');
+    Route::delete('/error-logs-clear', [AdminErrorLogController::class, 'clearResolved'])->name('error-logs.clear-resolved');
 });
 
 // ─── Razorpay Webhook (no auth, no CSRF) ───

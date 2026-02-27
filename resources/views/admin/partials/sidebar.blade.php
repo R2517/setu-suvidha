@@ -24,6 +24,13 @@
         <a href="{{ route('admin.settings') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.settings') ? 'bg-amber-500/20 text-amber-400' : 'text-gray-400 hover:text-white hover:bg-gray-800' }} transition">
             <i data-lucide="settings" class="w-4 h-4"></i> सेटिंग्ज
         </a>
+        <a href="{{ route('admin.error-logs') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.error-logs') ? 'bg-red-500/20 text-red-400' : 'text-gray-400 hover:text-white hover:bg-gray-800' }} transition">
+            <i data-lucide="bug" class="w-4 h-4"></i> Error Logs
+            @php try { $unresolvedCount = \App\Models\ErrorLog::where('is_resolved', false)->count(); } catch (\Throwable $e) { $unresolvedCount = 0; } @endphp
+            @if($unresolvedCount > 0)
+            <span class="ml-auto bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">{{ $unresolvedCount > 99 ? '99+' : $unresolvedCount }}</span>
+            @endif
+        </a>
         <div class="border-t border-gray-800 my-3"></div>
         <p class="px-3 text-[10px] uppercase tracking-wider text-gray-600 mb-1">Public Services</p>
         <a href="{{ route('admin.farmer-card-orders') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.farmer-card-orders') ? 'bg-green-500/20 text-green-400' : 'text-gray-400 hover:text-white hover:bg-gray-800' }} transition">
