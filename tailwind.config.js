@@ -80,5 +80,14 @@ export default {
         },
     },
 
+    safelist: [
+        // Dynamic color classes used in home.blade.php, services.blade.php, dashboard, etc.
+        // Pattern: bg-{color}-{shade}, text-{color}-{shade}
+        {
+            pattern: /^(bg|text|border|ring)-(orange|blue|green|yellow|purple|teal|pink|emerald|lime|rose|indigo|amber|violet|cyan|red|sky)-(50|100|200|300|400|500|600|700|800|900)$/,
+            variants: ['dark', 'hover', 'group-hover'],
+        },
+    ],
+
     plugins: [forms],
 };
