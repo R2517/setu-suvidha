@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'मुख्यमंत्री माझी लाडकी बहीण योजना २०२६: संपूर्ण माहिती, पात्रता, कागदपत्रे | SETU Suvidha')
+@section('title', 'Ladki Bahin Yojana 2026 Guide | SETU Suvidha')
 @section('description', 'लाडकी बहीण योजना अर्ज, कागदपत्रे, पात्रता, DBT स्टेटस, लाभार्थी यादी, आधार लिंक, हप्ता तारीख — फेब्रुवारी २०२६ अद्ययावत माहिती.')
 @push('meta')
 <meta name="keywords" content="लाडकी बहीण योजना, ladki bahin yojana, लाडकी बहीण योजना अर्ज, ladki bahin yojana apply online, लाडकी बहीण योजना कागदपत्रे, ladki bahin yojana documents, लाडकी बहीण योजना यादी, ladki bahin yojana beneficiary list, लाडकी बहीण योजना पात्रता, ladki bahin yojana eligibility, लाडकी बहीण योजना हप्ता, ladki bahin yojana status check, लाडकी बहीण योजना DBT स्टेटस, ladki bahin yojana helpline number, नारी शक्ती दूत ॲप, ladki bahin yojana age limit, लाडकी बहीण योजना आधार लिंक, mukhyamantri mazi ladki bahin yojana 2026">

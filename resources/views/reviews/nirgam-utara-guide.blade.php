@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Nirgam Utara Download 2026: निर्गम उतारा म्हणजे काय — अर्ज, वापर व PDF Format Guide')
+@section('title', 'Nirgam Utara Download Guide 2026 | SETU Suvidha')
 @section('description', 'Understand Nirgam Utara meaning, use, application format, and how to get it from school. निर्गम उतारा म्हणजे काय, अर्ज कसा लिहावा संपूर्ण माहिती.')
 @push('meta')
 <meta name="keywords" content="nirgam utara, nirgam utara meaning, nirgam utara in english, nirgam utara application, nirgam utara use, pravesh nirgam utara, duplicate tc nirgam utara, nirgam utara mhanje kay, निर्गम उतारा, निर्गम उतारा अर्ज, निर्गम उतारा म्हणजे काय, शाळा निर्गम दाखला, school leaving record, nirgam utara kya hota hai, nirgam utara kaise nikale, nirgam utara kaha milta hai, school nirgam utara in marathi, nirgam utara format pdf, nirgam dakhla">

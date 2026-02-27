@@ -1,0 +1,41 @@
+[
+  {"slug":"home","title":"SETU Suvidha","subtitle":"Maha e-Seva and CSC Government Form Platform","theme":"sunrise"},
+  {"slug":"about","title":"About SETU Suvidha","subtitle":"Built for Setu and CSC operators in Maharashtra","theme":"ocean"},
+  {"slug":"contact","title":"Contact SETU Suvidha","subtitle":"Support, onboarding and service help","theme":"ocean"},
+  {"slug":"services","title":"Government Services","subtitle":"Hamipatra, Income, Caste, Rajpatra and more","theme":"sunrise"},
+  {"slug":"how-it-works","title":"How SETU Suvidha Works","subtitle":"Workflow for high-speed citizen service counters","theme":"forest"},
+  {"slug":"benefits","title":"SETU Suvidha Benefits","subtitle":"Faster processing, better accuracy, stronger records","theme":"forest"},
+  {"slug":"faq","title":"SETU Suvidha FAQ","subtitle":"Answers for operators and applicants","theme":"violet"},
+  {"slug":"author","title":"Founder Story","subtitle":"Operator-built platform with field-first execution","theme":"violet"},
+  {"slug":"reviews-index","title":"Government Scheme Reviews","subtitle":"Practical scheme and service guides for Maharashtra","theme":"sunrise"},
+  {"slug":"farmer-id-online","title":"Farmer ID Card Online","subtitle":"QR-ready download and assisted workflow support","theme":"forest"},
+
+  {"slug":"services-hamipatra","title":"Hamipatra Format Marathi","subtitle":"Draft, validate and print with operator checklist","theme":"sunrise"},
+  {"slug":"services-self-declaration","title":"Self Declaration Format","subtitle":"Marathi declaration workflow for public services","theme":"ocean"},
+  {"slug":"services-income-certificate","title":"Income Certificate Application","subtitle":"Data quality and document checklist for fast approval","theme":"forest"},
+  {"slug":"services-caste-certificate","title":"Caste Certificate Form","subtitle":"Document mapping and verification best practices","theme":"violet"},
+  {"slug":"services-rajpatra","title":"Rajpatra Gazette Format","subtitle":"Marathi draft structure for notice workflows","theme":"sunrise"},
+  {"slug":"services-satbara","title":"Satbara 7/12 Utara Guide","subtitle":"Land record lookup and print support process","theme":"forest"},
+
+  {"slug":"review-farmer-id-card-online-guide-2026","title":"Farmer ID Card Online 2026","subtitle":"Practical process and FAQ guide","theme":"forest"},
+  {"slug":"review-ladki-bahin-yojana-maharashtra-2026","title":"Ladki Bahin Yojana 2026","subtitle":"Eligibility and document support guide","theme":"violet"},
+  {"slug":"review-mahabocw-bandkam-kamgar-yojana-2026","title":"MAHABOCW 2026","subtitle":"Registration and welfare scheme operations","theme":"sunrise"},
+  {"slug":"review-nirgam-utara-download","title":"Nirgam Utara Guide","subtitle":"Meaning, format and usage explained","theme":"ocean"},
+
+  {"slug":"review-pm-kisan-status-check-2026","title":"PM Kisan Status Check 2026","subtitle":"Beneficiary status workflow and support","theme":"forest"},
+  {"slug":"review-kcc-loan-online-apply-maharashtra","title":"KCC Loan Online Apply","subtitle":"Field-ready guide for Maharashtra operators","theme":"ocean"},
+  {"slug":"review-aadhaar-update-form-download-2026","title":"Aadhaar Update Form 2026","subtitle":"Correction process and checklist","theme":"ocean"},
+  {"slug":"review-voter-id-card-apply-online-maharashtra","title":"Voter ID Online Apply","subtitle":"Registration quality and document workflow","theme":"violet"},
+  {"slug":"review-pan-card-apply-online-guide-2026","title":"PAN Card Apply Online","subtitle":"Submission flow and common error prevention","theme":"sunrise"},
+  {"slug":"review-setu-kendra-registration-maharashtra","title":"Setu Kendra Registration","subtitle":"Launch checklist and operational setup","theme":"sunrise"},
+  {"slug":"review-csc-center-near-me-maharashtra-guide","title":"CSC Center Guide Maharashtra","subtitle":"Search, onboarding and citizen support process","theme":"forest"},
+  {"slug":"review-hamipatra-format-marathi-pdf-download","title":"Hamipatra PDF Format","subtitle":"Practical drafting for local service workflows","theme":"sunrise"},
+  {"slug":"review-self-declaration-format-marathi-download","title":"Self Declaration Marathi","subtitle":"Template strategy for faster approvals","theme":"ocean"},
+  {"slug":"review-income-certificate-online-maharashtra-guide","title":"Income Certificate Online","subtitle":"Checklist for quality first submission","theme":"forest"},
+  {"slug":"review-caste-certificate-documents-maharashtra","title":"Caste Certificate Documents","subtitle":"Structured records and verification controls","theme":"violet"},
+  {"slug":"review-rajpatra-format-marathi-guide","title":"Rajpatra Marathi Format","subtitle":"Notice drafting standards for operators","theme":"sunrise"},
+  {"slug":"review-satbara-utara-online-download-guide","title":"Satbara Utara Online Guide","subtitle":"Land record lookup and print workflow","theme":"forest"},
+  {"slug":"review-e-kyc-update-online-guide","title":"e-KYC Update Online","subtitle":"Digital correction and verification flow","theme":"ocean"},
+  {"slug":"review-maha-e-seva-kendra-start-guide","title":"Maha e-Seva Center Start Guide","subtitle":"Operational blueprint for new service counters","theme":"violet"}
+]
+

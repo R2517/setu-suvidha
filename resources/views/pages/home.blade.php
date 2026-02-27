@@ -1,16 +1,17 @@
 @extends('layouts.app')
-@section('title', 'SETU Suvidha — सेतू सुविधा | महा ई-सेवा पोर्टल | सर्व सरकारी फॉर्म्स एकाच ठिकाणी')
-@section('description', 'सेतु केंद्र, CSC केंद्र, महा ई-सेवा दुकानदारांसाठी — हमीपत्र, उत्पन्नाचा दाखला, जातीचा दाखला, राजपत्र, शेतकरी ओळखपत्र, आधार सेवा, पॅन कार्ड, बांधकाम कामगार नोंदणी. आपले सरकार सेवा सेतू सुविधा केंद्र.')
+@section('title', 'SETU Suvidha | Maha e-Seva and CSC Forms')
+@section('description', 'Setu Kendra and CSC operators ke liye practical government form platform: hamipatra, income certificate, caste certificate, rajpatra, farmer ID and more.')
 
 @push('meta')
-<meta name="keywords" content="setu suvidha, सेतू सुविधा, setu kendra, सेतू केंद्र, maha e seva, महा ई-सेवा, CSC center Maharashtra, aaple sarkar seva kendra, सेतू सुविधा केंद्र जवळ, government forms online Maharashtra, हमीपत्र, उत्पन्नाचा दाखला, जातीचा दाखला, राजपत्र नमुना, शेतकरी ओळखपत्र, farmer id card online, income certificate Maharashtra, caste certificate Maharashtra, सरकारी फॉर्म्स, digital seva portal, maha e seva kendra registration">
-<meta property="og:title" content="SETU Suvidha — महा ई-सेवा पोर्टल | सर्व सरकारी फॉर्म्स एकाच ठिकाणी">
-<meta property="og:description" content="सेतु केंद्र आणि महा ई-सेवा दुकानदारांसाठी — हमीपत्र, उत्पन्नाचा दाखला, जातीचा दाखला, शेतकरी ओळखपत्र आणि बरंच काही!">
-<meta property="og:type" content="website">
-<meta property="og:url" content="{{ url('/') }}">
-<link rel="canonical" href="{{ url('/') }}">
+<meta name="keywords" content="setu suvidha, setu kendra, maha e seva, CSC center Maharashtra, government forms online Maharashtra, hamipatra format, income certificate application, caste certificate, rajpatra format, farmer id card online">
+@php
+    $seoSocialProfiles = array_values(array_filter(config('seo.social', [])));
+@endphp
 <script type="application/ld+json">
-{"@@context":"https://schema.org","@@type":"Organization","name":"SETU Suvidha","alternateName":"सेतू सुविधा","url":"https://setusuvidha.com","description":"महाराष्ट्रातील सेतू केंद्र, CSC केंद्र आणि महा ई-सेवा दुकानदारांसाठी सर्व सरकारी फॉर्म्स, CRM आणि बिलिंग प्लॅटफॉर्म.","areaServed":{"@@type":"State","name":"Maharashtra"}}
+{"@@context":"https://schema.org","@@type":"Organization","name":"SETU Suvidha","alternateName":"Setu Suvidha","url":"{{ url('/') }}","description":"Maharashtra Setu and CSC service platform for government forms and operator workflow.","areaServed":{"@@type":"State","name":"Maharashtra"},"sameAs":@json($seoSocialProfiles)}
+</script>
+<script type="application/ld+json">
+{"@@context":"https://schema.org","@@type":"FAQPage","mainEntity":[{"@@type":"Question","name":"What is SETU Suvidha?","acceptedAnswer":{"@@type":"Answer","text":"SETU Suvidha is a practical platform for Setu and CSC operators to manage forms and service workflows."}},{"@@type":"Question","name":"Is registration free?","acceptedAnswer":{"@@type":"Answer","text":"Yes. Registration is free and users pay only for service usage based on plan and wallet flow."}},{"@@type":"Question","name":"Which forms are available?","acceptedAnswer":{"@@type":"Answer","text":"Hamipatra, self declaration, income certificate, caste certificate, rajpatra, farmer ID and more."}},{"@@type":"Question","name":"How does payment work?","acceptedAnswer":{"@@type":"Answer","text":"Wallet recharge and online payment support are available through integrated payment workflow."}},{"@@type":"Question","name":"Is the platform mobile friendly?","acceptedAnswer":{"@@type":"Answer","text":"Yes, the platform is responsive and optimized for mobile and desktop usage."}}]}
 </script>
 @endpush
 
@@ -75,13 +76,13 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             @foreach([
                 ['icon' => 'fingerprint', 'title' => 'आधार सेवा Hub', 'desc' => 'Adult, Minor, Child, Update Forms', 'color' => 'orange', 'url' => null],
-                ['icon' => 'file-text', 'title' => 'हमीपत्र', 'desc' => 'Disclaimer / Guarantee Bond', 'color' => 'blue', 'url' => null],
-                ['icon' => 'shield', 'title' => 'स्वयंघोषणापत्र', 'desc' => 'Self-Declaration Form', 'color' => 'green', 'url' => null],
+                ['icon' => 'file-text', 'title' => 'हमीपत्र', 'desc' => 'Disclaimer / Guarantee Bond', 'color' => 'blue', 'url' => route('services.landing.show', ['slug' => 'hamipatra-format-marathi'])],
+                ['icon' => 'shield', 'title' => 'स्वयंघोषणापत्र', 'desc' => 'Self-Declaration Form', 'color' => 'green', 'url' => route('services.landing.show', ['slug' => 'self-declaration-form-marathi'])],
                 ['icon' => 'alert-triangle', 'title' => 'तक्रार नोंदणी', 'desc' => 'Grievance Registration', 'color' => 'yellow', 'url' => null],
                 ['icon' => 'file-plus', 'title' => 'नवीन अर्ज', 'desc' => 'New Application', 'color' => 'purple', 'url' => null],
-                ['icon' => 'badge-check', 'title' => 'जात पडताळणी', 'desc' => 'Caste Validity', 'color' => 'teal', 'url' => null],
-                ['icon' => 'landmark', 'title' => 'उत्पन्न प्रमाणपत्र', 'desc' => 'Income Certificate', 'color' => 'pink', 'url' => null],
-                ['icon' => 'scale', 'title' => 'राजपत्र नमुना', 'desc' => 'Gazette Notice (3 formats)', 'color' => 'emerald', 'url' => null],
+                ['icon' => 'badge-check', 'title' => 'जात पडताळणी', 'desc' => 'Caste Validity', 'color' => 'teal', 'url' => route('services.landing.show', ['slug' => 'caste-certificate-form-maharashtra'])],
+                ['icon' => 'landmark', 'title' => 'उत्पन्न प्रमाणपत्र', 'desc' => 'Income Certificate', 'color' => 'pink', 'url' => route('services.landing.show', ['slug' => 'income-certificate-application-maharashtra'])],
+                ['icon' => 'scale', 'title' => 'राजपत्र नमुना', 'desc' => 'Gazette Notice (3 formats)', 'color' => 'emerald', 'url' => route('services.landing.show', ['slug' => 'rajpatra-gazette-format-marathi'])],
                 ['icon' => 'leaf', 'title' => 'शेतकरी ओळखपत्र', 'desc' => 'Farmer ID Card with QR', 'color' => 'lime', 'url' => route('farmer-card-public')],
                 ['icon' => 'camera', 'title' => 'पासपोर्ट फोटो', 'desc' => 'Passport Photo Maker', 'color' => 'rose', 'url' => null],
                 ['icon' => 'credit-card', 'title' => 'पॅन कार्ड CRM', 'desc' => 'PAN Card Applications', 'color' => 'indigo', 'url' => null],
@@ -128,57 +129,95 @@
     </div>
 </section>
 
-{{-- Pricing Section --}}
-<section class="py-20 bg-white dark:bg-gray-950">
+{{-- Subscription Plans Section --}}
+<section class="py-20 bg-gray-50 dark:bg-gray-900">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-14">
-            <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-3">सोपी किंमत</h2>
-            <p class="text-gray-500 dark:text-gray-400">कोणताही लपलेला खर्च नाही — फक्त फॉर्म शुल्क भरा</p>
+        <div class="text-center max-w-3xl mx-auto mb-12">
+            <p class="inline-flex items-center gap-2 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 px-3 py-1 rounded-full text-xs font-semibold mb-4">
+                <i data-lucide="crown" class="w-3.5 h-3.5"></i> Subscription Plans
+            </p>
+            <h2 class="text-3xl lg:text-4xl font-black text-gray-900 dark:text-white mb-3">Admin Configured Plans</h2>
+            <p class="text-sm sm:text-base text-gray-500 dark:text-gray-400">Yahaan wahi plans dikh rahe hain jo admin panel me active kiye gaye hain.</p>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {{-- Basic --}}
-            <div class="bg-gray-50 dark:bg-gray-900 rounded-2xl p-8 border border-gray-200 dark:border-gray-800">
-                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-1">बेसिक</h3>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">मोफत सुरुवात</p>
-                <div class="text-4xl font-bold text-gray-900 dark:text-white mb-6">₹0 <span class="text-sm font-normal text-gray-500">/महिना</span></div>
-                <ul class="space-y-3 mb-8 text-sm text-gray-600 dark:text-gray-400">
-                    <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> खाते तयार करा</li>
-                    <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> सर्व फॉर्म्स वापरा</li>
-                    <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> प्रति फॉर्म शुल्क</li>
-                    <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> व्यवहार इतिहास</li>
-                </ul>
-                <a href="{{ route('register') }}" class="block w-full text-center btn-outline">सुरुवात करा</a>
-            </div>
-            {{-- Pro --}}
-            <div class="relative bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-8 text-white shadow-xl scale-105">
-                <div class="absolute -top-3 right-6 bg-white text-amber-600 text-xs font-bold px-3 py-1 rounded-full">लोकप्रिय</div>
-                <h3 class="text-lg font-bold mb-1">प्रो</h3>
-                <p class="text-white/80 text-sm mb-4">व्यावसायिकांसाठी</p>
-                <div class="text-4xl font-bold mb-6">₹49 <span class="text-sm font-normal text-white/80">/महिना</span></div>
-                <ul class="space-y-3 mb-8 text-sm text-white/90">
-                    <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4"></i> सर्व बेसिक फीचर्स</li>
-                    <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4"></i> कमी शुल्क दर</li>
-                    <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4"></i> प्राधान्य सपोर्ट</li>
-                    <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4"></i> बल्क प्रिंट</li>
-                    <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4"></i> अॅडव्हान्स रिपोर्ट्स</li>
-                </ul>
-                <a href="{{ route('register') }}" class="block w-full text-center bg-white text-amber-600 font-semibold py-3 rounded-xl hover:bg-amber-50 transition">प्रो निवडा</a>
-            </div>
-            {{-- Enterprise --}}
-            <div class="bg-gray-50 dark:bg-gray-900 rounded-2xl p-8 border border-gray-200 dark:border-gray-800">
-                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-1">एंटरप्राइज</h3>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">मोठ्या संस्थांसाठी</p>
-                <div class="text-4xl font-bold text-gray-900 dark:text-white mb-6">संपर्क <span class="text-sm font-normal text-gray-500">करा</span></div>
-                <ul class="space-y-3 mb-8 text-sm text-gray-600 dark:text-gray-400">
-                    <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> सर्व प्रो फीचर्स</li>
-                    <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> कस्टम ब्रँडिंग</li>
-                    <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> API ऍक्सेस</li>
-                    <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> डेडिकेटेड सपोर्ट</li>
-                    <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> मल्टी-लोकेशन</li>
-                </ul>
-                <a href="{{ route('contact') }}" class="block w-full text-center btn-outline">संपर्क करा</a>
-            </div>
+
+        @php
+            $planColors = [
+                'monthly' => ['from-blue-500', 'to-blue-600'],
+                'quarterly' => ['from-emerald-500', 'to-emerald-600'],
+                'half_yearly' => ['from-purple-500', 'to-purple-600'],
+                'yearly' => ['from-amber-500', 'to-amber-600'],
+            ];
+        @endphp
+
+        @if($plans->isNotEmpty())
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+            @foreach($plans as $plan)
+            @php
+                $colors = $planColors[$plan->plan_type] ?? $planColors['monthly'];
+                $features = is_array($plan->features) ? array_slice(array_values(array_filter($plan->features)), 0, 6) : [];
+                $typeLabel = str_replace('_', ' ', (string) $plan->plan_type);
+            @endphp
+            <article class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden relative flex flex-col">
+                @if((float) $plan->discount_percent > 0)
+                <div class="absolute top-3 left-3 text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-600">
+                    {{ (int) $plan->discount_percent }}% OFF
+                </div>
+                @endif
+
+                <div class="bg-gradient-to-br {{ $colors[0] }} {{ $colors[1] }} px-5 py-4 text-white">
+                    <div class="text-xs font-bold uppercase tracking-wider opacity-85 mb-1">{{ $typeLabel }}</div>
+                    <div class="text-2xl font-black">Rs {{ number_format((float) $plan->price, 0) }}</div>
+                    <div class="text-xs opacity-80">/ {{ (int) $plan->duration_days }} days</div>
+                </div>
+
+                <div class="p-5 flex-1 flex flex-col">
+                    <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-3">{{ $plan->name }}</h3>
+
+                    @if((float) $plan->maintenance_amount > 0)
+                    <div class="flex items-center justify-between bg-amber-50 dark:bg-amber-900/20 rounded-lg px-3 py-2 mb-3">
+                        <span class="text-[10px] font-bold text-amber-700 dark:text-amber-300">Maintenance</span>
+                        <span class="text-xs font-black text-amber-700 dark:text-amber-300">Rs {{ number_format((float) $plan->maintenance_amount, 0) }}</span>
+                    </div>
+                    @endif
+
+                    @if((int) $plan->trial_days > 0)
+                    <div class="text-xs text-gray-500 dark:text-gray-400 mb-3 flex items-center gap-1">
+                        <i data-lucide="clock" class="w-3 h-3"></i> {{ (int) $plan->trial_days }} days trial
+                    </div>
+                    @endif
+
+                    @if(count($features) > 0)
+                    <ul class="space-y-1.5 mb-4 flex-1">
+                        @foreach($features as $feature)
+                        <li class="text-xs text-gray-600 dark:text-gray-400 flex items-start gap-1.5">
+                            <i data-lucide="check" class="w-3 h-3 text-green-500 mt-0.5 shrink-0"></i>
+                            <span>{{ $feature }}</span>
+                        </li>
+                        @endforeach
+                    </ul>
+                    @else
+                    <div class="text-xs text-gray-500 dark:text-gray-400 mb-4 flex-1">Full access as per current admin plan configuration.</div>
+                    @endif
+
+                    <div class="mt-auto pt-3">
+                        <a href="{{ route('register') }}" class="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold bg-gradient-to-r {{ $colors[0] }} {{ $colors[1] }} text-white hover:opacity-90 transition">
+                            <i data-lucide="rocket" class="w-4 h-4"></i> Activate
+                        </a>
+                    </div>
+                </div>
+            </article>
+            @endforeach
         </div>
+        @else
+        <div class="max-w-2xl mx-auto text-center rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 px-6 py-10">
+            <i data-lucide="badge-alert" class="w-8 h-8 text-amber-500 mx-auto mb-3"></i>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">No active plans found</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Please add or activate subscription plans from the admin panel.</p>
+            <a href="{{ route('register') }}" class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-2.5 rounded-xl transition">
+                <i data-lucide="user-plus" class="w-4 h-4"></i> Go to Register
+            </a>
+        </div>
+        @endif
     </div>
 </section>
 

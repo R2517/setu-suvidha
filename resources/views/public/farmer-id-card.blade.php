@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Farmer ID Card Online Download PDF — शेतकरी ओळखपत्र ऑनलाइन बनवा | Kisan Card Apply Free 2026')
+@section('title', 'Farmer ID Card Online 2026 | SETU Suvidha')
 @section('description', 'Download Farmer ID Card online with QR code instantly. शेतकरी ओळखपत्र ऑनलाइन बनवा — No CSC visit required. Farmer ID card Maharashtra, West Bengal, UP, MP, Rajasthan. PM Kisan card apply online free. किसान कार्ड ऑनलाइन डाउनलोड.')
 
 @push('meta')
@@ -334,7 +334,17 @@
                                 <div class="w-full lg:w-48 flex flex-col items-center">
                                     <label class="text-xs font-bold text-gray-600 dark:text-gray-400 mb-2">शेतकरी फोटो <span class="text-red-500">*</span></label>
                                     <div class="w-36 h-44 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg flex items-center justify-center bg-gray-50 dark:bg-gray-800 mb-3 overflow-hidden cursor-pointer" @click="$refs.photoInput.click()">
-                                        <template x-if="photoPreview"><img :src="photoPreview" class="w-full h-full object-cover"></template>
+                                        <template x-if="photoPreview">
+                                            <img
+                                                :src="photoPreview"
+                                                alt="Applicant preview"
+                                                width="160"
+                                                height="160"
+                                                loading="lazy"
+                                                decoding="async"
+                                                class="w-full h-full object-cover"
+                                            >
+                                        </template>
                                         <template x-if="!photoPreview">
                                             <div class="text-center px-2">
                                                 <i data-lucide="camera" class="w-8 h-8 text-gray-300 mx-auto mb-1"></i>

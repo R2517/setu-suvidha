@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Farmer ID Card Online 2026: संपूर्ण मार्गदर्शक — शेतकरी ओळखपत्र कसे बनवायचे | PM Kisan, Agristack')
+@section('title', 'Farmer ID Card Online Guide 2026 | SETU Suvidha')
 @section('description', 'Farmer ID Card download online guide 2026. शेतकरी ओळखपत्र कसे बनवायचे — PM Kisan, Agristack, crop insurance, KCC loan. Maharashtra, West Bengal, UP, MP सर्व राज्यांसाठी. Step-by-step अर्ज प्रक्रिया.')
 @push('meta')
 <meta name="keywords" content="farmer id card guide, farmer id card online guide, शेतकरी ओळखपत्र मार्गदर्शक, how to make farmer id card, farmer id card kaise banaye, farmer id card download pdf, farmer id card maharashtra guide, kisan card guide, pm kisan farmer id, agristack farmer id, farmer id card benefits, farmer id card documents, शेतकरी ओळखपत्र फायदे, शेतकरी ओळखपत्र कागदपत्रे, किसान कार्ड गाइड, farmer card all states india, farmer id card west bengal, farmer id card UP, farmer id card rajasthan, farmer id card karnataka">

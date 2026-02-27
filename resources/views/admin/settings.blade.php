@@ -47,11 +47,11 @@
                     </div>
                     <div class="flex items-center justify-between py-2 border-b border-gray-50 dark:border-gray-800">
                         <span class="text-xs text-gray-500">Key Secret</span>
-                        <span class="text-xs font-mono text-gray-700 dark:text-gray-300">{{ $razorpayKeySecret ? Str::mask($razorpayKeySecret, '*', 4) : '—' }}</span>
+                        <span class="text-xs font-mono text-gray-700 dark:text-gray-300">{{ $razorpayKeySecretMasked ?: '—' }}</span>
                     </div>
                     <div class="flex items-center justify-between py-2">
                         <span class="text-xs text-gray-500">Webhook Secret</span>
-                        <span class="text-xs font-mono text-gray-700 dark:text-gray-300">{{ $razorpayWebhookSecret ? Str::mask($razorpayWebhookSecret, '*', 4) : '—' }}</span>
+                        <span class="text-xs font-mono text-gray-700 dark:text-gray-300">{{ $razorpayWebhookSecretMasked ?: '—' }}</span>
                     </div>
                 </div>
                 {{-- Edit form --}}
@@ -63,11 +63,11 @@
                     </div>
                     <div>
                         <label class="text-xs font-bold text-gray-700 dark:text-gray-300 mb-1 block">Razorpay Key Secret</label>
-                        <input type="password" name="razorpay_key_secret" value="{{ $razorpayKeySecret }}" placeholder="xxxxxxxxxxxxxxxx" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm font-mono">
+                        <input type="password" name="razorpay_key_secret" placeholder="Leave empty to keep current" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm font-mono">
                     </div>
                     <div>
                         <label class="text-xs font-bold text-gray-700 dark:text-gray-300 mb-1 block">Webhook Secret</label>
-                        <input type="password" name="razorpay_webhook_secret" value="{{ $razorpayWebhookSecret }}" placeholder="whsec_xxxxxxx" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm font-mono">
+                        <input type="password" name="razorpay_webhook_secret" placeholder="Leave empty to keep current" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm font-mono">
                     </div>
                     <div class="flex gap-3 pt-1">
                         <button type="submit" class="px-5 py-2.5 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl text-sm font-bold transition">Save Razorpay Config</button>

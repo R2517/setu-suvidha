@@ -3,10 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Models\FormSubmission;
+use App\Models\SubscriptionPlan;
+use Illuminate\Support\Facades\DB;
 
 class PageController extends Controller
 {
-    public function home() { return view('pages.home'); }
+    public function home()
+    {
+        $plansQuery = SubscriptionPlan::where('is_active', true);
+
+        if (in_array(DB::getDriverName(), ['mysql', 'mariadb'], true)) {
+            $plansQuery->orderByRaw("FIELD(plan_type, 'monthly', 'quarterly', 'half_yearly', 'yearly')");
+        } else {
+            $plansQuery->orderBy('duration_days');
+        }
+
+        $plans = $plansQuery->get();
+
+        return view('pages.home', compact('plans'));
+    }
     public function about() { return view('pages.about'); }
     public function contact() { return view('pages.contact'); }
     public function services() { return view('pages.services'); }

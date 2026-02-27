@@ -631,14 +631,28 @@ class BillingController extends Controller
         $totalExpenses = $dailyExpenses + $proratedMonthlyFixed;
         $netProfit = $totalSales - $totalExpenses;
 
-        // Daily breakdown for chart
+        // Daily breakdown for chart - optimized with grouped queries
+        $salesByDate = BillingSale::where('user_id', $userId)->active()
+            ->whereBetween('sale_date', [$startDate, $endDate])
+            ->groupBy('sale_date')
+            ->select('sale_date', DB::raw('SUM(total_amount) as total'))
+            ->pluck('total', 'sale_date')
+            ->toArray();
+
+        $expensesByDate = BillingExpense::where('user_id', $userId)
+            ->whereBetween('expense_date', [$startDate, $endDate])
+            ->groupBy('expense_date')
+            ->select('expense_date', DB::raw('SUM(amount) as total'))
+            ->pluck('total', 'expense_date')
+            ->toArray();
+
         $dailyData = [];
         for ($d = $startDate->copy(); $d->lte($endDate); $d->addDay()) {
             $ds = $d->toDateString();
             $dailyData[] = [
                 'date' => $d->format('d M'),
-                'sales' => (float) BillingSale::where('user_id', $userId)->active()->where('sale_date', $ds)->sum('total_amount'),
-                'expenses' => (float) BillingExpense::where('user_id', $userId)->where('expense_date', $ds)->sum('amount'),
+                'sales' => (float) ($salesByDate[$ds] ?? 0),
+                'expenses' => (float) ($expensesByDate[$ds] ?? 0),
             ];
         }
 

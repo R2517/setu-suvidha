@@ -162,11 +162,23 @@ class WalletController extends Controller
     {
         $webhookSecret = config('razorpay.webhook_secret');
 
-        // Verify webhook signature
-        $expectedSignature = hash_hmac('sha256', $request->getContent(), $webhookSecret);
+        if (empty($webhookSecret)) {
+            Log::critical('Razorpay webhook secret is not configured. Webhook processing blocked.');
+            return response()->json(['status' => 'misconfigured'], 500);
+        }
+
         $receivedSignature = $request->header('X-Razorpay-Signature');
 
-        if (!$receivedSignature || !hash_equals($expectedSignature, $receivedSignature)) {
+        if (!$receivedSignature) {
+            Log::warning('Razorpay webhook: missing signature header', [
+                'ip' => $request->ip(),
+            ]);
+            return response()->json(['status' => 'missing_signature'], 400);
+        }
+
+        $expectedSignature = hash_hmac('sha256', $request->getContent(), $webhookSecret);
+
+        if (!hash_equals($expectedSignature, $receivedSignature)) {
             Log::warning('Razorpay webhook: invalid signature', [
                 'ip' => $request->ip(),
             ]);

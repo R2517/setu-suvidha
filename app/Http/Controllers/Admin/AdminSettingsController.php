@@ -14,12 +14,25 @@ class AdminSettingsController extends Controller
     {
         $diskProbePath = DIRECTORY_SEPARATOR === '\\' ? base_path() : '/';
 
-        // Error logs (last 30 lines from laravel.log)
+        // Error logs (last 30 lines from laravel.log) - use tail to avoid loading full file
         $logFile = storage_path('logs/laravel.log');
         $logLines = [];
         if (File::exists($logFile)) {
-            $lines = explode("\n", File::get($logFile));
-            $logLines = array_slice(array_filter($lines), -30);
+            if (DIRECTORY_SEPARATOR === '\\') {
+                // Windows: read last 4KB and extract lines
+                $content = File::get($logFile);
+                $lines = explode("\n", $content);
+                $logLines = array_slice(array_filter($lines), -30);
+            } else {
+                // Unix/Linux/Mac: use tail command for efficiency
+                $logLines = [];
+                $output = [];
+                $returnVar = 0;
+                exec("tail -30 " . escapeshellarg($logFile) . " 2>/dev/null", $output, $returnVar);
+                if ($returnVar === 0) {
+                    $logLines = array_filter($output);
+                }
+            }
         }
 
         // Site health
@@ -42,12 +55,23 @@ class AdminSettingsController extends Controller
             $health['db_status'] = 'Error: ' . $e->getMessage();
         }
 
-        // Razorpay config
-        $razorpayKeyId = config('razorpay.key_id', env('RAZORPAY_KEY_ID', ''));
-        $razorpayKeySecret = config('razorpay.key_secret', env('RAZORPAY_KEY_SECRET', ''));
-        $razorpayWebhookSecret = config('razorpay.webhook_secret', env('RAZORPAY_WEBHOOK_SECRET', ''));
+        // Razorpay config - mask secrets for display
+        $razorpayKeyId = config('razorpay.key_id', '');
+        $razorpayKeySecret = config('razorpay.key_secret', '');
+        $razorpayWebhookSecret = config('razorpay.webhook_secret', '');
 
-        return view('admin.settings', compact('logLines', 'health', 'razorpayKeyId', 'razorpayKeySecret', 'razorpayWebhookSecret'));
+        $razorpayKeySecretMasked = !empty($razorpayKeySecret)
+            ? substr($razorpayKeySecret, 0, 4) . '****' . substr($razorpayKeySecret, -4)
+            : '';
+        $razorpayWebhookSecretMasked = !empty($razorpayWebhookSecret)
+            ? substr($razorpayWebhookSecret, 0, 4) . '****' . substr($razorpayWebhookSecret, -4)
+            : '';
+
+        return view('admin.settings', compact(
+            'logLines', 'health',
+            'razorpayKeyId', 'razorpayKeySecret', 'razorpayWebhookSecret',
+            'razorpayKeySecretMasked', 'razorpayWebhookSecretMasked'
+        ));
     }
 
     public function updateRazorpay(Request $request)
@@ -61,14 +85,21 @@ class AdminSettingsController extends Controller
         $envPath = base_path('.env');
         $envContent = File::get($envPath);
 
-        $updates = [
-            'RAZORPAY_KEY_ID' => $request->razorpay_key_id ?? '',
-            'RAZORPAY_KEY_SECRET' => $request->razorpay_key_secret ?? '',
-            'RAZORPAY_WEBHOOK_SECRET' => $request->razorpay_webhook_secret ?? '',
-        ];
+        $updates = [];
+
+        if ($request->filled('razorpay_key_id')) {
+            $updates['RAZORPAY_KEY_ID'] = $request->razorpay_key_id;
+        }
+
+        if ($request->filled('razorpay_key_secret')) {
+            $updates['RAZORPAY_KEY_SECRET'] = $request->razorpay_key_secret;
+        }
+
+        if ($request->filled('razorpay_webhook_secret')) {
+            $updates['RAZORPAY_WEBHOOK_SECRET'] = $request->razorpay_webhook_secret;
+        }
 
         foreach ($updates as $key => $value) {
-            // Match key= with optional quotes, any value (handles KEY=val, KEY="val", KEY='val')
             if (preg_match("/^{$key}\s*=.*/m", $envContent)) {
                 $envContent = preg_replace("/^{$key}\s*=.*/m", "{$key}=\"{$value}\"", $envContent);
             } else {

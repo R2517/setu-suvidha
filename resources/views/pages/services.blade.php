@@ -1,6 +1,6 @@
 @extends('layouts.app')
-@section('title', 'सेवा — SETU Suvidha | हमीपत्र, उत्पन्नाचा दाखला, जातीचा दाखला, राजपत्र, शेतकरी ओळखपत्र')
-@section('description', 'SETU Suvidha वर उपलब्ध सर्व सरकारी फॉर्म्स — हमीपत्र, स्वयंघोषणापत्र, उत्पन्नाचा दाखला, जातीचा दाखला, राजपत्र नमुना (मराठी/English/7-12), शेतकरी ओळखपत्र, आधार सेवा, पॅन कार्ड CRM, बांधकाम कामगार नोंदणी.')
+@section('title', 'Services | SETU Suvidha')
+@section('description', 'Government service and form catalog for Setu and CSC operators: hamipatra, self declaration, income certificate, caste certificate, rajpatra, farmer ID and more.')
 
 @push('meta')
 <meta name="keywords" content="setu suvidha services, सेतू सुविधा सेवा, हमीपत्र ऑनलाइन, उत्पन्नाचा दाखला काढणे, जातीचा दाखला कसा काढावा, राजपत्र नमुना मराठी, शेतकरी ओळखपत्र, farmer id card online, income certificate Maharashtra, caste certificate documents, affidavit format marathi, self declaration format, प्रतिज्ञापत्र नमुना मराठी, स्वयं घोषणापत्र नमुना, आधार कार्ड अपडेट, पॅन कार्ड अर्ज, बांधकाम कामगार योजना, passport photo maker, bond formats online">
@@ -74,13 +74,13 @@
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             @foreach([
-                ['icon' => 'file-text', 'title' => 'हमीपत्र', 'desc' => 'Disclaimer / Guarantee Bond — जामीनदार हमीपत्र', 'price' => '₹2', 'color' => 'blue', 'url' => null],
-                ['icon' => 'shield', 'title' => 'स्वयंघोषणापत्र', 'desc' => 'Self-Declaration Form — शपथ टेक्स्टसह', 'price' => '₹2', 'color' => 'green', 'url' => null],
+                ['icon' => 'file-text', 'title' => 'हमीपत्र', 'desc' => 'Disclaimer / Guarantee Bond — जामीनदार हमीपत्र', 'price' => '₹2', 'color' => 'blue', 'url' => route('services.landing.show', ['slug' => 'hamipatra-format-marathi'])],
+                ['icon' => 'shield', 'title' => 'स्वयंघोषणापत्र', 'desc' => 'Self-Declaration Form — शपथ टेक्स्टसह', 'price' => '₹2', 'color' => 'green', 'url' => route('services.landing.show', ['slug' => 'self-declaration-form-marathi'])],
                 ['icon' => 'alert-triangle', 'title' => 'तक्रार नोंदणी', 'desc' => 'Grievance Registration — प्रकार + वर्णन', 'price' => '₹2', 'color' => 'yellow', 'url' => null],
                 ['icon' => 'file-plus', 'title' => 'नवीन अर्ज', 'desc' => 'New Application — सामान्य अर्ज फॉर्म', 'price' => '₹2', 'color' => 'purple', 'url' => null],
-                ['icon' => 'badge-check', 'title' => 'जात पडताळणी', 'desc' => 'Caste Validity — जात + उपजात फॉर्म', 'price' => '₹3', 'color' => 'teal', 'url' => null],
-                ['icon' => 'landmark', 'title' => 'उत्पन्न प्रमाणपत्र', 'desc' => 'Income Certificate — 4 प्रिंट फॉरमॅट', 'price' => '₹5', 'color' => 'pink', 'url' => null],
-                ['icon' => 'scale', 'title' => 'राजपत्र नमुना', 'desc' => 'Gazette Notice — मराठी, English, 7/12', 'price' => '₹5', 'color' => 'emerald', 'url' => null],
+                ['icon' => 'badge-check', 'title' => 'जात पडताळणी', 'desc' => 'Caste Validity — जात + उपजात फॉर्म', 'price' => '₹3', 'color' => 'teal', 'url' => route('services.landing.show', ['slug' => 'caste-certificate-form-maharashtra'])],
+                ['icon' => 'landmark', 'title' => 'उत्पन्न प्रमाणपत्र', 'desc' => 'Income Certificate — 4 प्रिंट फॉरमॅट', 'price' => '₹5', 'color' => 'pink', 'url' => route('services.landing.show', ['slug' => 'income-certificate-application-maharashtra'])],
+                ['icon' => 'scale', 'title' => 'राजपत्र नमुना', 'desc' => 'Gazette Notice — मराठी, English, 7/12', 'price' => '₹5', 'color' => 'emerald', 'url' => route('services.landing.show', ['slug' => 'rajpatra-gazette-format-marathi'])],
                 ['icon' => 'leaf', 'title' => 'शेतकरी ओळखपत्र', 'desc' => 'Farmer ID Card — QR कोडसह', 'price' => '₹3', 'color' => 'lime', 'url' => route('farmer-card-public')],
             ] as $s)
             <a href="{{ $s['url'] ?? route('register') }}" class="group bg-white dark:bg-gray-800 rounded-2xl p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-gray-100 dark:border-gray-700 block">

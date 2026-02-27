@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'महाराष्ट्र बांधकाम कामगार योजना (MAHABOCW) २०२६: संपूर्ण मार्गदर्शक | SETU Suvidha')
+@section('title', 'MAHABOCW Bandkam Kamgar 2026 | SETU Suvidha')
 @section('description', 'MAHABOCW च्या सर्व योजना, नोंदणी, ९० दिवस प्रमाणपत्र, शैक्षणिक लाभ, आरोग्य योजना — फेब्रुवारी २०२६ अद्ययावत.')
 @push('meta')
 <meta property="og:title" content="महाराष्ट्र बांधकाम कामगार योजना (MAHABOCW) २०२६">

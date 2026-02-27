@@ -15,6 +15,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
             'subscription' => \App\Http\Middleware\CheckSubscription::class,
         ]);
+
+        $middleware->prependToGroup('web', \App\Http\Middleware\SecurityHeadersMiddleware::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

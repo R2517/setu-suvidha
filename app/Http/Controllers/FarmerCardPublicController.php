@@ -40,7 +40,7 @@ class FarmerCardPublicController extends Controller
             'mobile'         => 'required|digits:10',
             'dob'            => 'nullable|date',
             'gender'         => 'nullable|in:Male,Female,Other',
-            'aadhaar'        => 'nullable|string|max:14',
+            'aadhaar'        => 'nullable|digits:12',
             'farmer_id'      => 'nullable|string|max:20',
             'address_village' => 'nullable|string|max:255',
             'address_taluka'  => 'nullable|string|max:255',

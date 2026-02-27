@@ -34,7 +34,15 @@
                 <div class="flex items-center gap-4 mb-4">
                     <div class="w-14 h-14 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center shrink-0">
                         @if($p->profile_pic)
-                        <img src="{{ asset('storage/' . $p->profile_pic) }}" class="w-14 h-14 rounded-xl object-cover">
+                        <img
+                            src="{{ asset('storage/' . $p->profile_pic) }}"
+                            alt="{{ $p->full_name }} profile"
+                            width="56"
+                            height="56"
+                            loading="lazy"
+                            decoding="async"
+                            class="w-14 h-14 rounded-xl object-cover"
+                        >
                         @else
                         <i data-lucide="user" class="w-6 h-6 text-amber-600"></i>
                         @endif

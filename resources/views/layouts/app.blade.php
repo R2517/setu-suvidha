@@ -1,21 +1,154 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="mr" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' }" :class="{ 'dark': darkMode }">
 <head>
+    @php
+        $routeName = request()->route()?->getName();
+        $indexableRoutes = config('seo.indexable_routes', []);
+        $isIndexableRoute = $routeName && in_array($routeName, $indexableRoutes, true);
+
+        $seoTitle = trim($__env->yieldContent('title', config('app.name', 'SETU Suvidha')));
+        $seoDescription = trim($__env->yieldContent('description', 'SETU Suvidha public services and government form platform.'));
+        $seoCanonical = trim($__env->yieldContent('canonical'));
+        $seoRobots = trim($__env->yieldContent('robots'));
+        if ($seoCanonical === '') {
+            $seoCanonical = url()->current();
+        }
+        if ($seoRobots === '') {
+            $seoRobots = $isIndexableRoute ? 'index, follow' : 'noindex, nofollow';
+        }
+
+        $seoOgImage = trim($__env->yieldContent('og_image'));
+        if ($seoOgImage === '' && $routeName === 'reviews.show') {
+            $slug = (string) request()->route('slug');
+            $seoOgImage = (string) data_get(config('reviews.articles', []), $slug . '.og_image', '');
+        }
+        if ($seoOgImage === '' && $routeName === 'services.landing.show') {
+            $slug = (string) request()->route('slug');
+            $seoOgImage = (string) data_get(config('service_pages.pages', []), $slug . '.og_image', '');
+        }
+        if ($seoOgImage === '') {
+            $seoOgImage = (string) data_get(config('seo.route_og_images', []), $routeName, '');
+        }
+        if ($seoOgImage === '') {
+            $seoOgImage = (string) config('seo.default_og_image', '/images/og/home.png');
+        }
+        if (!str_starts_with($seoOgImage, 'http')) {
+            $seoOgImage = url($seoOgImage);
+        }
+
+        $seoSocialUrls = array_values(array_filter((array) config('seo.social', [])));
+        $gtmContainerId = trim((string) config('seo.gtm_container_id', ''));
+        $ga4MeasurementId = trim((string) config('seo.ga4_measurement_id', ''));
+    @endphp
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
-    <title>@yield('title', 'SETU Suvidha â€” à¤®à¤¹à¤¾ à¤ˆ-à¤¸à¥‡à¤µà¤¾ à¤ªà¥‹à¤°à¥à¤Ÿà¤²')</title>
-    <meta name="description" content="@yield('description', 'à¤®à¤¹à¤¾à¤°à¤¾à¤·à¥à¤Ÿà¥à¤°à¤¾à¤¤à¥€à¤² à¤¸à¥‡à¤¤à¥ à¤•à¥‡à¤‚à¤¦à¥à¤°, CSC à¤•à¥‡à¤‚à¤¦à¥à¤° à¤†à¤£à¤¿ à¤ˆ-à¤¸à¥‡à¤µà¤¾ à¤¦à¥à¤•à¤¾à¤¨à¤¦à¤¾à¤°à¤¾à¤‚à¤¸à¤¾à¤ à¥€ â€” à¤¸à¤°à¥à¤µ à¤¸à¤°à¤•à¤¾à¤°à¥€ à¤«à¥‰à¤°à¥à¤®à¥à¤¸, à¤¬à¤¿à¤²à¤¿à¤‚à¤—, à¤µà¥‰à¤²à¥‡à¤Ÿ à¤†à¤£à¤¿ à¤—à¥à¤°à¤¾à¤¹à¤• à¤µà¥à¤¯à¤µà¤¸à¥à¤¥à¤¾à¤ªà¤¨ à¤à¤•à¤¾à¤š à¤ à¤¿à¤•à¤¾à¤£à¥€.')">
+
+    <title>{{ $seoTitle }}</title>
+    <meta name="description" content="{{ $seoDescription }}">
+    <meta name="robots" content="{{ $seoRobots }}">
+    <meta property="og:title" content="{{ $seoTitle }}">
+    <meta property="og:description" content="{{ $seoDescription }}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ $seoCanonical }}">
+    <meta property="og:image" content="{{ $seoOgImage }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $seoTitle }}">
+    <meta name="twitter:description" content="{{ $seoDescription }}">
+    <meta name="twitter:image" content="{{ $seoOgImage }}">
+    <link rel="canonical" href="{{ $seoCanonical }}">
+
+    @if(config('seo.gsc_verification'))
+    <meta name="google-site-verification" content="{{ config('seo.gsc_verification') }}">
+    @endif
+    @if(config('seo.bing_verification'))
+    <meta name="msvalidate.01" content="{{ config('seo.bing_verification') }}">
+    @endif
+
+    @if($isIndexableRoute)
+    <link rel="alternate" hreflang="mr-IN" href="{{ $seoCanonical }}">
+    <link rel="alternate" hreflang="en-IN" href="{{ $seoCanonical }}">
+    <link rel="alternate" hreflang="x-default" href="{{ $seoCanonical }}">
+    @endif
+
+    @if($gtmContainerId !== '')
+    <script>
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','{{ $gtmContainerId }}');
+    </script>
+    @elseif($ga4MeasurementId !== '')
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ $ga4MeasurementId }}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '{{ $ga4MeasurementId }}');
+    </script>
+    @endif
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('meta')
     @stack('styles')
+
+    @if($routeName === 'home')
+        @php
+            $websiteSchema = [
+                '@context' => 'https://schema.org',
+                '@type' => 'WebSite',
+                'name' => 'SETU Suvidha',
+                'url' => url('/'),
+                'inLanguage' => ['mr-IN', 'en-IN'],
+                'potentialAction' => [
+                    '@type' => 'SearchAction',
+                    'target' => url('/reviews?q={search_term_string}'),
+                    'query-input' => 'required name=search_term_string',
+                ],
+            ];
+        @endphp
+    <script type="application/ld+json">{!! json_encode($websiteSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
+    @endif
+    @if($routeName === 'services')
+        @php
+            $servicesBreadcrumbSchema = [
+                '@context' => 'https://schema.org',
+                '@type' => 'BreadcrumbList',
+                'itemListElement' => [
+                    ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => url('/')],
+                    ['@type' => 'ListItem', 'position' => 2, 'name' => 'Services', 'item' => url('/services')],
+                ],
+            ];
+        @endphp
+    <script type="application/ld+json">{!! json_encode($servicesBreadcrumbSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
+    @endif
+    @if($routeName === 'reviews.show')
+        @php
+            $reviewsBreadcrumbSchema = [
+                '@context' => 'https://schema.org',
+                '@type' => 'BreadcrumbList',
+                'itemListElement' => [
+                    ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => url('/')],
+                    ['@type' => 'ListItem', 'position' => 2, 'name' => 'Reviews', 'item' => url('/reviews')],
+                    [
+                        '@type' => 'ListItem',
+                        'position' => 3,
+                        'name' => (string) data_get(config('reviews.articles', []), request()->route('slug') . '.title_en', 'Review'),
+                        'item' => $seoCanonical,
+                    ],
+                ],
+            ];
+        @endphp
+    <script type="application/ld+json">{!! json_encode($reviewsBreadcrumbSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
+    @endif
 </head>
 <body class="font-sans antialiased bg-background text-foreground min-h-screen" x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val))">
+    @if($gtmContainerId !== '')
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ $gtmContainerId }}"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    @endif
     {{-- Toast Notification --}}
     @if(session('success'))
     <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)"
@@ -135,25 +268,25 @@
             </div>
             <div class="p-2 space-y-1">
                 <button @click="showPopup=false; openSaleModal()" class="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-gray-700 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-green-900/20 hover:text-green-600 transition">
-                    <i data-lucide="plus-circle" class="w-4 h-4 text-green-500"></i> à¤¨à¤µà¥€à¤¨ à¤µà¤¿à¤•à¥à¤°à¥€ (Sale)
+                    <i data-lucide="plus-circle" class="w-4 h-4 text-green-500"></i> नवीन विक्री (Sale)
                 </button>
                 <button @click="showPopup=false; showExpModal=true" class="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 transition">
-                    <i data-lucide="minus-circle" class="w-4 h-4 text-red-500"></i> à¤–à¤°à¥à¤š (Expense)
+                    <i data-lucide="minus-circle" class="w-4 h-4 text-red-500"></i> खर्च (Expense)
                 </button>
                 <button @click="showPopup=false; showKskModal=true" class="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-gray-700 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 hover:text-purple-600 transition">
-                    <i data-lucide="landmark" class="w-4 h-4 text-purple-500"></i> à¤•à¤¿à¤“à¤¸à¥à¤• (Kiosk)
+                    <i data-lucide="landmark" class="w-4 h-4 text-purple-500"></i> किओस्क (Kiosk)
                 </button>
                 <div class="border-t border-gray-100 dark:border-gray-800 my-1"></div>
                 <a href="{{ route('billing.dashboard') }}" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-gray-700 dark:text-gray-300 hover:bg-amber-50 dark:hover:bg-amber-900/20 hover:text-amber-600 transition">
-                    <i data-lucide="layout-dashboard" class="w-4 h-4 text-amber-500"></i> à¤¬à¤¿à¤²à¤¿à¤‚à¤— à¤¡à¥…à¤¶à¤¬à¥‹à¤°à¥à¤¡
+                    <i data-lucide="layout-dashboard" class="w-4 h-4 text-amber-500"></i> बिलिंग डॅशबोर्ड
                 </a>
                 <a href="{{ route('wallet') }}" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 transition">
-                    <i data-lucide="wallet" class="w-4 h-4 text-blue-500"></i> à¤µà¥‰à¤²à¥‡à¤Ÿ
+                    <i data-lucide="wallet" class="w-4 h-4 text-blue-500"></i> वॉलेट
                 </a>
             </div>
         </div>
 
-        {{-- â•â•â• SALE MODAL â•â•â• --}}
+        {{-- ═══ SALE MODAL ═══ --}}
         <div x-show="showSlModal" x-transition.opacity class="fixed inset-0 z-[90] flex items-center justify-center p-4" style="display:none" @click.self="showSlModal=false">
             <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
             <div class="relative bg-white dark:bg-gray-900 rounded-2xl w-full max-w-lg shadow-2xl border border-gray-200 dark:border-gray-800 max-h-[90vh] overflow-y-auto" @click.stop>
@@ -180,24 +313,24 @@
                                         <button type="button" @click="q=svc.name; item.service_name=svc.name; item.unit_price=svc.default_price; item.cost_price=svc.cost_price; open=false"
                                             class="block w-full text-left px-3 py-2 text-xs hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition">
                                             <span class="font-medium text-gray-900 dark:text-white" x-text="svc.name"></span>
-                                            <span class="text-gray-400 ml-1" x-text="'â‚¹' + svc.default_price"></span>
+                                            <span class="text-gray-400 ml-1" x-text="'₹' + svc.default_price"></span>
                                         </button>
                                     </template>
                                 </div>
                             </div>
                             <input x-model.number="item.quantity" type="number" min="1" class="w-14 px-2 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm text-center">
                             <input x-model.number="item.unit_price" type="number" min="0" class="w-20 px-2 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm">
-                            <span class="text-xs font-bold text-gray-600 w-16 text-right" x-text="'â‚¹'+(item.quantity*item.unit_price)"></span>
+                            <span class="text-xs font-bold text-gray-600 w-16 text-right" x-text="'₹'+(item.quantity*item.unit_price)"></span>
                             <button type="button" @click="sl.items.splice(i,1)" x-show="sl.items.length>1" class="p-1 text-red-400"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
                         </div>
                     </template>
                     <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-3 mb-4 space-y-1.5 mt-3">
-                        <div class="flex justify-between text-sm"><span class="text-gray-500">Subtotal:</span><span class="font-bold" x-text="'â‚¹'+slSub()"></span></div>
+                        <div class="flex justify-between text-sm"><span class="text-gray-500">Subtotal:</span><span class="font-bold" x-text="'₹'+slSub()"></span></div>
                         <div class="flex items-center justify-between text-sm">
                             <span class="text-gray-500">Discount:</span>
                             <input x-model.number="sl.discount_amount" type="number" min="0" class="w-20 px-2 py-1 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-right">
                         </div>
-                        <div class="flex justify-between text-sm font-bold border-t border-gray-200 dark:border-gray-700 pt-1.5"><span>Total:</span><span class="text-emerald-600" x-text="'â‚¹'+slTotal()"></span></div>
+                        <div class="flex justify-between text-sm font-bold border-t border-gray-200 dark:border-gray-700 pt-1.5"><span>Total:</span><span class="text-emerald-600" x-text="'₹'+slTotal()"></span></div>
                     </div>
                     <div class="grid grid-cols-3 gap-2 mb-3">
                         <template x-for="mode in ['cash','online','split']" :key="mode">
@@ -221,7 +354,7 @@
             </div>
         </div>
 
-        {{-- â•â•â• EXPENSE MODAL â•â•â• --}}
+        {{-- ═══ EXPENSE MODAL ═══ --}}
         <div x-show="showExpModal" x-transition.opacity class="fixed inset-0 z-[90] flex items-center justify-center p-4" style="display:none" @click.self="showExpModal=false">
             <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
             <div class="relative bg-white dark:bg-gray-900 rounded-2xl w-full max-w-md shadow-2xl border border-gray-200 dark:border-gray-800" @click.stop>
@@ -237,7 +370,7 @@
                         <option value="Food">Food</option><option value="Supplies">Supplies</option><option value="Maintenance">Maintenance</option><option value="Other">Other</option>
                     </select>
                     <textarea x-model="exp.description" rows="2" placeholder="Description" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm resize-none"></textarea>
-                    <input x-model.number="exp.amount" type="number" step="0.01" placeholder="Amount â‚¹ *" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm">
+                    <input x-model.number="exp.amount" type="number" step="0.01" placeholder="Amount ₹ *" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm">
                     <div class="grid grid-cols-3 gap-2">
                         <template x-for="mode in ['cash','upi','online']" :key="mode">
                             <button type="button" @click="exp.payment_mode=mode" :class="exp.payment_mode===mode?'bg-red-500 text-white':'bg-gray-100 dark:bg-gray-800 text-gray-600'" class="px-3 py-2 rounded-xl text-sm font-bold transition capitalize" x-text="mode"></button>
@@ -254,7 +387,7 @@
             </div>
         </div>
 
-        {{-- â•â•â• KIOSK MODAL â•â•â• --}}
+        {{-- ═══ KIOSK MODAL ═══ --}}
         <div x-show="showKskModal" x-transition.opacity class="fixed inset-0 z-[90] flex items-center justify-center p-4" style="display:none" @click.self="showKskModal=false">
             <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
             <div class="relative bg-white dark:bg-gray-900 rounded-2xl w-full max-w-md shadow-2xl border border-gray-200 dark:border-gray-800" @click.stop>
@@ -275,10 +408,10 @@
                         <input x-model="ksk.aadhaar_last_four" type="text" placeholder="Aadhaar last 4" maxlength="4" class="px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm">
                         <input x-model="ksk.bank_name" type="text" placeholder="Bank Name" class="px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm">
                     </div>
-                    <input x-model.number="ksk.amount" type="number" min="0" placeholder="Amount â‚¹" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm">
+                    <input x-model.number="ksk.amount" type="number" min="0" placeholder="Amount ₹" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm">
                     <div class="grid grid-cols-2 gap-3">
-                        <input x-model.number="ksk.manual_commission" type="number" min="0" placeholder="Cash Comm â‚¹" class="px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm">
-                        <input x-model.number="ksk.portal_commission" type="number" min="0" placeholder="Portal Comm â‚¹" class="px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm">
+                        <input x-model.number="ksk.manual_commission" type="number" min="0" placeholder="Cash Comm ₹" class="px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm">
+                        <input x-model.number="ksk.portal_commission" type="number" min="0" placeholder="Portal Comm ₹" class="px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm">
                     </div>
                     <input x-model="ksk.transaction_date" type="date" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm">
                     <div class="flex gap-3 pt-2">
@@ -324,7 +457,7 @@
             slTotal() { return Math.max(0, this.slSub() - (this.sl.discount_amount || 0)); },
 
             async submitSl() {
-                if (!this.sl.items[0]?.service_name) { alert('à¤•à¤®à¥€à¤¤ à¤•à¤®à¥€ à¤à¤• à¤¸à¥‡à¤µà¤¾ à¤¨à¤¿à¤µà¤¡à¤¾'); return; }
+                if (!this.sl.items[0]?.service_name) { alert('कमीत कमी एक सेवा निवडा'); return; }
                 this.slBusy = true;
                 try {
                     var res = await fetch('/billing/sales', { method:'POST', headers:{'Content-Type':'application/json','X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content,'Accept':'application/json'}, body:JSON.stringify({...this.sl, received_amount: this.sl.received_amount || this.slTotal()}) });
@@ -335,7 +468,7 @@
             },
 
             async submitExp() {
-                if (!this.exp.category || !this.exp.amount) { alert('Category à¤†à¤£à¤¿ Amount à¤­à¤°à¤¾'); return; }
+                if (!this.exp.category || !this.exp.amount) { alert('Category आणि Amount भरा'); return; }
                 this.expBusy = true;
                 try {
                     var res = await fetch('/billing/expenses', { method:'POST', headers:{'Content-Type':'application/json','X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content,'Accept':'application/json'}, body:JSON.stringify(this.exp) });
@@ -384,8 +517,8 @@
     @if($subscriptionUi['show_popup'])
     <div x-data="subReminder()" x-show="showReminder" x-transition.opacity
          class="fixed inset-0 z-[100] flex items-center justify-center p-4" style="display:none">
-        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" @click="dismiss()"></div>
-        <div class="relative bg-white dark:bg-gray-900 rounded-2xl w-full max-w-sm shadow-2xl border border-gray-200 dark:border-gray-800 overflow-hidden" @click.stop>
+        <div class="absolute inset-0 z-0 bg-black/60 backdrop-blur-sm" @click="dismiss()"></div>
+        <div class="relative z-10 pointer-events-auto bg-white dark:bg-gray-900 rounded-2xl w-full max-w-sm shadow-2xl border border-gray-200 dark:border-gray-800 overflow-hidden" @click.stop>
             <div class="bg-gradient-to-br from-red-500 to-rose-600 px-6 py-5 text-white text-center">
                 <i data-lucide="bell-ring" class="w-10 h-10 mx-auto mb-2"></i>
                 <h2 class="text-lg font-black mb-1" x-text="title"></h2>
@@ -393,10 +526,10 @@
             </div>
             <div class="p-5 space-y-3 text-center">
                 <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-3 text-xs text-red-700" x-text="message"></div>
-                <a :href="ctaHref"
+                <a href="{{ route('subscription') }}" @click="dismiss()"
                    class="block w-full py-3 bg-gradient-to-r from-red-500 to-rose-600 text-white rounded-xl font-bold text-sm hover:opacity-90 transition"
                    x-text="ctaText"></a>
-                <button @click="dismiss()" class="text-xs text-gray-400 hover:text-gray-600 transition">
+                <button type="button" @click="dismiss()" class="text-xs text-gray-400 hover:text-gray-600 transition">
                     Remind later (<span x-text="remaining"></span> left today)
                 </button>
             </div>
@@ -407,7 +540,6 @@
             'title' => $subscriptionUi['popup_title'],
             'message' => $subscriptionUi['popup_message'],
             'ctaText' => $subscriptionUi['popup_cta_text'],
-            'ctaHref' => $subscriptionUi['popup_cta_url'],
             'userId' => $subscriptionUi['user_id'],
         ];
     @endphp
@@ -422,7 +554,6 @@
             title: config.title || 'Subscription Reminder',
             message: config.message || 'Please activate your subscription.',
             ctaText: config.ctaText || 'Open Subscription Page',
-            ctaHref: config.ctaHref || '{{ route('subscription') }}',
             showReminder: count < maxPerDay,
             remaining: Math.max(0, maxPerDay - count - 1),
             dismiss() {
@@ -435,7 +566,6 @@
     </script>
     @endif
 
-    <script>lucide.createIcons();</script>
     @stack('scripts')
 </body>
 </html>

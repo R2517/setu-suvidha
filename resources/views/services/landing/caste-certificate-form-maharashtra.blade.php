@@ -1,0 +1,2 @@
+@extends('services.landing.template')
+

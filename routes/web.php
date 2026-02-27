@@ -29,13 +29,31 @@ use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\DocslipController;
 use App\Http\Controllers\BillingController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\PublicServicePageController;
+use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
+
+// ─── Health Check (for load balancers) ───
+Route::get('/health', function () {
+    try {
+        DB::connection()->getPdo();
+        return response()->json(['status' => 'ok', 'timestamp' => now()->toIso8601String()]);
+    } catch (\Exception $e) {
+        \Illuminate\Support\Facades\Log::error('Health check failed: ' . $e->getMessage());
+        return response()->json(['status' => 'error', 'message' => 'database_unavailable'], 503);
+    }
+})->name('health');
 
 // ─── Public Pages ───
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap.xml');
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/about', [PageController::class, 'about'])->name('about');
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 Route::get('/services', [PageController::class, 'services'])->name('services');
+Route::get('/services/{slug}', [PublicServicePageController::class, 'show'])
+    ->whereIn('slug', array_keys(config('service_pages.pages', [])))
+    ->name('services.landing.show');
 Route::get('/how-it-works', [PageController::class, 'howItWorks'])->name('how-it-works');
 Route::get('/benefits', [PageController::class, 'benefits'])->name('benefits');
 Route::get('/faq', [PageController::class, 'faq'])->name('faq');
@@ -47,7 +65,7 @@ Route::get('/bandkam-kamgar-info', [PageController::class, 'bandkamInfo'])->name
 Route::get('/author', [AuthorController::class, 'index'])->name('author');
 Route::post('/author/submit-request', [AuthorController::class, 'submitRequest'])->name('author.submit-request');
 Route::get('/vle-directory', [VleDirectoryController::class, 'index'])->name('vle.directory');
-Route::get('/vle/{id}', [VleDirectoryController::class, 'show'])->name('vle.show');
+Route::get('/vle/{id}', [VleDirectoryController::class, 'show'])->where('id', '[0-9]+')->name('vle.show');
 
 // ─── Public: Printable Formats ───
 Route::get('/print/nirgam-utara-application', function () {
@@ -60,11 +78,15 @@ Route::get('/reviews/{slug}', [ReviewController::class, 'show'])->name('reviews.
 
 // ─── Public: Farmer ID Card Online (Self-Service) ───
 Route::get('/services/farmer-id-card-online', [FarmerCardPublicController::class, 'index'])->name('farmer-card-public');
-Route::post('/services/farmer-id-card-online/store', [FarmerCardPublicController::class, 'store'])->name('farmer-card-public.store');
-Route::post('/services/farmer-id-card-online/verify-payment', [FarmerCardPublicController::class, 'verifyPayment'])
-    ->name('farmer-card-public.verify');
-Route::post('/services/farmer-id-card-online/lookup', [FarmerCardPublicController::class, 'lookup'])->name('farmer-card-public.lookup');
-Route::get('/services/farmer-id-card-online/download/{txn}', [FarmerCardPublicController::class, 'download'])->name('farmer-card-public.download');
+Route::middleware(['throttle:5,1'])->group(function () {
+    Route::post('/services/farmer-id-card-online/store', [FarmerCardPublicController::class, 'store'])->name('farmer-card-public.store');
+    Route::post('/services/farmer-id-card-online/verify-payment', [FarmerCardPublicController::class, 'verifyPayment'])
+        ->name('farmer-card-public.verify');
+    Route::post('/services/farmer-id-card-online/lookup', [FarmerCardPublicController::class, 'lookup'])->name('farmer-card-public.lookup');
+});
+Route::middleware(['throttle:10,1'])->group(function () {
+    Route::get('/services/farmer-id-card-online/download/{txn}', [FarmerCardPublicController::class, 'download'])->name('farmer-card-public.download');
+});
 
 // 301 Redirect: old URL → new URL
 Route::get('/farmer-id-card-online', fn() => redirect('/services/farmer-id-card-online', 301));
@@ -85,18 +107,20 @@ Route::middleware(['auth'])->group(function () {
 
     // Wallet
     Route::get('/wallet', [WalletController::class, 'index'])->name('wallet');
-    Route::post('/wallet/recharge', [WalletController::class, 'createOrder'])->name('wallet.recharge');
-    Route::post('/wallet/verify', [WalletController::class, 'verifyPayment'])->name('wallet.verify');
+    Route::middleware(['throttle:10,1'])->group(function () {
+        Route::post('/wallet/recharge', [WalletController::class, 'createOrder'])->name('wallet.recharge');
+        Route::post('/wallet/verify', [WalletController::class, 'verifyPayment'])->name('wallet.verify');
+    });
 
     // Subscription
     Route::get('/subscription', [SubscriptionController::class, 'index'])->name('subscription');
-    Route::post('/subscription/activate', [SubscriptionController::class, 'activate'])->name('subscription.activate');
-    Route::post('/subscription/activate-now', [SubscriptionController::class, 'activateNow'])->name('subscription.activate-now');
-    Route::get('/subscription/activate', fn() => redirect()->route('subscription'))->name('subscription.activate.redirect');
-    Route::post('/subscription/change', [SubscriptionController::class, 'changePlan'])->name('subscription.change');
-    Route::post('/subscription/payment-order', [SubscriptionController::class, 'createPaymentOrder'])->name('subscription.payment-order');
-    Route::post('/subscription/payment-verify', [SubscriptionController::class, 'verifyPayment'])->name('subscription.payment-verify');
-    Route::get('/subscription/change', fn() => redirect()->route('subscription'));
+    Route::middleware(['throttle:10,1'])->group(function () {
+        Route::post('/subscription/activate', [SubscriptionController::class, 'activate'])->name('subscription.activate');
+        Route::post('/subscription/activate-now', [SubscriptionController::class, 'activateNow'])->name('subscription.activate-now');
+        Route::post('/subscription/change', [SubscriptionController::class, 'changePlan'])->name('subscription.change');
+        Route::post('/subscription/payment-order', [SubscriptionController::class, 'createPaymentOrder'])->name('subscription.payment-order');
+        Route::post('/subscription/payment-verify', [SubscriptionController::class, 'verifyPayment'])->name('subscription.payment-verify');
+    });
 
     // ─── Subscription-Protected Features ───
     // Billing System
@@ -150,32 +174,34 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // Forms — Generic Engine (C4: proper controller routing)
-    Route::get('/hamipatra', [FormController::class, 'showHamipatra'])->name('hamipatra');
-    Route::get('/self-declaration', [FormController::class, 'showSelfDeclaration'])->name('self-declaration');
-    Route::get('/grievance', [FormController::class, 'showGrievance'])->name('grievance');
-    Route::get('/new-application', [FormController::class, 'showNewApplication'])->name('new-application');
-    Route::get('/caste-validity', [FormController::class, 'showCasteValidity'])->name('caste-validity');
-    Route::get('/income-cert', [FormController::class, 'showIncomeCert'])->name('income-cert');
-    Route::get('/rajpatra', fn() => view('forms.rajpatra-hub'))->name('rajpatra');
-    Route::get('/rajpatra-marathi', [FormController::class, 'showRajpatraMarathi'])->name('rajpatra-marathi');
-    Route::get('/rajpatra-english', [FormController::class, 'showRajpatraEnglish'])->name('rajpatra-english');
-    Route::get('/rajpatra-affidavit-712', [FormController::class, 'showRajpatra712'])->name('rajpatra-712');
-    Route::get('/farmer-id-card', [FormController::class, 'showFarmerIdCard'])->name('farmer-id-card');
+    Route::middleware('subscription')->group(function () {
+        Route::get('/hamipatra', [FormController::class, 'showHamipatra'])->name('hamipatra');
+        Route::get('/self-declaration', [FormController::class, 'showSelfDeclaration'])->name('self-declaration');
+        Route::get('/grievance', [FormController::class, 'showGrievance'])->name('grievance');
+        Route::get('/new-application', [FormController::class, 'showNewApplication'])->name('new-application');
+        Route::get('/caste-validity', [FormController::class, 'showCasteValidity'])->name('caste-validity');
+        Route::get('/income-cert', [FormController::class, 'showIncomeCert'])->name('income-cert');
+        Route::get('/rajpatra', fn() => view('forms.rajpatra-hub'))->name('rajpatra');
+        Route::get('/rajpatra-marathi', [FormController::class, 'showRajpatraMarathi'])->name('rajpatra-marathi');
+        Route::get('/rajpatra-english', [FormController::class, 'showRajpatraEnglish'])->name('rajpatra-english');
+        Route::get('/rajpatra-affidavit-712', [FormController::class, 'showRajpatra712'])->name('rajpatra-712');
+        Route::get('/farmer-id-card', [FormController::class, 'showFarmerIdCard'])->name('farmer-id-card');
 
-    // B4: Rate-limited form POST routes (30 per minute per user)
-    Route::middleware(['throttle:30,1'])->group(function () {
-        Route::post('/hamipatra', [FormController::class, 'storeHamipatra']);
-        Route::post('/self-declaration', [FormController::class, 'storeSelfDeclaration']);
-        Route::post('/grievance', [FormController::class, 'storeGrievance']);
-        Route::post('/new-application', [FormController::class, 'storeNewApplication']);
-        Route::post('/caste-validity', [FormController::class, 'storeCasteValidity']);
-        Route::post('/income-cert', [FormController::class, 'storeIncomeCert']);
-        Route::post('/rajpatra-marathi', [FormController::class, 'storeRajpatraMarathi']);
-        Route::post('/rajpatra-english', [FormController::class, 'storeRajpatraEnglish']);
-        Route::post('/rajpatra-affidavit-712', [FormController::class, 'storeRajpatra712']);
-        Route::post('/farmer-id-card', [FormController::class, 'storeFarmerIdCard']);
+        // B4: Rate-limited form POST routes (30 per minute per user)
+        Route::middleware(['throttle:30,1'])->group(function () {
+            Route::post('/hamipatra', [FormController::class, 'storeHamipatra']);
+            Route::post('/self-declaration', [FormController::class, 'storeSelfDeclaration']);
+            Route::post('/grievance', [FormController::class, 'storeGrievance']);
+            Route::post('/new-application', [FormController::class, 'storeNewApplication']);
+            Route::post('/caste-validity', [FormController::class, 'storeCasteValidity']);
+            Route::post('/income-cert', [FormController::class, 'storeIncomeCert']);
+            Route::post('/rajpatra-marathi', [FormController::class, 'storeRajpatraMarathi']);
+            Route::post('/rajpatra-english', [FormController::class, 'storeRajpatraEnglish']);
+            Route::post('/rajpatra-affidavit-712', [FormController::class, 'storeRajpatra712']);
+            Route::post('/farmer-id-card', [FormController::class, 'storeFarmerIdCard']);
+        });
+        Route::get('/farmer-id-card/bulk-print', [FormController::class, 'bulkPrintFarmer'])->name('farmer.bulk-print');
     });
-    Route::get('/farmer-id-card/bulk-print', [FormController::class, 'bulkPrintFarmer'])->name('farmer.bulk-print');
 
     // PassportPro — Passport Photo Maker
     Route::get('/passport-photo-maker', [PassportPhotoMakerController::class, 'index'])->name('passport-photo-maker');
@@ -288,6 +314,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 });
 
 // ─── Razorpay Webhook (no auth, no CSRF) ───
+// CSRF exemption: Razorpay sends webhook requests from their servers which cannot include Laravel's CSRF token.
+// The webhook handler validates the request using Razorpay's signature verification instead.
 Route::post('/webhook/razorpay', [WalletController::class, 'webhook'])
     ->name('webhook.razorpay')
     ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);

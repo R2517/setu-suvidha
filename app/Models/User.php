@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Cache;
 
 class User extends Authenticatable
 {
@@ -91,7 +92,9 @@ class User extends Authenticatable
 
     public function getWalletBalance(): float
     {
-        return (float) ($this->profile?->wallet_balance ?? 0);
+        return Cache::remember("wallet_balance:{$this->id}", 300, function () {
+            return (float) ($this->profile?->wallet_balance ?? 0);
+        });
     }
 
     public function subscriptions(): HasMany

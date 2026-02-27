@@ -17,9 +17,25 @@
             <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6 text-center">
                 <div class="w-24 h-24 rounded-2xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mx-auto mb-4">
                     @if($profile->profile_pic)
-                    <img src="{{ asset('storage/' . $profile->profile_pic) }}" class="w-24 h-24 rounded-2xl object-cover">
+                    <img
+                        src="{{ asset('storage/' . $profile->profile_pic) }}"
+                        alt="{{ $profile->full_name }} profile photo"
+                        width="96"
+                        height="96"
+                        loading="eager"
+                        decoding="async"
+                        class="w-24 h-24 rounded-2xl object-cover"
+                    >
                     @elseif($profile->logo_url)
-                    <img src="{{ asset($profile->logo_url) }}" class="w-24 h-24 rounded-2xl object-cover">
+                    <img
+                        src="{{ asset($profile->logo_url) }}"
+                        alt="{{ $profile->shop_name ?? $profile->full_name }} logo"
+                        width="96"
+                        height="96"
+                        loading="eager"
+                        decoding="async"
+                        class="w-24 h-24 rounded-2xl object-cover"
+                    >
                     @else
                     <i data-lucide="user" class="w-10 h-10 text-amber-600"></i>
                     @endif
@@ -116,7 +132,15 @@
             {{-- Shop Photo --}}
             @if($profile->shop_pic)
             <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden">
-                <img src="{{ asset('storage/' . $profile->shop_pic) }}" alt="{{ $profile->shop_name }}" class="w-full h-64 object-cover">
+                <img
+                    src="{{ asset('storage/' . $profile->shop_pic) }}"
+                    alt="{{ $profile->shop_name }}"
+                    width="1200"
+                    height="640"
+                    loading="lazy"
+                    decoding="async"
+                    class="w-full h-64 object-cover"
+                >
             </div>
             @endif
 
@@ -130,7 +154,15 @@
                 <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">UPI: <span class="font-mono font-bold text-gray-900 dark:text-white">{{ $profile->upi_id }}</span></p>
                 @endif
                 @if($profile->qr_code_pic)
-                <img src="{{ asset('storage/' . $profile->qr_code_pic) }}" alt="QR Code" class="w-40 h-40 rounded-xl border border-gray-200">
+                <img
+                    src="{{ asset('storage/' . $profile->qr_code_pic) }}"
+                    alt="QR Code for {{ $profile->shop_name ?? $profile->full_name }}"
+                    width="160"
+                    height="160"
+                    loading="lazy"
+                    decoding="async"
+                    class="w-40 h-40 rounded-xl border border-gray-200"
+                >
                 @endif
             </div>
             @endif

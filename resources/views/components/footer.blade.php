@@ -46,6 +46,29 @@
                 <a href="{{ route('author') }}" class="inline-flex items-center gap-2 mt-4 text-sm text-amber-400 hover:text-amber-300 font-medium transition">
                     <i data-lucide="user-circle" class="w-4 h-4"></i> About the Founder
                 </a>
+                @php
+                    $socialLinks = [
+                        ['label' => 'Facebook', 'icon' => 'facebook', 'url' => config('seo.social.facebook')],
+                        ['label' => 'Instagram', 'icon' => 'instagram', 'url' => config('seo.social.instagram')],
+                        ['label' => 'YouTube', 'icon' => 'youtube', 'url' => config('seo.social.youtube')],
+                        ['label' => 'X', 'icon' => 'twitter', 'url' => config('seo.social.x')],
+                        ['label' => 'LinkedIn', 'icon' => 'linkedin', 'url' => config('seo.social.linkedin')],
+                    ];
+                @endphp
+                @if(collect($socialLinks)->contains(fn ($social) => filled($social['url'])))
+                <div class="mt-5">
+                    <p class="text-[11px] uppercase tracking-wide text-gray-500 mb-2">Social</p>
+                    <div class="flex flex-wrap gap-2">
+                        @foreach($socialLinks as $social)
+                            @continue(!filled($social['url']))
+                            <a href="{{ $social['url'] }}" target="_blank" rel="noopener noreferrer"
+                               class="inline-flex items-center gap-1.5 rounded-lg border border-gray-700 px-2.5 py-1.5 text-xs text-gray-300 hover:text-amber-300 hover:border-amber-500/60 transition">
+                                <i data-lucide="{{ $social['icon'] }}" class="w-3.5 h-3.5"></i> {{ $social['label'] }}
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
         <div class="border-t border-gray-800 pt-6 flex flex-col md:flex-row items-center justify-between text-xs text-gray-500">
