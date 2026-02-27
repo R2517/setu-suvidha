@@ -163,14 +163,27 @@
         @endphp
 
         @if($plans->isNotEmpty())
-        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-{{ min($plans->count(), 4) }} gap-6 max-w-5xl mx-auto">
-            @foreach($plans as $index => $plan)
+        @php
+            // Sort plans: put highest-price plan in center (index 1)
+            $sortedPlans = $plans->sortBy('price')->values();
+            if ($sortedPlans->count() === 3) {
+                $reordered = collect([
+                    $sortedPlans[0],
+                    $sortedPlans[2],  // most expensive in center
+                    $sortedPlans[1],
+                ]);
+            } else {
+                $reordered = $sortedPlans;
+            }
+        @endphp
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            @foreach($reordered as $index => $plan)
             @php
                 $grad = $planGradients[$plan->plan_type] ?? $planGradients['monthly'];
                 $iconName = $planIcons[$plan->plan_type] ?? 'zap';
                 $label = $planLabels[$plan->plan_type] ?? str_replace('_', ' ', (string) $plan->plan_type);
                 $features = is_array($plan->features) ? array_slice(array_values(array_filter($plan->features)), 0, 6) : [];
-                $isPopular = $plans->count() > 1 && $index === 1;
+                $isPopular = $reordered->count() >= 3 && $index === 1;
                 $price = (float) $plan->price;
             @endphp
             <article class="group relative bg-white dark:bg-gray-900 rounded-3xl border {{ $isPopular ? 'border-indigo-300 dark:border-indigo-700 shadow-xl shadow-indigo-500/10 scale-[1.02]' : 'border-gray-200 dark:border-gray-800 shadow-lg shadow-gray-200/50 dark:shadow-gray-900/50' }} overflow-hidden flex flex-col transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
