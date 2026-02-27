@@ -82,9 +82,9 @@
                         @endforeach
                     </select>
                     <select name="status" class="px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm">
-                        <option value="">All Status</option>
-                        <option value="unresolved" {{ request('status') === 'unresolved' ? 'selected' : '' }}>Unresolved</option>
-                        <option value="resolved" {{ request('status') === 'resolved' ? 'selected' : '' }}>Resolved</option>
+                        <option value="unresolved" {{ request('status', 'unresolved') === 'unresolved' ? 'selected' : '' }}>Unresolved Only</option>
+                        <option value="resolved" {{ request('status') === 'resolved' ? 'selected' : '' }}>Resolved Only</option>
+                        <option value="all" {{ request('status') === 'all' ? 'selected' : '' }}>All Status</option>
                     </select>
                     <input type="text" name="search" value="{{ request('search') }}" placeholder="Search message, file, URL..." class="flex-1 min-w-[200px] px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm">
                     <button type="submit" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-sm font-bold transition">
@@ -138,7 +138,14 @@
                                 </td>
                                 <td class="px-4 py-3 max-w-xs">
                                     <button @click="expanded = !expanded" class="text-left w-full">
-                                        <p class="text-xs font-semibold text-gray-900 dark:text-white truncate max-w-[300px]">{{ $log->message }}</p>
+                                        <div class="flex items-start gap-2">
+                                            <p class="text-xs font-semibold text-gray-900 dark:text-white truncate max-w-[250px]">{{ $log->message }}</p>
+                                            @if($log->occurrence_count > 1)
+                                            <span class="inline-flex px-1.5 py-0.5 rounded-full text-[9px] font-black bg-red-100 text-red-600 shrink-0" title="Occurred {{ $log->occurrence_count }} times">
+                                                {{ $log->occurrence_count }}x
+                                            </span>
+                                            @endif
+                                        </div>
                                         <p class="text-[10px] text-gray-400 mt-0.5">{{ $log->method }} {{ Str::limit($log->url, 40) }}</p>
                                     </button>
                                     <div x-show="expanded" x-collapse class="mt-2 bg-gray-900 text-gray-200 rounded-lg p-3 text-[11px] font-mono max-h-48 overflow-y-auto whitespace-pre-wrap">{{ Str::limit($log->trace, 2000) }}</div>
@@ -158,8 +165,11 @@
                                     @endif
                                 </td>
                                 <td class="px-4 py-3">
-                                    <p class="text-xs text-gray-600 dark:text-gray-400">{{ $log->created_at->diffForHumans() }}</p>
-                                    <p class="text-[10px] text-gray-400">{{ $log->created_at->format('d M, H:i') }}</p>
+                                    <p class="text-xs text-gray-600 dark:text-gray-400">{{ ($log->last_seen_at ?? $log->created_at)->diffForHumans() }}</p>
+                                    <p class="text-[10px] text-gray-400">{{ ($log->last_seen_at ?? $log->created_at)->format('d M, H:i') }}</p>
+                                    @if($log->last_seen_at && $log->last_seen_at->ne($log->created_at))
+                                    <p class="text-[9px] text-amber-500">Last seen</p>
+                                    @endif
                                 </td>
                                 <td class="px-4 py-3 text-center">
                                     <div class="flex items-center justify-center gap-1">

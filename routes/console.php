@@ -13,3 +13,6 @@ Schedule::command('bandkam:expiry-alert --days=7')->dailyAt('08:00');
 
 // Purge farmer card public orders — runs daily at 2:00 AM
 Schedule::command('farmer-cards:purge')->dailyAt('02:00');
+
+// Auto-resolve old error logs — runs every hour
+Schedule::command('errors:auto-resolve')->hourly();

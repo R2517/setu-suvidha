@@ -10,15 +10,20 @@ class AdminErrorLogController extends Controller
 {
     public function index(Request $request)
     {
-        $query = ErrorLog::query()->latest('created_at');
+        $query = ErrorLog::query()->latest('last_seen_at');
 
         if ($request->filled('level')) {
             $query->where('level', $request->level);
         }
 
-        if ($request->filled('status')) {
-            $query->where('is_resolved', $request->status === 'resolved');
+        // Default to showing only unresolved errors
+        $status = $request->get('status', 'unresolved');
+        if ($status === 'resolved') {
+            $query->where('is_resolved', true);
+        } elseif ($status === 'unresolved') {
+            $query->where('is_resolved', false);
         }
+        // 'all' shows everything
 
         if ($request->filled('search')) {
             $search = $request->search;

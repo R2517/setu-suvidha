@@ -11,6 +11,9 @@ class ErrorLog extends Model
 
     protected $fillable = [
         'level',
+        'fingerprint',
+        'occurrence_count',
+        'last_seen_at',
         'message',
         'file',
         'line',
@@ -28,10 +31,16 @@ class ErrorLog extends Model
         'context' => 'array',
         'is_resolved' => 'boolean',
         'created_at' => 'datetime',
+        'last_seen_at' => 'datetime',
     ];
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public static function generateFingerprint(string $message, string $file, int $line): string
+    {
+        return hash('xxh3', $message . '|' . $file . '|' . $line);
     }
 }
