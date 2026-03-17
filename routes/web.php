@@ -150,6 +150,8 @@ Route::middleware(['auth'])->group(function () {
         // Customers
         Route::get('/customers', [BillingController::class, 'customers'])->name('customers');
         Route::post('/customers', [BillingController::class, 'storeCustomer'])->name('customers.store');
+        Route::get('/customers/search', [BillingController::class, 'searchCustomers'])->name('customers.search');
+        Route::put('/customers/{id}', [BillingController::class, 'updateCustomer'])->name('customers.update');
         Route::get('/customers/{id}', [BillingController::class, 'showCustomer'])->name('customers.show');
         Route::delete('/customers/{id}', [BillingController::class, 'destroyCustomer'])->name('customers.delete');
 

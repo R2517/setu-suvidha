@@ -191,12 +191,31 @@ class BillingController extends Controller
 
         // Find/Create customer
         $customerId = null;
-        if ($request->customer_name || $request->customer_phone) {
-            $customer = BillingCustomer::firstOrCreate(
-                ['user_id' => $userId, 'mobile' => $request->customer_phone ?: null],
-                ['name' => $request->customer_name ?: 'Guest', 'mobile' => $request->customer_phone]
-            );
-            if ($request->customer_name) $customer->update(['name' => $request->customer_name]);
+        $customerPhone = $request->customer_phone;
+        $customerName = $request->customer_name ?: 'Walk-in';
+
+        if ($customerPhone || $customerName) {
+            // Only search by mobile if it's provided and not empty
+            if (!empty($customerPhone)) {
+                $customer = BillingCustomer::where('user_id', $userId)
+                    ->where('mobile', $customerPhone)
+                    ->first();
+            } else {
+                $customer = null;
+            }
+
+            // Create new customer if not found
+            if (!$customer) {
+                $customer = BillingCustomer::create([
+                    'user_id' => $userId,
+                    'name' => $customerName,
+                    'mobile' => $customerPhone,
+                ]);
+            } else {
+                // Update name if customer exists
+                $customer->update(['name' => $customerName]);
+            }
+
             $customer->increment('total_visits');
             $customer->increment('total_spent', $receivedAmount);
             $customer->increment('total_due', $dueAmount);
@@ -232,6 +251,11 @@ class BillingController extends Controller
     {
         $sale = BillingSale::where('user_id', $request->user()->id)->findOrFail($id);
 
+        // Track old received amount for customer total_due adjustment
+        $oldReceivedAmount = $sale->received_amount;
+        $newReceivedAmount = $request->received_amount ?? $oldReceivedAmount;
+        $receivedDifference = $newReceivedAmount - $oldReceivedAmount;
+
         $sale->update($request->only([
             'customer_name', 'customer_phone', 'received_amount', 'due_amount',
             'payment_mode', 'cash_amount', 'online_amount', 'payment_status', 'remarks',
@@ -244,6 +268,18 @@ class BillingController extends Controller
             if ($due <= 0) $status = 'paid';
             elseif ($request->received_amount > 0) $status = 'partial';
             $sale->update(['due_amount' => $due, 'payment_status' => $status]);
+        }
+
+        // Update customer totals
+        if ($sale->customer_id && $receivedDifference != 0) {
+            $customer = BillingCustomer::find($sale->customer_id);
+            if ($customer) {
+                // Adjust total_spent and total_due based on payment difference
+                if ($receivedDifference > 0) {
+                    $customer->increment('total_spent', $receivedDifference);
+                    $customer->decrement('total_due', $receivedDifference);
+                }
+            }
         }
 
         return response()->json(['success' => true, 'sale' => $sale->fresh()->load('items')]);
@@ -404,6 +440,38 @@ class BillingController extends Controller
             'address' => $request->address,
             'notes' => $request->notes,
         ]);
+
+        return response()->json(['success' => true, 'customer' => $customer]);
+    }
+
+    public function searchCustomers(Request $request)
+    {
+        $query = $request->get('q', '');
+        $userId = $request->user()->id;
+
+        $customers = BillingCustomer::where('user_id', $userId)
+            ->where(function ($q) use ($query) {
+                $q->where('name', 'like', "%{$query}%")
+                  ->orWhere('mobile', 'like', "%{$query}%");
+            })
+            ->orderBy('name')
+            ->limit(10)
+            ->get(['id', 'name', 'mobile', 'total_visits', 'total_spent', 'total_due']);
+
+        return response()->json(['customers' => $customers]);
+    }
+
+    public function updateCustomer(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'mobile' => 'nullable|string|max:15',
+            'address' => 'nullable|string|max:500',
+            'notes' => 'nullable|string',
+        ]);
+
+        $customer = BillingCustomer::where('user_id', $request->user()->id)->findOrFail($id);
+        $customer->update($request->only(['name', 'mobile', 'address', 'notes', 'aadhaar_last_four']));
 
         return response()->json(['success' => true, 'customer' => $customer]);
     }
