@@ -188,6 +188,23 @@ class BandkamController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'applicant_name' => 'nullable|string|max:255',
+            'mobile_number' => 'nullable|string|max:20',
+            'aadhar_number' => 'nullable|string|max:12',
+            'dob' => 'nullable|date',
+            'district' => 'nullable|string|max:100',
+            'taluka' => 'nullable|string|max:100',
+            'village' => 'nullable|string|max:100',
+            'registration_type' => 'nullable|string|max:50',
+            'application_number' => 'nullable|string|max:50',
+            'amount' => 'nullable|numeric|min:0',
+            'received_amount' => 'nullable|numeric|min:0',
+            'payment_mode' => 'nullable|string|max:50',
+            'payment_status' => 'nullable|string|max:50',
+            'status' => 'nullable|string|max:50',
+        ]);
+
         $reg = BandkamRegistration::where('id', $id)->where('user_id', $request->user()->id)->firstOrFail();
         $reg->update($request->only([
             'applicant_name', 'mobile_number', 'aadhar_number', 'dob',
@@ -199,6 +216,14 @@ class BandkamController extends Controller
 
     public function updateDates(Request $request, $id)
     {
+        $request->validate([
+            'form_date' => 'nullable|date',
+            'online_date' => 'nullable|date',
+            'appointment_date' => 'nullable|date',
+            'activation_date' => 'nullable|date',
+            'application_number' => 'nullable|string|max:50',
+        ]);
+
         $reg = BandkamRegistration::where('id', $id)->where('user_id', $request->user()->id)->firstOrFail();
 
         $data = $request->only(['form_date', 'online_date', 'appointment_date', 'activation_date', 'application_number']);
@@ -247,6 +272,9 @@ class BandkamController extends Controller
 
         $request->validate([
             'scheme_type' => 'required|string|max:50',
+            'amount' => 'nullable|numeric|min:0',
+            'received_amount' => 'nullable|numeric|min:0',
+            'commission_percent' => 'nullable|numeric|min:0|max:100',
         ]);
 
         $commPercent = (float) ($request->commission_percent ?? 0);

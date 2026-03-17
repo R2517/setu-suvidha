@@ -32,6 +32,14 @@
             @endif
         </a>
         <div class="border-t border-gray-800 my-3"></div>
+        <p class="px-3 text-[10px] uppercase tracking-wider text-gray-600 mb-1">Blog</p>
+        <a href="{{ route('admin.blog.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.blog.index') ? 'bg-amber-500/20 text-amber-400' : 'text-gray-400 hover:text-white hover:bg-gray-800' }} transition">
+            <i data-lucide="newspaper" class="w-4 h-4"></i> All Posts
+        </a>
+        <a href="{{ route('admin.blog.create') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.blog.create') ? 'bg-amber-500/20 text-amber-400' : 'text-gray-400 hover:text-white hover:bg-gray-800' }} transition">
+            <i data-lucide="file-plus" class="w-4 h-4"></i> Create Post
+        </a>
+        <div class="border-t border-gray-800 my-3"></div>
         <p class="px-3 text-[10px] uppercase tracking-wider text-gray-600 mb-1">Public Services</p>
         <a href="{{ route('admin.farmer-card-orders') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.farmer-card-orders') ? 'bg-green-500/20 text-green-400' : 'text-gray-400 hover:text-white hover:bg-gray-800' }} transition">
             <i data-lucide="leaf" class="w-4 h-4"></i> Farmer Card Orders

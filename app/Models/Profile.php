@@ -43,10 +43,13 @@ class Profile extends Model
         'google_map_link',
         'latitude',
         'longitude',
-        'wallet_balance',
         'is_active',
         'is_public_approved',
         'dashboard_config',
+    ];
+
+    protected $guarded = [
+        'wallet_balance',
     ];
 
     protected $casts = [

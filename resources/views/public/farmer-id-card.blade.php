@@ -541,7 +541,7 @@
                         <span class="font-medium text-gray-900 dark:text-white text-sm">{{ $faq['q'] }}</span>
                         <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 transition-transform" :class="faqOpen === {{ $i }} && 'rotate-180'"></i>
                     </button>
-                    <div x-show="faqOpen === {{ $i }}" x-collapse class="px-5 pb-4 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">{!! $faq['a'] !!}</div>
+                    <div x-show="faqOpen === {{ $i }}" x-collapse class="px-5 pb-4 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">{{ $faq['a'] }}</div>
                 </div>
                 @endforeach
             </div>

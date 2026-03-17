@@ -165,7 +165,7 @@ class FormController extends Controller
             ]);
             return redirect()->back()
                 ->withInput()
-                ->with('error', $e->getMessage());
+                ->with('error', 'Form submission failed. Please try again or contact support.');
         }
     }
 
@@ -213,7 +213,10 @@ class FormController extends Controller
                 }
             }
         } catch (\Exception $e) {
-            // Photo extraction failed silently
+            Log::warning('PDF photo extraction failed', [
+                'submission_id' => $request->id ?? null,
+                'error' => $e->getMessage(),
+            ]);
         }
 
         return response()->json($result);

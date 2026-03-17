@@ -16,3 +16,10 @@ Schedule::command('farmer-cards:purge')->dailyAt('02:00');
 
 // Auto-resolve old error logs — runs every hour
 Schedule::command('errors:auto-resolve')->hourly();
+
+// Auto-publish scheduled blog posts — runs every 5 minutes
+Schedule::call(function () {
+    \App\Models\BlogPost::where('status', 'scheduled')
+        ->where('scheduled_at', '<=', now())
+        ->update(['status' => 'published', 'published_at' => now()]);
+})->everyFiveMinutes();

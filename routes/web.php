@@ -32,6 +32,9 @@ use App\Http\Controllers\BillingController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\PublicServicePageController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\BlogController;
+use App\Http\Controllers\Admin\AdminBlogController;
+use App\Models\BlogRedirect;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 
@@ -316,6 +319,38 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::patch('/error-logs/{id}/resolve', [AdminErrorLogController::class, 'resolve'])->name('error-logs.resolve');
     Route::delete('/error-logs/{id}', [AdminErrorLogController::class, 'destroy'])->name('error-logs.destroy');
     Route::delete('/error-logs-clear', [AdminErrorLogController::class, 'clearResolved'])->name('error-logs.clear-resolved');
+    
+    // Blog Management
+    Route::prefix('blog')->name('blog.')->group(function () {
+        Route::get('/', [AdminBlogController::class, 'index'])->name('index');
+        Route::get('/create', [AdminBlogController::class, 'create'])->name('create');
+        Route::post('/', [AdminBlogController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [AdminBlogController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [AdminBlogController::class, 'update'])->name('update');
+        Route::delete('/{id}', [AdminBlogController::class, 'destroy'])->name('destroy');
+        Route::post('/upload-json', [AdminBlogController::class, 'uploadJson'])->name('upload-json');
+        Route::post('/validate-json', [AdminBlogController::class, 'validateJson'])->name('validate-json');
+        Route::post('/upload-image', [AdminBlogController::class, 'uploadImage'])->name('upload-image');
+        Route::get('/images', [AdminBlogController::class, 'imageLibrary'])->name('images');
+        Route::delete('/images/{id}', [AdminBlogController::class, 'deleteImage'])->name('images.delete');
+    });
+});
+
+// ─── Blog — Public Routes ───
+Route::prefix('blog')->name('blog.')->group(function () {
+    Route::get('/', [BlogController::class, 'index'])->name('index');
+    Route::get('/category/{slug}', [BlogController::class, 'category'])->name('category');
+    Route::get('/tag/{slug}', [BlogController::class, 'tag'])->name('tag');
+    Route::get('/search', [BlogController::class, 'search'])->name('search');
+    Route::get('/feed', [BlogController::class, 'rssFeed'])->name('feed');
+    Route::get('/{slug}', [BlogController::class, 'show'])->name('show');
+});
+
+// ─── 301 Redirects for old /reviews/* URLs ───
+Route::get('/reviews/{slug}', function ($slug) {
+    $redirect = BlogRedirect::where('old_path', "/reviews/{$slug}")->first();
+    if ($redirect) return redirect($redirect->new_path, $redirect->status_code);
+    return redirect("/blog/{$slug}", 301);
 });
 
 // ─── Razorpay Webhook (no auth, no CSRF) ───
