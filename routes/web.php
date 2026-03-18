@@ -76,6 +76,17 @@ Route::get('/print/nirgam-utara-application', function () {
     return view('print.nirgam-utara-application');
 })->name('print.nirgam-utara-application');
 
+// ─── 301 Redirects for old /reviews/* URLs (must be BEFORE controller routes) ───
+Route::get('/reviews/{slug}', function ($slug) {
+    try {
+        $redirect = \App\Models\BlogRedirect::where('old_path', "/reviews/{$slug}")->first();
+        if ($redirect) return redirect($redirect->new_path, $redirect->status_code);
+    } catch (\Exception $e) {
+        // Database not available, skip redirect
+    }
+    return redirect("/blog/{$slug}", 301);
+});
+
 // ─── Public: Reviews (SEO Blog) ───
 Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
 Route::get('/reviews/{slug}', [ReviewController::class, 'show'])->name('reviews.show');
@@ -346,13 +357,6 @@ Route::prefix('blog')->name('blog.')->group(function () {
     Route::get('/search', [BlogController::class, 'search'])->name('search');
     Route::get('/feed', [BlogController::class, 'rssFeed'])->name('feed');
     Route::get('/{slug}', [BlogController::class, 'show'])->name('show');
-});
-
-// ─── 301 Redirects for old /reviews/* URLs ───
-Route::get('/reviews/{slug}', function ($slug) {
-    $redirect = BlogRedirect::where('old_path', "/reviews/{$slug}")->first();
-    if ($redirect) return redirect($redirect->new_path, $redirect->status_code);
-    return redirect("/blog/{$slug}", 301);
 });
 
 // ─── Razorpay Webhook (no auth, no CSRF) ───
