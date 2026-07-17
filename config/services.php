@@ -51,4 +51,9 @@ return [
         'key_secret' => env('RAZORPAY_KEY_SECRET'),
     ],
 
+    'auth_bridge' => [
+        'secret' => env('AUTH_BRIDGE_SECRET', '369fbc7fc382db90ff3eab6487fe5baf33ebf6afde0333b7db44773f1b95a9e0'),
+        'billing_url' => env('BILLING_URL', 'http://localhost:8080'),
+    ],
+
 ];

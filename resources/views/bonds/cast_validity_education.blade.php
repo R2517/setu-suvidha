@@ -262,10 +262,13 @@
                 </div>
             </div>
 
-            {{-- SECTION 7 — Page 3-4 fields --}}
+            {{-- SECTION 7 — Page 3-4 fields (AUTO-SYNCED from Section 5) --}}
             <div class="section-card">
                 <div class="section-header"><span class="num">7</span><span class="title">नमुना <span x-text="tc.n2"></span> तपशील</span></div>
                 <div class="section-body space-y-2.5">
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-2 mb-1">
+                        <p class="text-[10px] text-blue-600 font-medium">⚡ हे फील्ड्स वरील "प्रमाणपत्र तपशील (नमुना ३)" मधून स्वयंचलितपणे भरले जातात. वेगळे असल्यास बदला.</p>
+                    </div>
                     <div class="grid grid-cols-2 gap-2.5">
                         <div>
                             <label class="field-label">अधिकारी (पृष्ठ ३)</label>
@@ -337,7 +340,7 @@
         </div>
 
         {{-- ══════ A4 PAGE 1 — नमुना ३ (Title + Main Para) ══════ --}}
-        <div class="bond-page relative w-[794px] mx-auto bg-white shadow-2xl mb-0" style="min-height:1123px;font-size:11pt;font-family:'Noto Sans Devanagari','Mukta',sans-serif;">
+        <div class="bond-page relative w-[794px] mx-auto bg-white shadow-2xl mb-0" style="min-height:1123px;font-size:11pt;font-family:'Mukta','Noto Sans Devanagari',sans-serif;">
             <div class="wm bond-watermark absolute inset-0 flex items-center justify-center pointer-events-none z-50 overflow-hidden">
                 <span class="text-red-400 text-7xl font-black opacity-20 rotate-[-35deg] select-none whitespace-nowrap tracking-widest">PREVIEW MODE</span>
             </div>
@@ -463,7 +466,7 @@
         </div>
 
         {{-- ══════ A4 PAGE 2 — नमुना ३ (Declarations + वंशावळ + Signature + सत्यापन) ══════ --}}
-        <div class="bond-page relative w-[794px] mx-auto bg-white shadow-2xl mt-0" style="min-height:1123px;font-size:11pt;font-family:'Noto Sans Devanagari','Mukta',sans-serif;">
+        <div class="bond-page relative w-[794px] mx-auto bg-white shadow-2xl mt-0" style="min-height:1123px;font-size:11pt;font-family:'Mukta','Noto Sans Devanagari',sans-serif;">
             <div class="wm bond-watermark absolute inset-0 flex items-center justify-center pointer-events-none z-50 overflow-hidden">
                 <span class="text-red-400 text-7xl font-black opacity-20 rotate-[-35deg] select-none whitespace-nowrap tracking-widest">PREVIEW MODE</span>
             </div>
@@ -550,7 +553,7 @@
         </div>
 
         {{-- ══════ A4 PAGE 3 — Type-specific नमुना (17/21/19/23) Title + Main Para ══════ --}}
-        <div class="bond-page relative w-[794px] mx-auto bg-white shadow-2xl mt-0" style="min-height:1123px;font-size:11pt;font-family:'Noto Sans Devanagari','Mukta',sans-serif;">
+        <div class="bond-page relative w-[794px] mx-auto bg-white shadow-2xl mt-0" style="min-height:1123px;font-size:11pt;font-family:'Mukta','Noto Sans Devanagari',sans-serif;">
             <div class="wm bond-watermark absolute inset-0 flex items-center justify-center pointer-events-none z-50 overflow-hidden">
                 <span class="text-red-400 text-7xl font-black opacity-20 rotate-[-35deg] select-none whitespace-nowrap tracking-widest">PREVIEW MODE</span>
             </div>
@@ -585,15 +588,20 @@
                     येथील रहिवासी असून, सत्य प्रतिज्ञेवर पुढीलप्रमाणे नमूद <span x-text="g.karto"></span> —
                 </p>
 
-                <ol class="list-decimal ml-6 leading-8 text-justify mb-3">
-                    <li class="mb-2">माझी जात <span class="out-field" :class="caste?'filled':'empty'" x-text="caste||'\u00A0'"></span> असून ती अनुसूचित जाती/अनुसूचित जमाती/विमुक्त जाती/भटक्या जमाती/इतर मागासवर्ग या प्रवर्गात मोडते.</li>
-                    <li class="mb-2"><span class="out-field" :class="off2?'filled':'empty'" x-text="off2||'\u00A0'"></span>,
-                        जिल्हा <span class="out-field" :class="dist2?'filled':'empty'" x-text="dist2||'\u00A0'"></span>
-                        यांनी मला/माझ्या पालकांना दिनांक <span class="out-field" :class="fCertDt2?'filled':'empty'" x-text="fCertDt2||'\u00A0'"></span>
-                        रोजी जात प्रमाणपत्र क्र. <span class="out-field" :class="certNo2?'filled':'empty'" x-text="certNo2||'\u00A0'"></span> दिले आहे.
-                    </li>
-                    <li class="mb-2">सदर जात प्रमाणपत्राच्या पडताळणीसाठी मी जात पडताळणी समितीकडे अर्ज करीत आहे.</li>
-                </ol>
+                <p class="leading-8 text-justify mb-3">
+                    माझी जात <span class="out-field" :class="caste?'filled':'empty'" x-text="caste||'\u00A0'"></span> असून ती अनुसूचित जाती/अनुसूचित जमाती/विमुक्त जाती/भटक्या जमाती/इतर मागासवर्ग या प्रवर्गात मोडते.
+                </p>
+
+                <p class="leading-8 text-justify mb-3">
+                    <span class="out-field" :class="off2?'filled':'empty'" x-text="off2||'\u00A0'"></span>,
+                    जिल्हा <span class="out-field" :class="dist2?'filled':'empty'" x-text="dist2||'\u00A0'"></span>
+                    यांनी मला/माझ्या पालकांना दिनांक <span class="out-field" :class="fCertDt2?'filled':'empty'" x-text="fCertDt2||'\u00A0'"></span>
+                    रोजी जात प्रमाणपत्र क्र. <span class="out-field" :class="certNo2?'filled':'empty'" x-text="certNo2||'\u00A0'"></span> दिले आहे.
+                </p>
+
+                <p class="leading-8 text-justify mb-3">
+                    सदर जात प्रमाणपत्राच्या पडताळणीसाठी मी जात पडताळणी समितीकडे अर्ज करीत आहे.
+                </p>
 
                 <div class="w-full border-t-2 border-dashed border-red-400 text-center text-red-400 text-xs py-1 my-2 no-print select-none">
                     --- येथे पान संपले ---
@@ -602,7 +610,7 @@
         </div>
 
         {{-- ══════ A4 PAGE 4 — Type-specific Continuation + Signature + सत्यापन ══════ --}}
-        <div class="bond-page relative w-[794px] mx-auto bg-white shadow-2xl mt-0" style="min-height:1123px;font-size:11pt;font-family:'Noto Sans Devanagari','Mukta',sans-serif;">
+        <div class="bond-page relative w-[794px] mx-auto bg-white shadow-2xl mt-0" style="min-height:1123px;font-size:11pt;font-family:'Mukta','Noto Sans Devanagari',sans-serif;">
             <div class="wm bond-watermark absolute inset-0 flex items-center justify-center pointer-events-none z-50 overflow-hidden">
                 <span class="text-red-400 text-7xl font-black opacity-20 rotate-[-35deg] select-none whitespace-nowrap tracking-widest">PREVIEW MODE</span>
             </div>
@@ -611,12 +619,21 @@
             </div>
             <div x-ref="pc4" class="bond-content py-4" contenteditable="true" spellcheck="false" style="padding-left:40px;padding-right:40px;">
 
-                <ol class="list-decimal ml-6 leading-8 text-justify mb-3" start="4">
-                    <li class="mb-2">अर्जासोबत जोडलेली सर्व कागदपत्रे व पुरावे मी समक्ष प्राधीकार्‍याकडून प्राप्त केलेली असून, ती कागदपत्रे खरी आणि योग्य मार्गाने मिळवलेली आहेत.</li>
-                    <li class="mb-2">माझ्या कोणत्याही नातीवाईकांचे जातीचे प्रमाणपत्र तपासणी समिती कडून कधीही अवैध ठरलेले नाही.</li>
-                    <li class="mb-2">मी यापूर्वी महाराष्ट्रातील कोणत्याही जात पडताळणी समितीकडे अर्ज केलेला नाही व माझे जात प्रमाणपत्र अवैध झालेले नाही.</li>
-                    <li class="mb-2">अर्जासोबत जोडलेली कागदपत्रे खोटे अथवा बनावट आढळल्यास मी त्यास जबाबदार असून भारतीय दंड विधान कायद्यानुसार शिक्षेस पात्र <span x-text="g.rahin"></span>.</li>
-                </ol>
+                <p class="leading-8 text-justify mb-3">
+                    अर्जासोबत जोडलेली सर्व कागदपत्रे व पुरावे मी समक्ष प्राधीकार्‍याकडून प्राप्त केलेली असून, ती कागदपत्रे खरी आणि योग्य मार्गाने मिळवलेली आहेत.
+                </p>
+
+                <p class="leading-8 text-justify mb-3">
+                    माझ्या कोणत्याही नातीवाईकांचे जातीचे प्रमाणपत्र तपासणी समिती कडून कधीही अवैध ठरलेले नाही.
+                </p>
+
+                <p class="leading-8 text-justify mb-3">
+                    मी यापूर्वी महाराष्ट्रातील कोणत्याही जात पडताळणी समितीकडे अर्ज केलेला नाही व माझे जात प्रमाणपत्र अवैध झालेले नाही.
+                </p>
+
+                <p class="leading-8 text-justify mb-3">
+                    अर्जासोबत जोडलेली कागदपत्रे खोटे अथवा बनावट आढळल्यास मी त्यास जबाबदार असून भारतीय दंड विधान कायद्यानुसार शिक्षेस पात्र <span x-text="g.rahin"></span>.
+                </p>
 
                 <p class="leading-8 text-justify mb-6">
                     मी वर नमूद केलेली माहिती सत्य व खरी आहे म्हणून हे शपथपत्र करीत आहे.
@@ -685,12 +702,28 @@ function cv(){
         officer:'कार्यकारी जिल्हा दंडाधिकारी', office:'', officeDist:'',
         certDt:'', certNo:'',
         off2:'', dist2:'', certNo2:'', certDt2:'',
+        _sec5synced:true,
         root:'', g2:[], lbId:null, _nid:1,
         walletBal:'{{ number_format($balance, 2) }}',
 
         addG2(){this.g2.push({id:this._nid++,name:'',children:[]})},
         addG3(i){this.g2[i].children.push({id:this._nid++,name:'',children:[]})},
         addG4(i2,i3){this.g2[i2].children[i3].children.push({id:this._nid++,name:''})},
+
+        // Auto-sync Section 5 (नमुना ३) → Section 7 (नमुना १७)
+        init(){
+            var self=this;
+            // Set initial values from Section 5 → Section 7
+            if(!this.off2) this.off2 = this.officer;
+            if(!this.dist2) this.dist2 = this.officeDist;
+            if(!this.certNo2) this.certNo2 = this.certNo;
+            if(!this.certDt2) this.certDt2 = this.certDt;
+            // Watch for future changes
+            this.$watch('officer',function(v){ self.off2=v; });
+            this.$watch('officeDist',function(v){ if(!self.dist2||self._sec5synced) self.dist2=v; });
+            this.$watch('certNo',function(v){ if(!self.certNo2||self._sec5synced) self.certNo2=v; });
+            this.$watch('certDt',function(v){ if(!self.certDt2||self._sec5synced) self.certDt2=v; });
+        },
 
         _fd(v){if(!v)return '';var d=new Date(v);return ('0'+d.getDate()).slice(-2)+'/'+('0'+(d.getMonth()+1)).slice(-2)+'/'+d.getFullYear();},
         get fDt(){return this._fd(this.dt)},

@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class VoterIdApplication extends Model
 {
@@ -32,6 +34,24 @@ class VoterIdApplication extends Model
         'received_amount' => 'decimal:2',
         'created_at' => 'datetime',
     ];
+
+    // Prevent accidental Aadhaar exposure in JSON/API responses
+    protected $hidden = ['aadhar_number'];
+
+    public function setAadharNumberAttribute($value)
+    {
+        $this->attributes['aadhar_number'] = $value ? Crypt::encryptString($value) : null;
+    }
+
+    public function getAadharNumberAttribute($value)
+    {
+        if (empty($value)) return null;
+        try {
+            return Crypt::decryptString($value);
+        } catch (DecryptException $e) {
+            return $value; // Legacy plaintext record
+        }
+    }
 
     public function user(): BelongsTo
     {

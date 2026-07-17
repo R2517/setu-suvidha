@@ -33,25 +33,30 @@ class PanCardController extends Controller
             'payment_mode' => 'nullable|in:cash,online,upi,cheque',
         ]);
 
-        $amt = (float) ($request->amount ?? 0);
-        $rcv = (float) ($request->received_amount ?? 0);
+        try {
+            $amt = (float) ($request->amount ?? 0);
+            $rcv = (float) ($request->received_amount ?? 0);
 
-        PanCardApplication::create([
-            'user_id' => $request->user()->id,
-            'applicant_name' => $request->applicant_name,
-            'mobile_number' => $request->mobile_number,
-            'aadhar_number' => $request->aadhar_number,
-            'application_type' => $request->application_type,
-            'application_number' => $request->application_number ?: 'PAN-' . strtoupper(substr(uniqid(), -6)),
-            'dob' => $request->dob,
-            'amount' => $amt,
-            'received_amount' => $rcv,
-            'payment_mode' => $request->payment_mode ?? 'cash',
-            'payment_status' => $this->calculatePaymentStatus($amt, $rcv),
-            'status' => 'pending',
-        ]);
+            PanCardApplication::create([
+                'user_id' => $request->user()->id,
+                'applicant_name' => $request->applicant_name,
+                'mobile_number' => $request->mobile_number,
+                'aadhar_number' => $request->aadhar_number,
+                'application_type' => $request->application_type,
+                'application_number' => $request->application_number ?: 'PAN-' . strtoupper(substr(uniqid(), -6)),
+                'dob' => $request->dob,
+                'amount' => $amt,
+                'received_amount' => $rcv,
+                'payment_mode' => $request->payment_mode ?? 'cash',
+                'payment_status' => $this->calculatePaymentStatus($amt, $rcv),
+                'status' => 'pending',
+            ]);
 
-        return redirect()->route('pan-card')->with('success', 'PAN Card अर्ज जतन झाला! ✅');
+            return redirect()->route('pan-card')->with('success', 'PAN Card अर्ज जतन झाला! ✅');
+        } catch (\Exception $e) {
+            \Log::error('PAN Card store failed: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return redirect()->route('pan-card')->with('error', 'Error: ' . $e->getMessage());
+        }
     }
 
     public function update(Request $request, $id)

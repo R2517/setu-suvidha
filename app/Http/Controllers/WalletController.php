@@ -268,6 +268,51 @@ class WalletController extends Controller
                 ]);
                 return response()->json(['status' => 'credit_failed'], 500);
             }
+        } elseif ($event === 'refund.created') {
+            $refund = $payload['payload']['refund']['entity'] ?? null;
+            if (!$refund) {
+                return response()->json(['status' => 'no_refund_entity'], 400);
+            }
+            $paymentId = $refund['payment_id'];
+            $amountInRupees = $refund['amount'] / 100;
+            
+            // Find the original credit transaction to get the user
+            $originalCredit = WalletTransaction::where('type', 'credit')
+                ->where('reference_id', $paymentId)
+                ->first();
+                
+            if ($originalCredit) {
+                $user = \App\Models\User::find($originalCredit->user_id);
+                if ($user) {
+                    try {
+                        // Idempotency: skip if we already processed this refund
+                        $existingDebit = WalletTransaction::where('type', 'debit')
+                            ->where('reference_id', $refund['id'])
+                            ->first();
+                            
+                        if (!$existingDebit) {
+                            $this->walletService->deduct(
+                                $user,
+                                $amountInRupees,
+                                'Razorpay रिफंड (webhook)',
+                                $refund['id']
+                            );
+                            Log::info('Razorpay webhook: refund debited', [
+                                'user_id' => $user->id,
+                                'refund_id' => $refund['id'],
+                                'amount' => $amountInRupees,
+                            ]);
+                        }
+                    } catch (\Exception $e) {
+                        Log::error('Razorpay webhook: refund debit failed', [
+                            'user_id' => $user->id,
+                            'refund_id' => $refund['id'],
+                            'error' => $e->getMessage(),
+                        ]);
+                        return response()->json(['status' => 'debit_failed'], 500);
+                    }
+                }
+            }
         }
 
         return response()->json(['status' => 'ok']);

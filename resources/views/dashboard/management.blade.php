@@ -11,7 +11,7 @@
         <i data-lucide="briefcase" class="w-6 h-6 text-amber-600"></i> CRM व्यवस्थापन केंद्र
     </h2>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <a href="{{ route('pan-card') }}" class="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-800 hover:shadow-lg hover:-translate-y-1 transition-all group">
             <div class="w-14 h-14 rounded-xl bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center mb-4 group-hover:scale-110 transition">
                 <i data-lucide="credit-card" class="w-7 h-7 text-indigo-600"></i>
@@ -35,6 +35,14 @@
             <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-1">बांधकाम कामगार</h3>
             <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">नोंदणी, योजना, स्थिती — बांधकाम कामगार CRM</p>
             <span class="text-xs font-semibold text-orange-600 flex items-center gap-1">व्यवस्थापन करा <i data-lucide="arrow-right" class="w-3 h-3"></i></span>
+        </a>
+        <a href="{{ route('mahasarthi') }}" class="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-800 hover:shadow-lg hover:-translate-y-1 transition-all group">
+            <div class="w-14 h-14 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mb-4 group-hover:scale-110 transition">
+                <i data-lucide="car" class="w-7 h-7 text-emerald-600"></i>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-1">महासारथी कार्ड</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Learning Licence, DL — महासारथी कार्ड अर्ज व्यवस्थापित करा</p>
+            <span class="text-xs font-semibold text-emerald-600 flex items-center gap-1">व्यवस्थापन करा <i data-lucide="arrow-right" class="w-3 h-3"></i></span>
         </a>
     </div>
 </div>

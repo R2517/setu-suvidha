@@ -107,51 +107,71 @@
         </div>
         <div x-show="showFilters" @click="showFilters = false" class="fixed inset-0 bg-black/30 z-40" x-transition.opacity></div>
 
+        {{-- Validation Errors --}}
+        @if($errors->any())
+        <div class="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm">
+            <p class="font-bold mb-1">⚠️ Please fix the following errors:</p>
+            <ul class="list-disc ml-5 space-y-0.5">
+                @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+
+        @if(session('error'))
+        <div class="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm font-medium">❌ {{ session('error') }}</div>
+        @endif
+
         {{-- New Application Form --}}
-        <div x-show="showForm" x-transition class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6 mb-6">
+        <div x-show="showForm" x-transition class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6 mb-6" x-init="@if($errors->any()) showForm = true @endif">
             <h3 class="text-base font-bold text-gray-900 dark:text-white mb-5 flex items-center gap-2">New PAN Card Application</h3>
             <form method="POST" action="{{ route('pan-card.store') }}">
                 @csrf
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-5">
                     <div>
                         <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">TYPE *</label>
                         <select name="application_type" required class="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm">
-                            <option value="new">New (नवीन)</option>
-                            <option value="correction">Correction (दुरुस्ती)</option>
-                            <option value="reprint">Reprint (रिप्रिंट)</option>
+                            <option value="new" {{ old('application_type') === 'new' ? 'selected' : '' }}>New (नवीन)</option>
+                            <option value="correction" {{ old('application_type') === 'correction' ? 'selected' : '' }}>Correction (दुरुस्ती)</option>
+                            <option value="reprint" {{ old('application_type') === 'reprint' ? 'selected' : '' }}>Reprint (रिप्रिंट)</option>
                         </select>
                     </div>
                     <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">APP NO.</label>
+                        <input type="text" name="application_number" value="{{ old('application_number') }}" placeholder="Auto if empty" class="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm">
+                    </div>
+                    <div>
                         <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">NAME *</label>
-                        <input type="text" name="applicant_name" required placeholder="Full Name" class="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm">
+                        <input type="text" name="applicant_name" required value="{{ old('applicant_name') }}" placeholder="Full Name" class="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">MOBILE *</label>
-                        <input type="text" name="mobile_number" required maxlength="10" placeholder="10 digit" class="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm">
+                        <input type="text" name="mobile_number" required maxlength="10" value="{{ old('mobile_number') }}" placeholder="10 digit" class="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">AADHAR</label>
-                        <input type="text" name="aadhar_number" maxlength="12" placeholder="12 digit" class="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm">
+                        <input type="text" name="aadhar_number" maxlength="12" value="{{ old('aadhar_number') }}" placeholder="12 digit" class="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">DOB</label>
-                        <input type="date" name="dob" class="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm">
+                        <input type="date" name="dob" value="{{ old('dob') }}" class="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">AMOUNT &#8377;</label>
-                        <input type="number" name="amount" value="0" step="1" class="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm">
+                        <input type="number" name="amount" value="{{ old('amount', 0) }}" step="1" class="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">RECEIVED &#8377;</label>
-                        <input type="number" name="received_amount" value="0" step="1" class="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm">
+                        <input type="number" name="received_amount" value="{{ old('received_amount', 0) }}" step="1" class="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">PAYMENT MODE</label>
                         <select name="payment_mode" class="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm">
-                            <option value="cash">Cash</option>
-                            <option value="online">Online</option>
-                            <option value="upi">UPI</option>
-                            <option value="cheque">Cheque</option>
+                            <option value="cash" {{ old('payment_mode') === 'cash' ? 'selected' : '' }}>Cash</option>
+                            <option value="online" {{ old('payment_mode') === 'online' ? 'selected' : '' }}>Online</option>
+                            <option value="upi" {{ old('payment_mode') === 'upi' ? 'selected' : '' }}>UPI</option>
+                            <option value="cheque" {{ old('payment_mode') === 'cheque' ? 'selected' : '' }}>Cheque</option>
                         </select>
                     </div>
                 </div>
@@ -172,6 +192,7 @@
                         <tr>
                             <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-500 uppercase">#</th>
                             <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-500 uppercase">TYPE</th>
+                            <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-500 uppercase">APP NO.</th>
                             <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-500 uppercase">NAME</th>
                             <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-500 uppercase">MOBILE</th>
                             <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-500 uppercase">AADHAR</th>
@@ -190,6 +211,7 @@
                                 @php $typeColors = ['new' => 'bg-blue-100 text-blue-700', 'correction' => 'bg-amber-100 text-amber-700', 'reprint' => 'bg-purple-100 text-purple-700']; @endphp
                                 <span class="text-[10px] font-bold px-2 py-0.5 rounded-full {{ $typeColors[$app->application_type] ?? 'bg-gray-100 text-gray-600' }}">{{ ucfirst($app->application_type) }}</span>
                             </td>
+                            <td class="px-4 py-3 text-xs font-mono text-indigo-600">{{ $app->application_number ?? '—' }}</td>
                             <td class="px-4 py-3 font-bold text-gray-900 dark:text-white">{{ $app->applicant_name }}</td>
                             <td class="px-4 py-3 text-gray-600">{{ $app->mobile_number }}</td>
                             <td class="px-4 py-3 text-gray-500 text-xs font-mono">{{ $app->aadhar_number ?? '—' }}</td>

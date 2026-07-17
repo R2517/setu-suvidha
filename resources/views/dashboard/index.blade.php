@@ -33,13 +33,15 @@
                 <span>प्रोफाइल</span>
                 <span class="absolute inset-0 rounded-xl bg-white/0 group-hover:bg-white/10 transition-all duration-300"></span>
             </a>
-            <a href="{{ route('billing.dashboard') }}"
+            <a href="{{ route('billing.redirect') }}"
+               target="_blank"
                class="group relative inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl font-semibold text-sm
                       text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 hover:scale-[1.03]
                       active:scale-[0.98] transition-all duration-300 ease-out"
                style="background: linear-gradient(135deg, #7c3aed, #8b5cf6, #a78bfa)">
                 <i data-lucide="receipt" class="w-4 h-4 transition-transform duration-300 group-hover:rotate-12"></i>
                 <span>बिलिंग</span>
+                <i data-lucide="external-link" class="w-3 h-3 opacity-60"></i>
                 <span class="absolute inset-0 rounded-xl bg-white/0 group-hover:bg-white/10 transition-all duration-300"></span>
             </a>
             <a href="{{ route('management') }}"
@@ -56,10 +58,32 @@
                       text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 hover:scale-[1.03]
                       active:scale-[0.98] transition-all duration-300 ease-out"
                style="background: linear-gradient(135deg, #4338ca, #6366f1, #818cf8)">
-                <i data-lucide="clipboard-list" class="w-4 h-4 transition-transform duration-300 group-hover:rotate-12"></i>
+                <i data-lucide="file-check" class="w-4 h-4 transition-transform duration-300 group-hover:rotate-12"></i>
                 <span>DocSlip</span>
                 <span class="absolute inset-0 rounded-xl bg-white/0 group-hover:bg-white/10 transition-all duration-300"></span>
             </a>
+            @if(auth()->user()->isAdmin())
+            @php 
+                try { 
+                    $openTickets = \App\Models\HelpdeskTicket::where('status', 'open')->count(); 
+                } catch (\Throwable $e) { 
+                    $openTickets = 0; 
+                } 
+            @endphp
+            <a href="{{ route('admin.helpdesk.index') }}"
+               class="group relative inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl font-semibold text-sm
+                      text-white hover:-translate-y-0.5 hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 ease-out"
+               style="background: linear-gradient(135deg, #dc2626, #e11d48); box-shadow: 0 0 15px rgba(220,38,38,0.5);">
+                <i data-lucide="life-buoy" class="w-4 h-4 transition-transform duration-300 group-hover:rotate-12"></i>
+                <span>Admin Helpdesk</span>
+                @if($openTickets > 0)
+                <span class="absolute -top-2 -right-2 bg-yellow-400 text-yellow-900 font-bold px-2 py-0.5 rounded-full text-[10px] shadow-md animate-bounce">
+                    {{ $openTickets }} New
+                </span>
+                @endif
+                <span class="absolute inset-0 rounded-xl bg-white/0 group-hover:bg-white/10 transition-all duration-300"></span>
+            </a>
+            @endif
 
             {{-- Theme Picker --}}
             <div class="relative ml-auto">

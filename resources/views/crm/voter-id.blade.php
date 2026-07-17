@@ -114,13 +114,17 @@
                 @csrf
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
                     <div>
-                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">TYPE *</label>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">APPLICATION TYPE *</label>
                         <select name="application_type" required class="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm">
                             <option value="new">New (नवीन)</option>
                             <option value="correction">Correction (दुरुस्ती)</option>
                             <option value="transfer">Transfer (ट्रान्सफर)</option>
                             <option value="duplicate">Duplicate (डुप्लिकेट)</option>
                         </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">APPLICATION NUMBER</label>
+                        <input type="text" name="application_number" placeholder="अर्ज क्रमांक" class="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">NAME *</label>
@@ -172,6 +176,7 @@
                     <thead class="bg-gray-50 dark:bg-gray-800/50">
                         <tr>
                             <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-500 uppercase">#</th>
+                            <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-500 uppercase">APP NO.</th>
                             <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-500 uppercase">TYPE</th>
                             <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-500 uppercase">NAME</th>
                             <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-500 uppercase">MOBILE</th>
@@ -187,6 +192,7 @@
                         @forelse($applications as $i => $app)
                         <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition" x-data="{ editing: false }">
                             <td class="px-4 py-3 text-gray-400 text-xs">{{ $applications->firstItem() + $i }}</td>
+                            <td class="px-4 py-3 text-xs font-mono text-gray-700 dark:text-gray-300">{{ $app->application_number ?? '—' }}</td>
                             <td class="px-4 py-3">
                                 @php $typeColors = ['new' => 'bg-blue-100 text-blue-700', 'correction' => 'bg-amber-100 text-amber-700', 'transfer' => 'bg-purple-100 text-purple-700', 'duplicate' => 'bg-orange-100 text-orange-700']; @endphp
                                 <span class="text-[10px] font-bold px-2 py-0.5 rounded-full {{ $typeColors[$app->application_type] ?? 'bg-gray-100 text-gray-600' }}">{{ ucfirst($app->application_type) }}</span>
@@ -215,9 +221,21 @@
                         </tr>
                         {{-- Inline Edit Row --}}
                         <tr x-show="editing" x-transition>
-                            <td colspan="10" class="px-4 py-3 bg-sky-50/50 dark:bg-sky-900/10">
+                            <td colspan="11" class="px-4 py-3 bg-sky-50/50 dark:bg-sky-900/10">
                                 <form method="POST" action="{{ route('voter-id.update', $app->id) }}" class="flex flex-wrap items-end gap-3">
                                     @csrf @method('PUT')
+                                    <div>
+                                        <label class="block text-[9px] font-bold text-gray-500 uppercase mb-0.5">Application Type</label>
+                                        <select name="application_type" class="px-2 py-1.5 rounded border border-gray-300 text-xs">
+                                            @foreach(['new' => 'New (नवीन)', 'correction' => 'Correction (दुरुस्ती)', 'transfer' => 'Transfer', 'duplicate' => 'Duplicate'] as $val => $label)
+                                            <option value="{{ $val }}" {{ $app->application_type === $val ? 'selected' : '' }}>{{ $label }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-[9px] font-bold text-gray-500 uppercase mb-0.5">App No.</label>
+                                        <input type="text" name="application_number" value="{{ $app->application_number }}" placeholder="अर्ज क्रमांक" class="w-28 px-2 py-1.5 rounded border border-gray-300 text-xs">
+                                    </div>
                                     <div>
                                         <label class="block text-[9px] font-bold text-gray-500 uppercase mb-0.5">Status</label>
                                         <select name="status" class="px-2 py-1.5 rounded border border-gray-300 text-xs">
@@ -242,17 +260,13 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div>
-                                        <label class="block text-[9px] font-bold text-gray-500 uppercase mb-0.5">App No.</label>
-                                        <input type="text" name="application_number" value="{{ $app->application_number }}" class="w-28 px-2 py-1.5 rounded border border-gray-300 text-xs">
-                                    </div>
                                     <button type="submit" class="px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-sky-500 hover:bg-sky-600 transition">Save</button>
                                     <button type="button" @click="editing = false" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 border border-gray-300 hover:bg-gray-50 transition">Cancel</button>
                                 </form>
                             </td>
                         </tr>
                         @empty
-                        <tr><td colspan="10" class="px-4 py-12 text-center text-gray-400">No applications yet. Click "New Application".</td></tr>
+                        <tr><td colspan="11" class="px-4 py-12 text-center text-gray-400">No applications yet. Click "New Application".</td></tr>
                         @endforelse
                     </tbody>
                 </table>

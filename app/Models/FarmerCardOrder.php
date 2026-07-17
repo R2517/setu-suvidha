@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class FarmerCardOrder extends Model
 {
@@ -20,6 +22,33 @@ class FarmerCardOrder extends Model
         'last_downloaded_at' => 'datetime',
         'data_purged' => 'boolean',
     ];
+
+    // Prevent accidental Aadhaar exposure in JSON/API responses
+    protected $hidden = ['aadhaar'];
+
+    /**
+     * Encrypt Aadhaar on write.
+     */
+    public function setAadhaarAttribute($value)
+    {
+        $this->attributes['aadhaar'] = $value ? Crypt::encryptString($value) : null;
+    }
+
+    /**
+     * Decrypt Aadhaar on read.
+     * Falls back to raw value for legacy records stored before encryption.
+     */
+    public function getAadhaarAttribute($value)
+    {
+        if (empty($value)) return null;
+
+        try {
+            return Crypt::decryptString($value);
+        } catch (DecryptException $e) {
+            // Legacy record stored as plaintext before encryption was added
+            return $value;
+        }
+    }
 
     /**
      * Generate a unique transaction number like FIC-20260217-XXXXX

@@ -18,6 +18,7 @@ use App\Http\Controllers\VleDirectoryController;
 use App\Http\Controllers\PanCardController;
 use App\Http\Controllers\VoterIdController;
 use App\Http\Controllers\BandkamController;
+use App\Http\Controllers\MahasarthiController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\PassportPhotoMakerController;
@@ -28,6 +29,7 @@ use App\Http\Controllers\BondFormatController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\DocslipController;
+use App\Http\Controllers\AuthBridgeController;
 use App\Http\Controllers\BillingController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\PublicServicePageController;
@@ -111,6 +113,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/dashboard/save-config', [DashboardController::class, 'saveConfig'])->name('dashboard.save-config');
 
+    // Auth Bridge - Redirect to billing subdomain
+    Route::middleware(['subscription'])->group(function () {
+        Route::get('/go/billing', [AuthBridgeController::class, 'redirectToBilling'])->name('billing.redirect');
+    });
+
     // Profile
     Route::get('/profile', [VleProfileController::class, 'index'])->name('profile');
     Route::post('/profile', [VleProfileController::class, 'update'])->name('profile.update');
@@ -127,71 +134,25 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/wallet/verify', [WalletController::class, 'verifyPayment'])->name('wallet.verify');
     });
 
-    // Subscription
+    // Helpdesk
+    Route::get('/helpdesk', [App\Http\Controllers\HelpdeskController::class, 'index'])->name('helpdesk.index');
+    Route::get('/helpdesk/{ticket}', [App\Http\Controllers\HelpdeskController::class, 'show'])->name('helpdesk.show');
+    Route::post('/helpdesk/submit', [App\Http\Controllers\HelpdeskController::class, 'submit'])->name('helpdesk.submit');
+    Route::post('/helpdesk/{ticket}/reply', [App\Http\Controllers\HelpdeskController::class, 'reply'])->name('helpdesk.reply');
+
+    // Subscription / Billing License
     Route::get('/subscription', [SubscriptionController::class, 'index'])->name('subscription');
-    Route::middleware(['throttle:10,1'])->group(function () {
-        Route::post('/subscription/activate', [SubscriptionController::class, 'activate'])->name('subscription.activate');
-        Route::post('/subscription/activate-now', [SubscriptionController::class, 'activateNow'])->name('subscription.activate-now');
-        Route::post('/subscription/change', [SubscriptionController::class, 'changePlan'])->name('subscription.change');
+    Route::middleware(['auth', 'verified'])->group(function () {
+        Route::post('/subscription/activate-billing', [SubscriptionController::class, 'activateBilling'])->name('subscription.activate-billing');
         Route::post('/subscription/payment-order', [SubscriptionController::class, 'createPaymentOrder'])->name('subscription.payment-order');
         Route::post('/subscription/payment-verify', [SubscriptionController::class, 'verifyPayment'])->name('subscription.payment-verify');
     });
 
     // ─── Subscription-Protected Features ───
-    // Billing System
-    Route::prefix('billing')->name('billing.')->middleware('subscription')->group(function () {
-        Route::get('/', [BillingController::class, 'dashboard'])->name('dashboard');
-
-        // Sales
-        Route::get('/sales', [BillingController::class, 'sales'])->name('sales');
-        Route::post('/sales', [BillingController::class, 'storeSale'])->name('sales.store');
-        Route::put('/sales/{id}', [BillingController::class, 'updateSale'])->name('sales.update');
-        Route::delete('/sales/{id}', [BillingController::class, 'softDeleteSale'])->name('sales.delete');
-        Route::post('/sales/{id}/restore', [BillingController::class, 'restoreSale'])->name('sales.restore');
-
-        // Expenses
-        Route::get('/expenses', [BillingController::class, 'expenses'])->name('expenses');
-        Route::post('/expenses', [BillingController::class, 'storeExpense'])->name('expenses.store');
-        Route::put('/expenses/{id}', [BillingController::class, 'updateExpense'])->name('expenses.update');
-        Route::delete('/expenses/{id}', [BillingController::class, 'destroyExpense'])->name('expenses.delete');
-        Route::post('/monthly-expenses', [BillingController::class, 'storeMonthlyExpense'])->name('monthly.store');
-        Route::put('/monthly-expenses/{id}', [BillingController::class, 'updateMonthlyExpense'])->name('monthly.update');
-        Route::delete('/monthly-expenses/{id}', [BillingController::class, 'destroyMonthlyExpense'])->name('monthly.delete');
-
-        // Customers
-        Route::get('/customers', [BillingController::class, 'customers'])->name('customers');
-        Route::post('/customers', [BillingController::class, 'storeCustomer'])->name('customers.store');
-        Route::get('/customers/search', [BillingController::class, 'searchCustomers'])->name('customers.search');
-        Route::put('/customers/{id}', [BillingController::class, 'updateCustomer'])->name('customers.update');
-        Route::get('/customers/{id}', [BillingController::class, 'showCustomer'])->name('customers.show');
-        Route::delete('/customers/{id}', [BillingController::class, 'destroyCustomer'])->name('customers.delete');
-
-        // Daily Book
-        Route::get('/daily-book', [BillingController::class, 'dailyBook'])->name('daily-book');
-        Route::post('/daily-book/start', [BillingController::class, 'startDay'])->name('daily-book.start');
-        Route::post('/daily-book/close', [BillingController::class, 'closeDay'])->name('daily-book.close');
-        Route::post('/daily-book/reopen', [BillingController::class, 'reopenDay'])->name('daily-book.reopen');
-        Route::post('/daily-book/adjust', [BillingController::class, 'addCashAdjustment'])->name('daily-book.adjust');
-
-        // Kiosk Book
-        Route::get('/kiosk-book', [BillingController::class, 'kioskBook'])->name('kiosk-book');
-        Route::post('/kiosk-book', [BillingController::class, 'storeKioskTransaction'])->name('kiosk.store');
-        Route::delete('/kiosk-book/{id}', [BillingController::class, 'destroyKioskTransaction'])->name('kiosk.delete');
-
-        // Reports
-        Route::get('/reports', [BillingController::class, 'reports'])->name('reports');
-
-        // Services
-        Route::get('/services', [BillingController::class, 'services'])->name('services');
-        Route::post('/services', [BillingController::class, 'storeService'])->name('services.store');
-        Route::put('/services/{id}', [BillingController::class, 'updateService'])->name('services.update');
-        Route::delete('/services/{id}', [BillingController::class, 'destroyService'])->name('services.delete');
-        Route::post('/services/csv-upload', [BillingController::class, 'csvUploadServices'])->name('services.csv-upload');
-        Route::get('/services-json', [BillingController::class, 'servicesJson'])->name('services.json');
-    });
+    // ─── Legacy PHP Billing System Removed (Now handled by React VLECODEBASE) ───
 
     // Forms — Generic Engine (C4: proper controller routing)
-    Route::middleware('subscription')->group(function () {
+    Route::group([], function () {
         Route::get('/hamipatra', [FormController::class, 'showHamipatra'])->name('hamipatra');
         Route::get('/self-declaration', [FormController::class, 'showSelfDeclaration'])->name('self-declaration');
         Route::get('/grievance', [FormController::class, 'showGrievance'])->name('grievance');
@@ -240,8 +201,8 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/forms/{id}', [FormController::class, 'delete'])->name('forms.delete');
     Route::get('/forms/{id}/print', [FormController::class, 'print'])->name('forms.print');
 
-    // Management / CRM Hub (subscription protected)
-    Route::middleware('subscription')->group(function () {
+    // Management / CRM Hub
+    Route::group([], function () {
         Route::get('/management', fn() => view('dashboard.management'))->name('management');
 
         // CRM: PAN Card
@@ -268,6 +229,12 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/bandkam/schemes/{schemeId}', [BandkamController::class, 'updateScheme'])->name('bandkam.schemes.update');
         Route::delete('/bandkam/schemes/{schemeId}', [BandkamController::class, 'destroyScheme'])->name('bandkam.schemes.destroy');
 
+        // CRM: Mahasarthi Card
+        Route::get('/mahasarthi', [MahasarthiController::class, 'index'])->name('mahasarthi');
+        Route::post('/mahasarthi', [MahasarthiController::class, 'store'])->name('mahasarthi.store');
+        Route::put('/mahasarthi/{id}', [MahasarthiController::class, 'update'])->name('mahasarthi.update');
+        Route::delete('/mahasarthi/{id}', [MahasarthiController::class, 'destroy'])->name('mahasarthi.destroy');
+
         // Export CSV
         Route::get('/export/pan-card', [ExportController::class, 'panCard'])->name('export.pan-card');
         Route::get('/export/voter-id', [ExportController::class, 'voterId'])->name('export.voter-id');
@@ -277,8 +244,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/reports', [ReportController::class, 'index'])->name('reports');
     });
 
-    // DocSlip — कागदपत्र पावती (subscription protected)
-    Route::prefix('docslip')->name('docslip.')->middleware('subscription')->group(function () {
+    // DocSlip — कागदपत्र पावती
+    Route::prefix('docslip')->name('docslip.')->group(function () {
         Route::get('/', [DocslipController::class, 'index'])->name('index');
         Route::post('/merge', [DocslipController::class, 'mergeDocuments'])->name('merge');
         Route::post('/print', [DocslipController::class, 'printSlip'])->name('print');
@@ -332,6 +299,15 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::patch('/error-logs/{id}/resolve', [AdminErrorLogController::class, 'resolve'])->name('error-logs.resolve');
     Route::delete('/error-logs/{id}', [AdminErrorLogController::class, 'destroy'])->name('error-logs.destroy');
     Route::delete('/error-logs-clear', [AdminErrorLogController::class, 'clearResolved'])->name('error-logs.clear-resolved');
+
+    // Ads Management
+    Route::get('/ads', [\App\Http\Controllers\Admin\AdSettingController::class, 'index'])->name('ads.index');
+    Route::post('/ads', [\App\Http\Controllers\Admin\AdSettingController::class, 'update'])->name('ads.update');
+
+    // Admin Helpdesk
+    Route::get('/helpdesk', [\App\Http\Controllers\Admin\HelpdeskController::class, 'index'])->name('helpdesk.index');
+    Route::get('/helpdesk/{ticket}', [\App\Http\Controllers\Admin\HelpdeskController::class, 'show'])->name('helpdesk.show');
+    Route::post('/helpdesk/{ticket}/reply', [\App\Http\Controllers\Admin\HelpdeskController::class, 'reply'])->name('helpdesk.reply');
     
     // Blog Management
     Route::prefix('blog')->name('blog.')->group(function () {

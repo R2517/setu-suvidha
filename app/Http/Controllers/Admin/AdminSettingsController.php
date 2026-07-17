@@ -69,8 +69,7 @@ class AdminSettingsController extends Controller
 
         return view('admin.settings', compact(
             'logLines', 'health',
-            'razorpayKeyId', 'razorpayKeySecret', 'razorpayWebhookSecret',
-            'razorpayKeySecretMasked', 'razorpayWebhookSecretMasked'
+            'razorpayKeyId', 'razorpayKeySecretMasked', 'razorpayWebhookSecretMasked'
         ));
     }
 
@@ -87,16 +86,26 @@ class AdminSettingsController extends Controller
 
         $updates = [];
 
+        // Sanitize input: strip newlines, carriage returns, null bytes, and quotes
+        // to prevent .env injection attacks
+        $sanitize = function ($value) {
+            // Remove characters that could break .env format or inject new keys
+            $value = preg_replace('/[\r\n\0"\'`\\\\]/', '', $value);
+            // Additional safety: only allow alphanumeric, underscores, hyphens, and dots
+            $value = preg_replace('/[^a-zA-Z0-9_\-.]/', '', $value);
+            return trim($value);
+        };
+
         if ($request->filled('razorpay_key_id')) {
-            $updates['RAZORPAY_KEY_ID'] = $request->razorpay_key_id;
+            $updates['RAZORPAY_KEY_ID'] = $sanitize($request->razorpay_key_id);
         }
 
         if ($request->filled('razorpay_key_secret')) {
-            $updates['RAZORPAY_KEY_SECRET'] = $request->razorpay_key_secret;
+            $updates['RAZORPAY_KEY_SECRET'] = $sanitize($request->razorpay_key_secret);
         }
 
         if ($request->filled('razorpay_webhook_secret')) {
-            $updates['RAZORPAY_WEBHOOK_SECRET'] = $request->razorpay_webhook_secret;
+            $updates['RAZORPAY_WEBHOOK_SECRET'] = $sanitize($request->razorpay_webhook_secret);
         }
 
         foreach ($updates as $key => $value) {

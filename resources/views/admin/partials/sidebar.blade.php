@@ -24,6 +24,13 @@
         <a href="{{ route('admin.settings') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.settings') ? 'bg-amber-500/20 text-amber-400' : 'text-gray-400 hover:text-white hover:bg-gray-800' }} transition">
             <i data-lucide="settings" class="w-4 h-4"></i> सेटिंग्ज
         </a>
+        <a href="{{ route('admin.helpdesk.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.helpdesk.*') ? 'bg-blue-500/20 text-blue-400' : 'text-gray-400 hover:text-white hover:bg-gray-800' }} transition">
+            <i data-lucide="life-buoy" class="w-4 h-4"></i> Helpdesk
+            @php try { $openTickets = \App\Models\HelpdeskTicket::where('status', 'open')->count(); } catch (\Throwable $e) { $openTickets = 0; } @endphp
+            @if($openTickets > 0)
+            <span class="ml-auto bg-blue-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">{{ $openTickets > 99 ? '99+' : $openTickets }}</span>
+            @endif
+        </a>
         <a href="{{ route('admin.error-logs') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.error-logs') ? 'bg-red-500/20 text-red-400' : 'text-gray-400 hover:text-white hover:bg-gray-800' }} transition">
             <i data-lucide="bug" class="w-4 h-4"></i> Error Logs
             @php try { $unresolvedCount = \App\Models\ErrorLog::where('is_resolved', false)->count(); } catch (\Throwable $e) { $unresolvedCount = 0; } @endphp
@@ -37,7 +44,14 @@
             <i data-lucide="newspaper" class="w-4 h-4"></i> All Posts
         </a>
         <a href="{{ route('admin.blog.create') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.blog.create') ? 'bg-amber-500/20 text-amber-400' : 'text-gray-400 hover:text-white hover:bg-gray-800' }} transition">
-            <i data-lucide="file-plus" class="w-4 h-4"></i> Create Post
+            <i data-lucide="plus-circle" class="w-4 h-4"></i> Create Post
+        </a>
+
+        <div class="h-px bg-gray-800 my-2"></div>
+        
+        <p class="px-3 text-[10px] uppercase tracking-wider text-gray-600 mb-1">Marketing</p>
+        <a href="{{ route('admin.ads.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.ads.*') ? 'bg-blue-500/20 text-blue-400' : 'text-gray-400 hover:text-white hover:bg-gray-800' }} transition">
+            <i data-lucide="megaphone" class="w-4 h-4"></i> Ads Management
         </a>
         <div class="border-t border-gray-800 my-3"></div>
         <p class="px-3 text-[10px] uppercase tracking-wider text-gray-600 mb-1">Public Services</p>

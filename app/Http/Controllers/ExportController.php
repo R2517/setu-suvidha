@@ -21,6 +21,18 @@ class ExportController extends Controller
         return '****';
     }
 
+    private function sanitizeCsvValue($value): string
+    {
+        $value = (string) $value;
+        if (empty($value)) {
+            return '';
+        }
+        if (preg_match('/^[=+\-@\t\r]/', $value)) {
+            return "'" . $value;
+        }
+        return $value;
+    }
+
     public function panCard(Request $request): StreamedResponse
     {
         $headers = ['ID', 'Type', 'Status', 'Name', 'Mobile', 'Aadhar', 'DOB', 'App No', 'Amount', 'Received', 'Payment Status', 'Payment Mode', 'Date'];
@@ -34,11 +46,11 @@ class ExportController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->chunk(500, function ($rows) use ($handle) {
                     foreach ($rows as $r) {
-                        fputcsv($handle, [
+                        fputcsv($handle, array_map([$this, 'sanitizeCsvValue'], [
                             $r->id, ucfirst($r->application_type), ucfirst($r->status), $r->applicant_name, $r->mobile_number,
                             $this->maskAadhaar($r->aadhaar_number), $r->dob?->format('d/m/Y'), $r->application_number,
                             $r->amount, $r->received_amount, ucfirst($r->payment_status), ucfirst($r->payment_mode), $r->created_at->format('d/m/Y')
-                        ]);
+                        ]));
                     }
                 });
 
@@ -62,11 +74,11 @@ class ExportController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->chunk(500, function ($rows) use ($handle) {
                     foreach ($rows as $r) {
-                        fputcsv($handle, [
+                        fputcsv($handle, array_map([$this, 'sanitizeCsvValue'], [
                             $r->id, ucfirst($r->application_type), ucfirst($r->status), $r->applicant_name, $r->mobile_number,
                             $this->maskAadhaar($r->aadhaar_number), $r->dob?->format('d/m/Y'), $r->application_number,
                             $r->amount, $r->received_amount, ucfirst($r->payment_status), ucfirst($r->payment_mode), $r->created_at->format('d/m/Y')
-                        ]);
+                        ]));
                     }
                 });
 
@@ -93,13 +105,13 @@ class ExportController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->chunk(500, function ($rows) use ($handle) {
                     foreach ($rows as $r) {
-                        fputcsv($handle, [
+                        fputcsv($handle, array_map([$this, 'sanitizeCsvValue'], [
                             $r->id, ucfirst($r->registration_type), ucfirst($r->status), $r->applicant_name, $r->mobile_number,
                             $this->maskAadhaar($r->aadhaar_number), $r->village, $r->taluka, $r->district, $r->application_number,
                             $r->form_date?->format('d/m/Y'), $r->online_date?->format('d/m/Y'), $r->appointment_date?->format('d/m/Y'),
                             $r->activation_date?->format('d/m/Y'), $r->expiry_date?->format('d/m/Y'),
                             $r->amount, $r->received_amount, ucfirst($r->payment_status), ucfirst($r->payment_mode), $r->schemes->count()
-                        ]);
+                        ]));
                     }
                 });
 

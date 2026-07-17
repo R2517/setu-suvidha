@@ -8,7 +8,7 @@
     <title>@yield('title') — SETU Suvidha</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Mukta:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     @stack('styles')
@@ -18,47 +18,152 @@
             padding: 0;
             height: 100%;
             overflow: hidden;
-            font-family: 'Poppins', 'Noto Sans Devanagari', sans-serif;
+            font-family: 'Mukta', 'Noto Sans Devanagari', 'Poppins', sans-serif;
         }
-        #leftPanel::-webkit-scrollbar { width: 5px; }
-        #leftPanel::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        #leftPanel { background: #f5f5f5 !important; }
+        #leftPanel::-webkit-scrollbar { width: 4px; }
+        #leftPanel::-webkit-scrollbar-track { background: transparent; }
+        #leftPanel::-webkit-scrollbar-thumb { background: #bbb; border-radius: 10px; }
         .preview-area::-webkit-scrollbar { width: 8px; }
         .preview-area::-webkit-scrollbar-thumb { background: #888; border-radius: 10px; }
 
-        /* ── Shared: Fillable output text ── */
+        /* ── Fillable output text ── */
         .out-field { display: inline; border: none !important; font-weight: 700; }
         .out-field.empty { color: #9ca3af; font-style: italic; font-weight: 500; }
         .out-field.filled { color: #111827; font-weight: 700; }
 
-        /* ── Shared: Modern form inputs ── */
+        /* ── Clean simple inputs ── */
         .form-input {
-            width: 100%; border: 1px solid #e2e8f0; border-radius: 8px;
-            padding: 8px 12px; font-size: 13px; transition: all 0.2s;
-            background: #fff; color: #1e293b;
+            width: 100%; border: 1px solid #ccc; border-radius: 4px;
+            padding: 6px 8px; font-size: 13px; font-weight: 600; transition: border-color 0.2s;
+            background: #fff; color: #222;
         }
-        .form-input:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.1); outline: none; }
-        .form-input::placeholder { color: #cbd5e1; }
+        .form-input:focus { border-color: #4f46e5; box-shadow: none; outline: none; }
+        .form-input:not(:placeholder-shown) { background: #fff; border-color: #999; }
+        .form-input::placeholder { color: #aaa; font-weight: 400; }
         .form-select {
-            width: 100%; border: 1px solid #e2e8f0; border-radius: 8px;
-            padding: 8px 12px; font-size: 13px; transition: all 0.2s;
-            background: #fff; color: #1e293b; cursor: pointer;
+            width: 100%; border: 1px solid #ccc; border-radius: 4px;
+            padding: 6px 8px; font-size: 13px; font-weight: 600; transition: border-color 0.2s;
+            background: #fff; color: #222; cursor: pointer;
         }
-        .form-select:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.1); outline: none; }
+        .form-select:focus { border-color: #4f46e5; box-shadow: none; outline: none; }
         .form-textarea {
-            width: 100%; border: 1px solid #e2e8f0; border-radius: 8px;
-            padding: 8px 12px; font-size: 13px; transition: all 0.2s;
-            background: #fff; color: #1e293b; resize: none;
+            width: 100%; border: 1px solid #ccc; border-radius: 4px;
+            padding: 6px 8px; font-size: 13px; font-weight: 600; transition: border-color 0.2s;
+            background: #fff; color: #222; resize: none;
         }
-        .form-textarea:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.1); outline: none; }
+        .form-textarea:focus { border-color: #4f46e5; box-shadow: none; outline: none; }
+        .form-textarea:not(:placeholder-shown) { background: #fff; }
+        .form-textarea::placeholder { color: #aaa; font-weight: 400; }
 
-        /* ── Shared: Section cards ── */
-        .section-card { background: #fff; border-radius: 12px; border: 1px solid #f1f5f9; box-shadow: 0 1px 3px rgba(0,0,0,0.04); overflow: hidden; }
-        .section-header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: #f8fafc; border-bottom: 1px solid #f1f5f9; }
-        .section-header .num { width: 22px; height: 22px; border-radius: 6px; background: #6366f1; color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .section-header .title { font-size: 12px; font-weight: 600; color: #334155; }
-        .section-body { padding: 12px 14px; }
-        .field-label { display: block; font-size: 11px; font-weight: 500; color: #64748b; margin-bottom: 4px; letter-spacing: 0.02em; }
+        /* ── Clean section cards ── */
+        .section-card {
+            background: #fff; border-radius: 6px;
+            border: 1px solid #ddd;
+            overflow: hidden;
+        }
+        .section-card:hover { border-color: #ccc; }
+        .section-header {
+            display: flex; align-items: center; gap: 0; padding: 0;
+            background: #4f46e5;
+            border-bottom: none;
+        }
+        .section-header .num {
+            width: auto; height: auto; border-radius: 0;
+            background: rgba(0,0,0,0.15);
+            color: #fff; font-size: 12px; font-weight: 700;
+            padding: 6px 10px;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .section-header .title {
+            font-size: 12.5px; font-weight: 700; color: #fff;
+            padding: 6px 10px;
+        }
+        .section-body { padding: 8px 10px; }
+        .field-label {
+            display: block; font-size: 11.5px; font-weight: 700; color: #555;
+            margin-bottom: 2px;
+        }
 
+        /* ── Compact spacing ── */
+        #leftPanel .space-y-2\.5 > * + * { margin-top: 6px !important; }
+        #leftPanel .space-y-3 > * + * { margin-top: 6px !important; }
+        #leftPanel .gap-2\.5 { gap: 6px !important; }
+        #leftPanel .gap-3 { gap: 6px !important; }
+        #leftPanel .px-3 { padding-left: 8px !important; padding-right: 8px !important; }
+        #leftPanel .pb-4 { padding-bottom: 10px !important; }
+        #leftPanel .mt-2\.5 { margin-top: 6px !important; }
+        #leftPanel .mb-1 { margin-bottom: 2px !important; }
+        #leftPanel .mb-2 { margin-bottom: 4px !important; }
+
+        /* ── Marriage form overrides (mi/ms/mt/sc/sh/fl) ── */
+        #leftPanel .mi, #leftPanel .ms, #leftPanel .mt {
+            background: #fff !important; color: #222 !important;
+            border: 1px solid #ccc !important; border-radius: 4px !important;
+            font-size: 13px !important; font-weight: 600 !important;
+            padding: 6px 8px !important;
+        }
+        #leftPanel .mi:focus, #leftPanel .ms:focus, #leftPanel .mt:focus {
+            border-color: #4f46e5 !important; box-shadow: none !important;
+        }
+        #leftPanel .mi::placeholder, #leftPanel .mt::placeholder { color: #aaa !important; font-weight: 400 !important; }
+        #leftPanel .mi.bg-gray-50 { background: #f5f5f5 !important; }
+        #leftPanel .sc {
+            background: #fff !important; border: 1px solid #ddd !important;
+            border-radius: 6px !important; box-shadow: none !important;
+        }
+        #leftPanel .sh {
+            background: #4f46e5 !important;
+            border-bottom: none !important; padding: 0 !important;
+        }
+        #leftPanel .sh .sn {
+            background: rgba(0,0,0,0.15) !important;
+            width: auto !important; height: auto !important;
+            font-size: 12px !important; padding: 6px 10px !important;
+            border-radius: 0 !important;
+        }
+        #leftPanel .sh .st { color: #fff !important; font-size: 12.5px !important; font-weight: 700 !important; padding: 6px 10px !important; }
+        #leftPanel .sb { padding: 8px 10px !important; }
+        #leftPanel .fl { color: #555 !important; font-size: 11.5px !important; font-weight: 700 !important; margin-bottom: 2px !important; }
+        #leftPanel .abg { background: #ecfdf5 !important; color: #059669 !important; }
+        #leftPanel .dbg { background: #eff6ff !important; color: #2563eb !important; }
+        #leftPanel .dtag { background: #f1f5f9 !important; border-color: #ddd !important; color: #333 !important; }
+        #leftPanel .dtag button { color: #999 !important; }
+        #leftPanel .dtag button:hover { color: #ef4444 !important; }
+
+        /* ── Panel header (dark bar on top) ── */
+        #leftPanel > div:first-child {
+            background: #4f46e5 !important;
+            border-bottom: none !important;
+        }
+        #leftPanel > div:first-child h2 { color: #fff !important; }
+        #leftPanel > div:first-child p { color: rgba(255,255,255,0.7) !important; }
+        #leftPanel > div:first-child a {
+            background: rgba(255,255,255,0.15) !important; border: none !important;
+        }
+        #leftPanel > div:first-child a:hover { background: rgba(255,255,255,0.25) !important; }
+        #leftPanel > div:first-child a i, #leftPanel > div:first-child a svg { color: #fff !important; }
+        #leftPanel > div:first-child button {
+            background: rgba(255,255,255,0.15) !important; color: #fff !important; border: none !important;
+        }
+        #leftPanel > div:first-child button:hover { background: rgba(255,255,255,0.25) !important; }
+
+        /* ── Misc ── */
+        #leftPanel .bg-indigo-50\/60, #leftPanel .bg-indigo-50 { background: #eef2ff !important; border-color: #c7d2fe !important; }
+        #leftPanel .text-indigo-600, #leftPanel .text-indigo-500 { color: #4f46e5 !important; }
+        #leftPanel .text-indigo-400 { color: #6366f1 !important; }
+        #leftPanel .bg-blue-50 { background: #eff6ff !important; border-color: #bfdbfe !important; }
+        #leftPanel .text-blue-600 { color: #2563eb !important; }
+        #leftPanel .tbtn { background: #eef2ff !important; color: #4f46e5 !important; border-color: #c7d2fe !important; }
+        #leftPanel .tbtn:hover { background: #e0e7ff !important; }
+        #leftPanel .tbtn.del { color: #ef4444 !important; border-color: #fecaca !important; background: #fff5f5 !important; }
+        #leftPanel .tbtn.del:hover { background: #fee2e2 !important; }
+        #leftPanel .text-gray-400 { color: #888 !important; }
+        #leftPanel .text-green-600 { color: #059669 !important; }
+        #leftPanel .tree-inp { border-left-color: #c7d2fe !important; }
+        #leftPanel .text-\[10px\] { font-size: 11px !important; }
+        #leftPanel .text-\[9px\] { font-size: 10px !important; }
+        #leftPanel .text-\[11px\] { font-size: 11px !important; }
         /* ── Shared: Right-panel controls bar ── */
         .ctrl-bar {
             position: sticky; top: 0; z-index: 30;
@@ -84,7 +189,9 @@
             #leftPanel, .no-print, #redLine, #floatingToolbar, #guideModal, .add-page-wrap, .ctrl-bar, #previewBg, #previewCloseFloat { display: none !important; }
             #root.panel-expanded .preview-area { display: block !important; position: static !important; }
             .bond-watermark { display: none !important; }
-            .out-field { color: #000 !important; font-style: normal !important; font-weight: normal !important; border: none !important; }
+            .out-field { color: #000 !important; font-style: normal !important; border: none !important; }
+            .out-field.filled { font-weight: 700 !important; }
+            .out-field.empty { font-weight: 400 !important; }
             #root { display: block !important; overflow: visible !important; height: auto !important; }
             .preview-area { overflow: visible !important; position: static !important; padding: 0 !important; margin: 0 !important; background: white !important; height: auto !important; }
             .bond-page {

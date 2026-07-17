@@ -97,6 +97,7 @@ class BandkamController extends Controller
         $rules = [
             'applicant_name' => 'required|string|max:255',
             'mobile_number' => 'required|string|max:15',
+            'aadhar_number' => 'nullable|digits:12',
         ];
 
         // Already Activated type requires application_number
@@ -191,7 +192,7 @@ class BandkamController extends Controller
         $request->validate([
             'applicant_name' => 'nullable|string|max:255',
             'mobile_number' => 'nullable|string|max:20',
-            'aadhar_number' => 'nullable|string|max:12',
+            'aadhar_number' => 'nullable|digits:12',
             'dob' => 'nullable|date',
             'district' => 'nullable|string|max:100',
             'taluka' => 'nullable|string|max:100',
@@ -200,9 +201,9 @@ class BandkamController extends Controller
             'application_number' => 'nullable|string|max:50',
             'amount' => 'nullable|numeric|min:0',
             'received_amount' => 'nullable|numeric|min:0',
-            'payment_mode' => 'nullable|string|max:50',
-            'payment_status' => 'nullable|string|max:50',
-            'status' => 'nullable|string|max:50',
+            'payment_mode' => 'nullable|in:cash,online,upi,cheque',
+            'payment_status' => 'nullable|in:unpaid,partial,paid',
+            'status' => 'nullable|in:pending,activated,expired,rejected',
         ]);
 
         $reg = BandkamRegistration::where('id', $id)->where('user_id', $request->user()->id)->firstOrFail();

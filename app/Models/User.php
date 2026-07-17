@@ -117,4 +117,22 @@ class User extends Authenticatable
     {
         return $this->activeSubscription() !== null;
     }
+
+    /**
+     * Billing Trial expires 15 days after account creation.
+     */
+    public function getBillingTrialEndsAt()
+    {
+        return $this->created_at->addDays(15);
+    }
+
+    public function isBillingTrialActive(): bool
+    {
+        return now()->lessThanOrEqualTo($this->getBillingTrialEndsAt());
+    }
+
+    public function hasBillingAccess(): bool
+    {
+        return $this->isAdmin() || $this->isBillingTrialActive() || $this->hasActiveSubscription();
+    }
 }

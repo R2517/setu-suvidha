@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Legal Bond Formats — SETU Suvidha')
+@section('title', 'Affidavits & Shapathpatra — SETU Suvidha')
 
 @section('content')
 <div class="w-full bg-gradient-to-br from-[#1a3a6b] via-[#1e4a8a] to-[#2155a3] py-12 px-4 text-center rounded-b-3xl"
@@ -8,10 +8,10 @@
         <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
             <i data-lucide="file-text" class="text-white w-6 h-6"></i>
         </div>
-        <h1 class="text-3xl md:text-4xl font-bold text-white">Legal Bond Formats</h1>
+        <h1 class="text-3xl md:text-4xl font-bold text-white">Affidavits & Shapathpatra</h1>
     </div>
     <p class="text-white/80 text-base mt-1 mb-8">
-        विविध कायदेशीर बॉण्ड व करारनामे सोप्या पद्धतीमध्ये बनवा.
+        विविध कायदेशीर प्रतिज्ञापत्र व शपथपत्र सोप्या पद्धतीमध्ये बनवा.
     </p>
 
     <div class="max-w-2xl mx-auto relative">

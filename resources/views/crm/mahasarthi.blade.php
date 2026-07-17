@@ -1,0 +1,316 @@
+@extends('layouts.app')
+@section('title', 'महासारथी कार्ड CRM — SETU Suvidha')
+@section('content')
+<div x-data="mahasarthiApp()" class="min-h-screen bg-gray-50 dark:bg-gray-950">
+    <div class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-lg font-bold flex items-center gap-2"><i data-lucide="car" class="w-5 h-5"></i> महासारथी कार्ड CRM</h1>
+                    <p class="text-xs text-white/70">Learning Licence, DL — महासारथी कार्ड अर्ज व्यवस्थापित करा</p>
+                </div>
+                <a href="{{ route('management') }}" class="text-xs bg-white/15 hover:bg-white/25 px-3 py-1.5 rounded-lg transition">&larr; CRM Hub</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        @if(session('success'))
+        <div class="mb-4 p-3 rounded-xl bg-green-50 border border-green-200 text-green-700 text-sm font-medium">{{ session('success') }}</div>
+        @endif
+
+        @if(session('error'))
+        <div class="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm font-medium">❌ {{ session('error') }}</div>
+        @endif
+
+        @if($errors->any())
+        <div class="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm">
+            <p class="font-bold mb-1">⚠️ Please fix:</p>
+            <ul class="list-disc ml-5 space-y-0.5">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
+        </div>
+        @endif
+
+        {{-- Status Cards --}}
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6">
+            <a href="{{ route('mahasarthi') }}" class="block bg-white dark:bg-gray-900 rounded-xl border-2 {{ !request('status_filter') ? 'border-emerald-500 shadow-md' : 'border-gray-200 dark:border-gray-800' }} p-4 text-center hover:shadow-lg transition">
+                <i data-lucide="clipboard-list" class="w-6 h-6 mx-auto mb-1 text-emerald-500"></i>
+                <div class="text-2xl font-black text-emerald-600">{{ $allCount }}</div>
+                <div class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">ALL</div>
+            </a>
+            <a href="{{ route('mahasarthi', ['status_filter' => 'applied']) }}" class="block bg-white dark:bg-gray-900 rounded-xl border-2 {{ request('status_filter') === 'applied' ? 'border-amber-500 shadow-md' : 'border-gray-200 dark:border-gray-800' }} p-4 text-center hover:shadow-lg transition">
+                <i data-lucide="file-text" class="w-6 h-6 mx-auto mb-1 text-amber-500"></i>
+                <div class="text-2xl font-black text-amber-600">{{ $appliedCount }}</div>
+                <div class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">APPLIED</div>
+            </a>
+            <a href="{{ route('mahasarthi', ['status_filter' => 'card_otp']) }}" class="block bg-white dark:bg-gray-900 rounded-xl border-2 {{ request('status_filter') === 'card_otp' ? 'border-blue-500 shadow-md' : 'border-gray-200 dark:border-gray-800' }} p-4 text-center hover:shadow-lg transition">
+                <i data-lucide="key-round" class="w-6 h-6 mx-auto mb-1 text-blue-500"></i>
+                <div class="text-2xl font-black text-blue-600">{{ $cardOtpCount }}</div>
+                <div class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">CARD OTP</div>
+            </a>
+            <a href="{{ route('mahasarthi', ['status_filter' => 'ready_card']) }}" class="block bg-white dark:bg-gray-900 rounded-xl border-2 {{ request('status_filter') === 'ready_card' ? 'border-purple-500 shadow-md' : 'border-gray-200 dark:border-gray-800' }} p-4 text-center hover:shadow-lg transition">
+                <i data-lucide="badge-check" class="w-6 h-6 mx-auto mb-1 text-purple-500"></i>
+                <div class="text-2xl font-black text-purple-600">{{ $readyCardCount }}</div>
+                <div class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">READY CARD</div>
+            </a>
+            <a href="{{ route('mahasarthi', ['status_filter' => 'delivered']) }}" class="block bg-white dark:bg-gray-900 rounded-xl border-2 {{ request('status_filter') === 'delivered' ? 'border-green-500 shadow-md' : 'border-gray-200 dark:border-gray-800' }} p-4 text-center hover:shadow-lg transition">
+                <i data-lucide="check-circle" class="w-6 h-6 mx-auto mb-1 text-green-500"></i>
+                <div class="text-2xl font-black text-green-600">{{ $deliveredCount }}</div>
+                <div class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">DELIVERED</div>
+            </a>
+        </div>
+
+        {{-- Top Bar --}}
+        <div class="flex flex-wrap items-center gap-3 mb-6">
+            <button @click="showForm = !showForm" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-emerald-500 to-teal-500 shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all">
+                <i data-lucide="plus" class="w-4 h-4"></i> New Application
+            </button>
+            <button @click="showFilters = !showFilters" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 hover:border-emerald-400 transition">
+                <i data-lucide="filter" class="w-4 h-4"></i> Filter
+            </button>
+            <form method="GET" action="{{ route('mahasarthi') }}" class="flex-1 max-w-sm ml-auto">
+                <div class="relative">
+                    <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search name / mobile..."
+                        class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm focus:ring-2 focus:ring-emerald-500 transition">
+                </div>
+            </form>
+        </div>
+
+        {{-- Filter Sidebar --}}
+        <div x-show="showFilters" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full"
+             class="fixed inset-y-0 left-0 z-50 w-72 bg-white dark:bg-gray-900 shadow-2xl border-r border-gray-200 dark:border-gray-800 overflow-y-auto">
+            <div class="p-5">
+                <div class="flex items-center justify-between mb-5">
+                    <h3 class="font-bold text-gray-900 dark:text-white flex items-center gap-2"><i data-lucide="filter" class="w-4 h-4"></i> Filters</h3>
+                    <button @click="showFilters = false" class="p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"><i data-lucide="x" class="w-5 h-5 text-gray-500"></i></button>
+                </div>
+                <form method="GET" action="{{ route('mahasarthi') }}">
+                    <div class="mb-5">
+                        <p class="text-xs font-bold text-gray-500 uppercase mb-2">Payment Status</p>
+                        @foreach(['paid' => 'Paid', 'partial' => 'Partial', 'unpaid' => 'Unpaid'] as $val => $label)
+                        <label class="flex items-center gap-2 py-1 text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
+                            <input type="checkbox" name="pay_status[]" value="{{ $val }}" {{ in_array($val, (array) request('pay_status', [])) ? 'checked' : '' }} class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"> {{ $label }}
+                        </label>
+                        @endforeach
+                    </div>
+                    <div class="mb-5">
+                        <p class="text-xs font-bold text-gray-500 uppercase mb-2">Payment Mode</p>
+                        @foreach(['cash' => 'Cash', 'online' => 'Online', 'upi' => 'UPI', 'cheque' => 'Cheque'] as $val => $label)
+                        <label class="flex items-center gap-2 py-1 text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
+                            <input type="checkbox" name="pay_mode[]" value="{{ $val }}" {{ in_array($val, (array) request('pay_mode', [])) ? 'checked' : '' }} class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"> {{ $label }}
+                        </label>
+                        @endforeach
+                    </div>
+                    <div class="flex gap-2">
+                        <button type="submit" class="flex-1 btn-primary text-xs !py-2">Apply</button>
+                        <a href="{{ route('mahasarthi') }}" class="flex-1 text-center py-2 text-xs font-medium text-gray-600 border border-gray-300 rounded-xl hover:bg-gray-50">Clear</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div x-show="showFilters" @click="showFilters = false" class="fixed inset-0 bg-black/30 z-40" x-transition.opacity></div>
+
+        {{-- New Application Form --}}
+        <div x-show="showForm" x-transition class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6 mb-6">
+            <h3 class="text-base font-bold text-gray-900 dark:text-white mb-5 flex items-center gap-2">नवीन महासारथी कार्ड अर्ज</h3>
+            <form method="POST" action="{{ route('mahasarthi.store') }}">
+                @csrf
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">NAME (नाव) *</label>
+                        <input type="text" name="applicant_name" required placeholder="Full Name" class="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">MAHASARTHI ID</label>
+                        <input type="text" name="application_number" placeholder="Auto Generate" class="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">AADHAR (आधार)</label>
+                        <input type="text" name="aadhar_number" maxlength="12" placeholder="12 digit" class="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">MOBILE (मोबाईल) *</label>
+                        <input type="text" name="mobile_number" required maxlength="10" placeholder="10 digit" class="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">AMOUNT &#8377;</label>
+                        <input type="number" name="amount" value="0" step="1" class="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">RECEIVED &#8377;</label>
+                        <input type="number" name="received_amount" value="0" step="1" class="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">PAYMENT MODE</label>
+                        <select name="payment_mode" class="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm">
+                            <option value="cash">Cash</option>
+                            <option value="online">Online</option>
+                            <option value="upi">UPI</option>
+                            <option value="cheque">Cheque</option>
+                        </select>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">NOTES</label>
+                        <input type="text" name="notes" placeholder="Optional notes..." class="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm">
+                    </div>
+                </div>
+                <button type="submit" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-emerald-500 to-teal-500 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all">
+                    Save Application
+                </button>
+            </form>
+        </div>
+
+        {{-- Applications Table --}}
+        <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+            <div class="px-5 py-3 border-b border-gray-100 dark:border-gray-800">
+                <h3 class="text-sm font-bold text-gray-700 dark:text-gray-300">Applications ({{ $allCount }})</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-50 dark:bg-gray-800/50">
+                        <tr>
+                            <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 uppercase">#</th>
+                            <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 uppercase">NAME</th>
+                            <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 uppercase">AADHAR</th>
+                            <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 uppercase">MOBILE</th>
+                            <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 uppercase">MAHASARTHI ID</th>
+                            <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 uppercase">AMOUNT</th>
+                            <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 uppercase">PAYMENT</th>
+                            <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 uppercase">STATUS</th>
+                            <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 uppercase">DATE</th>
+                            <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 uppercase">PRINTS</th>
+                            <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 uppercase"></th>
+                        </tr>
+                    </thead>
+                    @forelse($applications as $i => $app)
+                    <tbody x-data="{ editing: false }" class="border-b border-gray-50 dark:border-gray-800">
+                        {{-- Data Row --}}
+                        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition">
+                            <td class="px-3 py-3 text-gray-400 text-xs">{{ $applications->firstItem() + $i }}</td>
+                            <td class="px-3 py-3 font-bold text-gray-900 dark:text-white">{{ $app->applicant_name }}</td>
+                            <td class="px-3 py-3 text-gray-500 text-xs font-mono">{{ $app->aadhar_number ?? '—' }}</td>
+                            <td class="px-3 py-3 text-gray-600">{{ $app->mobile_number }}</td>
+                            <td class="px-3 py-3 text-xs">
+                                @if($app->application_number)
+                                <span class="font-mono font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">{{ $app->application_number }}</span>
+                                @else
+                                <span class="text-gray-300">—</span>
+                                @endif
+                            </td>
+                            <td class="px-3 py-3 text-xs text-gray-700">&#8377;{{ number_format($app->amount, 0) }} / &#8377;{{ number_format($app->received_amount, 0) }}</td>
+                            <td class="px-3 py-3">
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full {{ $app->payment_status === 'paid' ? 'bg-green-100 text-green-700' : ($app->payment_status === 'partial' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700') }}">{{ ucfirst($app->payment_status) }}</span>
+                            </td>
+                            <td class="px-3 py-2">
+                                {{-- Inline Status Change Dropdown --}}
+                                <form method="POST" action="{{ route('mahasarthi.update', $app->id) }}" x-data="{ status: '{{ $app->status }}' }">
+                                    @csrf @method('PUT')
+                                    <select name="status" x-model="status" @change="$el.closest('form').submit()"
+                                        class="text-xs font-bold px-2 py-1 rounded-lg border cursor-pointer transition
+                                        {{ $app->status === 'applied' ? 'border-amber-300 bg-amber-50 text-amber-700' : '' }}
+                                        {{ $app->status === 'card_otp' ? 'border-blue-300 bg-blue-50 text-blue-700' : '' }}
+                                        {{ $app->status === 'ready_card' ? 'border-purple-300 bg-purple-50 text-purple-700' : '' }}
+                                        {{ $app->status === 'delivered' ? 'border-green-300 bg-green-50 text-green-700' : '' }}
+                                        ">
+                                        <option value="applied" {{ $app->status === 'applied' ? 'selected' : '' }}>Applied</option>
+                                        <option value="card_otp" {{ $app->status === 'card_otp' ? 'selected' : '' }}>Card OTP</option>
+                                        <option value="ready_card" {{ $app->status === 'ready_card' ? 'selected' : '' }}>Ready Card</option>
+                                        <option value="delivered" {{ $app->status === 'delivered' ? 'selected' : '' }}>Delivered</option>
+                                    </select>
+                                </form>
+                            </td>
+                            <td class="px-3 py-3 text-gray-500 text-xs">
+                                @php
+                                    $dateCol = \App\Models\MahasarthiApplication::statusDateColumn($app->status);
+                                    $dateVal = $dateCol ? $app->$dateCol : null;
+                                @endphp
+                                {{ $dateVal ? \Carbon\Carbon::parse($dateVal)->format('d/m/Y') : ($app->created_at ? $app->created_at->format('d/m/Y') : '—') }}
+                            </td>
+                            <td class="px-3 py-3 text-xs text-gray-500">
+                                @if($app->print_count > 0)
+                                <span class="inline-flex items-center gap-1 text-emerald-600"><i data-lucide="printer" class="w-3 h-3"></i>{{ $app->print_count }}x</span>
+                                @else
+                                <span class="text-gray-300">—</span>
+                                @endif
+                            </td>
+                            <td class="px-3 py-3">
+                                <div class="flex items-center gap-1">
+                                    <button @click="editing = !editing" class="p-1.5 rounded-lg text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition" title="Edit"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+                                    <form method="POST" action="{{ route('mahasarthi.destroy', $app->id) }}" onsubmit="return confirm('Delete?')">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="p-1.5 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition" title="Delete"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {{-- Inline Edit Row --}}
+                        <tr x-show="editing" x-transition x-cloak>
+                            <td colspan="11" class="px-4 py-4 bg-emerald-50/50 dark:bg-emerald-900/10">
+                                <form method="POST" action="{{ route('mahasarthi.update', $app->id) }}">
+                                    @csrf @method('PUT')
+                                    <div class="flex flex-wrap items-end gap-3">
+                                        <div>
+                                            <label class="block text-[9px] font-bold text-gray-500 uppercase mb-0.5">Name</label>
+                                            <input type="text" name="applicant_name" value="{{ $app->applicant_name }}" class="w-40 px-2 py-1.5 rounded border border-gray-300 text-xs">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[9px] font-bold text-gray-500 uppercase mb-0.5">Aadhar</label>
+                                            <input type="text" name="aadhar_number" value="{{ $app->aadhar_number }}" maxlength="12" class="w-28 px-2 py-1.5 rounded border border-gray-300 text-xs">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[9px] font-bold text-gray-500 uppercase mb-0.5">Mobile</label>
+                                            <input type="text" name="mobile_number" value="{{ $app->mobile_number }}" maxlength="10" class="w-24 px-2 py-1.5 rounded border border-gray-300 text-xs">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[9px] font-bold text-gray-500 uppercase mb-0.5">Mahasarthi ID</label>
+                                            <input type="text" name="application_number" value="{{ $app->application_number }}" placeholder="Enter ID..." class="w-32 px-2 py-1.5 rounded border border-gray-300 text-xs">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[9px] font-bold text-gray-500 uppercase mb-0.5">Amount</label>
+                                            <input type="number" name="amount" value="{{ $app->amount }}" step="1" class="w-20 px-2 py-1.5 rounded border border-gray-300 text-xs">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[9px] font-bold text-gray-500 uppercase mb-0.5">Received</label>
+                                            <input type="number" name="received_amount" value="{{ $app->received_amount }}" step="1" class="w-20 px-2 py-1.5 rounded border border-gray-300 text-xs">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[9px] font-bold text-gray-500 uppercase mb-0.5">Pay Mode</label>
+                                            <select name="payment_mode" class="px-2 py-1.5 rounded border border-gray-300 text-xs">
+                                                @foreach(['cash','online','upi','cheque'] as $m)
+                                                <option value="{{ $m }}" {{ $app->payment_mode === $m ? 'selected' : '' }}>{{ ucfirst($m) }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-[9px] font-bold text-gray-500 uppercase mb-0.5">Notes</label>
+                                            <input type="text" name="notes" value="{{ $app->notes }}" class="w-36 px-2 py-1.5 rounded border border-gray-300 text-xs">
+                                        </div>
+                                        <button type="submit" class="px-4 py-1.5 rounded-lg text-xs font-bold text-white bg-emerald-500 hover:bg-emerald-600 transition">Save</button>
+                                        <button type="button" @click="editing = false" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 border border-gray-300 hover:bg-gray-50 transition">Cancel</button>
+                                    </div>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                    @empty
+                    <tbody>
+                        <tr><td colspan="11" class="px-4 py-12 text-center text-gray-400">No applications yet. Click "New Application".</td></tr>
+                    </tbody>
+                    @endforelse
+                </table>
+            </div>
+            @if($applications->hasPages())
+            <div class="px-5 py-3 border-t border-gray-100 dark:border-gray-800">{{ $applications->links() }}</div>
+            @endif
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+function mahasarthiApp() {
+    return { showForm: false, showFilters: false }
+}
+</script>
+@endpush
+@endsection
