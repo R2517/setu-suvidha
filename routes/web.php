@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\AdminSettingsController;
 use App\Http\Controllers\Admin\AdminFarmerCardController;
 use App\Http\Controllers\Admin\AdminContactRequestController;
 use App\Http\Controllers\Admin\AdminErrorLogController;
+use App\Http\Controllers\Admin\AdminCardSettingController;
 use App\Http\Controllers\VleDirectoryController;
 use App\Http\Controllers\PanCardController;
 use App\Http\Controllers\VoterIdController;
@@ -36,6 +37,7 @@ use App\Http\Controllers\PublicServicePageController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\Admin\AdminBlogController;
+use App\Http\Controllers\CardGeneratorController;
 use App\Models\BlogRedirect;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
@@ -93,6 +95,16 @@ Route::get('/reviews/{slug}', function ($slug) {
 Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
 Route::get('/reviews/{slug}', [ReviewController::class, 'show'])->name('reviews.show');
 
+// ─── Public: Card Generator (Free, no login) ───
+Route::prefix('card-generator')->name('card-generator.')->group(function () {
+    Route::get('/', [CardGeneratorController::class, 'index'])->name('index');
+    Route::get('/aadhaar', [CardGeneratorController::class, 'aadhaar'])->name('aadhaar');
+    Route::get('/pan-card', [CardGeneratorController::class, 'panCard'])->name('pan-card');
+    Route::get('/abha', [CardGeneratorController::class, 'abha'])->name('abha');
+    Route::get('/eshram', [CardGeneratorController::class, 'eshram'])->name('eshram');
+    Route::get('/mahasarathi', [CardGeneratorController::class, 'mahasarathi'])->name('mahasarathi');
+});
+
 // ─── Public: Farmer ID Card Online (Self-Service) ───
 Route::get('/services/farmer-id-card-online', [FarmerCardPublicController::class, 'index'])->name('farmer-card-public');
 Route::middleware(['throttle:5,1'])->group(function () {
@@ -112,6 +124,13 @@ Route::get('/farmer-id-card-online', fn() => redirect('/services/farmer-id-card-
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/dashboard/save-config', [DashboardController::class, 'saveConfig'])->name('dashboard.save-config');
+
+    // Bulk Card Generator
+    Route::get('/vle/card-generator', [\App\Http\Controllers\VleCardGeneratorController::class, 'index'])->name('vle.card-generator');
+    Route::post('/vle/card-generator/record', [\App\Http\Controllers\VleCardGeneratorController::class, 'storeRecord'])->name('vle.card-generator.record');
+    Route::get('/vle/card-generator/queue', [\App\Http\Controllers\VleCardGeneratorController::class, 'getQueue'])->name('vle.card-generator.queue');
+    Route::post('/vle/card-generator/queue', [\App\Http\Controllers\VleCardGeneratorController::class, 'saveToQueue']);
+    Route::delete('/vle/card-generator/queue/{id}', [\App\Http\Controllers\VleCardGeneratorController::class, 'deleteFromQueue']);
 
     // Auth Bridge - Redirect to billing subdomain
     Route::middleware(['subscription'])->group(function () {
@@ -291,6 +310,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/transactions', [AdminTransactionController::class, 'index'])->name('transactions');
     Route::get('/settings', [AdminSettingsController::class, 'index'])->name('settings');
     Route::post('/settings/razorpay', [AdminSettingsController::class, 'updateRazorpay'])->name('settings.razorpay');
+    
+    // Card Settings
+    Route::get('/card-settings', [AdminCardSettingController::class, 'index'])->name('card-settings');
+    Route::post('/card-settings', [AdminCardSettingController::class, 'store'])->name('card-settings.store');
+    
     Route::get('/farmer-card-orders', [AdminFarmerCardController::class, 'index'])->name('farmer-card-orders');
     Route::get('/contact-requests', [AdminContactRequestController::class, 'index'])->name('contact-requests');
     Route::post('/contact-requests/{id}/status', [AdminContactRequestController::class, 'updateStatus'])->name('contact-requests.status');

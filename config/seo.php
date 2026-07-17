@@ -30,12 +30,15 @@ return [
         'refund',
         'disclaimer',
         'bandkam-info',
+        'services.landing.show',
+        'reviews.index',
+        'reviews.show',
         'vle.directory',
         'vle.show',
         'farmer-card-public',
-        'reviews.index',
-        'reviews.show',
-        'services.landing.show',
+        'card-generator.index',
+        'card-generator.aadhaar',
+        'card-generator.pan-card',
     ],
 
     'route_og_images' => [

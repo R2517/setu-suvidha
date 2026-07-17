@@ -18,6 +18,7 @@
             <div class="hidden md:flex items-center gap-1">
                 <a href="{{ route('home') }}" class="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-amber-600 dark:hover:text-amber-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition">मुख्यपृष्ठ</a>
                 <a href="{{ route('services') }}" class="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-amber-600 dark:hover:text-amber-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition">सेवा</a>
+                <a href="{{ route('card-generator.index') }}" class="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-amber-600 dark:hover:text-amber-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition flex items-center gap-1">Card Generator <span class="bg-red-500 text-white text-[9px] px-1.5 py-0.5 rounded font-bold uppercase animate-pulse">New</span></a>
                 <a href="{{ route('benefits') }}" class="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-amber-600 dark:hover:text-amber-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition">फायदे</a>
                 <a href="{{ url('/faq') }}" class="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-amber-600 dark:hover:text-amber-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition">FAQ</a>
                 <a href="{{ route('reviews.index') }}" class="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-amber-600 dark:hover:text-amber-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition">Review</a>
@@ -88,6 +89,7 @@
     <div x-show="mobileOpen" x-transition class="md:hidden bg-white dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800 px-4 py-3 space-y-1">
         <a href="{{ route('home') }}" class="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">मुख्यपृष्ठ</a>
         <a href="{{ route('services') }}" class="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">सेवा</a>
+        <a href="{{ route('card-generator.index') }}" class="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 flex justify-between items-center">Card Generator <span class="bg-red-500 text-white text-[9px] px-1.5 py-0.5 rounded font-bold uppercase animate-pulse">New</span></a>
         <a href="{{ route('benefits') }}" class="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">फायदे</a>
         <a href="{{ url('/faq') }}" class="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">FAQ</a>
         <a href="{{ route('reviews.index') }}" class="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">Review</a>

@@ -58,6 +58,9 @@
         <a href="{{ route('admin.farmer-card-orders') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.farmer-card-orders') ? 'bg-green-500/20 text-green-400' : 'text-gray-400 hover:text-white hover:bg-gray-800' }} transition">
             <i data-lucide="leaf" class="w-4 h-4"></i> Farmer Card Orders
         </a>
+        <a href="{{ route('admin.card-settings') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.card-settings') ? 'bg-amber-500/20 text-amber-400' : 'text-gray-400 hover:text-white hover:bg-gray-800' }} transition">
+            <i data-lucide="crop" class="w-4 h-4"></i> Card Cropper Settings
+        </a>
         <div class="border-t border-gray-800 my-3"></div>
         <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-400 hover:text-white hover:bg-gray-800 transition">
             <i data-lucide="layout-grid" class="w-4 h-4"></i> VLE डॅशबोर्ड

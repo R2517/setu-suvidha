@@ -85,6 +85,7 @@ class DashboardController extends Controller
     private function getServiceCards(): array
     {
         return [
+            ['id' => 'card-generator', 'title' => 'PVC Card Print (Bulk & Crop)', 'icon' => 'printer', 'iconBg' => 'linear-gradient(135deg, #FFEDD5, #FDBA74)', 'iconColor' => '#EA580C', 'path' => '/vle/card-generator', 'ready' => true, 'badge' => 'BULK', 'badgeType' => 'new'],
             ['id' => 'hamipatra', 'title' => 'हमीपत्र (Disclaimer)', 'icon' => 'file-text', 'iconBg' => 'linear-gradient(135deg, #DBEAFE, #BFDBFE)', 'iconColor' => '#2563EB', 'path' => '/hamipatra', 'ready' => true, 'badge' => 'READY', 'badgeType' => 'ready'],
             ['id' => 'self-declaration', 'title' => 'स्वयंघोषणापत्र', 'icon' => 'shield', 'iconBg' => 'linear-gradient(135deg, #D1FAE5, #A7F3D0)', 'iconColor' => '#059669', 'path' => '/self-declaration', 'ready' => true, 'badge' => 'READY', 'badgeType' => 'ready'],
             ['id' => 'farmer-id', 'title' => 'शेतकरी ओळखपत्र (FARMER ID CARD)', 'icon' => 'leaf', 'iconBg' => 'linear-gradient(135deg, #DCFCE7, #BBF7D0)', 'iconColor' => '#16A34A', 'path' => '/farmer-id-card', 'ready' => true, 'badge' => 'NEW', 'badgeType' => 'new'],
