@@ -144,7 +144,7 @@ echo ""
 # ─── Step 6: Install PHP dependencies ───
 echo ">>> Step 6: Installing PHP dependencies..."
 cd "$APP_DIR"
-$PHP_BIN $(which composer) install --no-dev --optimize-autoloader --no-interaction
+$PHP_BIN /opt/composer/composer.phar install --no-dev --optimize-autoloader --no-interaction
 echo ""
 
 # ─── Step 7: Install Node.js dependencies & build ───
