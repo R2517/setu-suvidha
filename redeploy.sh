@@ -19,7 +19,10 @@ cd "$APP_DIR"
 git pull origin main
 
 echo ">>> Installing dependencies..."
-$PHP_BIN /opt/composer/composer.phar install --no-dev --optimize-autoloader --no-interaction
+if [ ! -f composer.phar ]; then
+    wget -q -O composer.phar https://getcomposer.org/download/latest-stable/composer.phar
+fi
+$PHP_BIN composer.phar install --no-dev --optimize-autoloader --no-interaction
 
 echo ">>> Building frontend..."
 npm ci
