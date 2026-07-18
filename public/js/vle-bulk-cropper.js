@@ -165,13 +165,13 @@ document.addEventListener('alpine:init', () => {
         },
 
         // MANUAL CROP LOGIC
-        async initManualCropper(file) {
+        async initManualCropper(file, password = '') {
             let dataUrl = null;
             
             if (file.type === 'application/pdf') {
                 try {
                     const arrayBuffer = await file.arrayBuffer();
-                    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer, password: password }).promise;
                     const page = await pdf.getPage(1);
                     const scale = 3.0; // High res for manual crop
                     const viewport = page.getViewport({ scale: scale });
@@ -182,10 +182,31 @@ document.addEventListener('alpine:init', () => {
                     
                     await page.render({ canvasContext: ctx, viewport: viewport }).promise;
                     dataUrl = this.processCanvas.toDataURL('image/jpeg', 1.0);
-                } catch (e) {
-                    console.error("Could not read PDF for manual crop", e);
-                    alert("Failed to read PDF. Try an image instead or check if it's password protected.");
-                    return;
+                } catch (error) {
+                    if (error.name === 'PasswordException') {
+                        // Ask user for password
+                        this.currentLockedFileName = file.name;
+                        this.pdfPassword = '';
+                        this.showPasswordInput = true;
+                        
+                        // Wait for user to input password
+                        const newPassword = await new Promise((res) => {
+                            this.resolvePasswordPromise = res;
+                        });
+                        
+                        this.showPasswordInput = false;
+                        
+                        if (newPassword === null) {
+                            return; // User cancelled
+                        } else {
+                            // Retry with password
+                            return this.initManualCropper(file, newPassword);
+                        }
+                    } else {
+                        console.error("Could not read PDF for manual crop", error);
+                        alert("Failed to read PDF. Try an image instead.");
+                        return;
+                    }
                 }
             } else if (file.type.startsWith('image/')) {
                 dataUrl = await new Promise((resolve) => {
@@ -214,7 +235,7 @@ document.addEventListener('alpine:init', () => {
                 }
                 
                 this.manualCropper = new Cropper(imgElement, {
-                    aspectRatio: 90 / 60, // Standard CR-80 card ratio
+                    aspectRatio: NaN, // Free size crop
                     viewMode: 1,
                     autoCropArea: 0.8,
                     background: false,
