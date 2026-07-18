@@ -168,7 +168,9 @@
                 { id: 'eshram_front', name: 'E-Shram (Front)' },
                 { id: 'eshram_back', name: 'E-Shram (Back)' },
                 { id: 'mahasarathi_front', name: 'Mahasarathi (Front)' },
-                { id: 'mahasarathi_back', name: 'Mahasarathi (Back)' }
+                { id: 'mahasarathi_back', name: 'Mahasarathi (Back)' },
+                { id: 'ayushman_front', name: 'Ayushman Bharat (Front)' },
+                { id: 'ayushman_back', name: 'Ayushman Bharat (Back)' }
             ],
             cardType: 'aadhaar_front',
             currentFile: null,
