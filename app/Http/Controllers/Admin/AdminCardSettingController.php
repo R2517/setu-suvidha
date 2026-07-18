@@ -23,7 +23,7 @@ class AdminCardSettingController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'card_type' => 'required|string|in:aadhaar_front,aadhaar_back,pan_front,pan_back,abha_front,abha_back,eshram_front,eshram_back,mahasarathi_front,mahasarathi_back',
+            'card_type' => 'required|string|in:aadhaar_front,aadhaar_back,pan_front,pan_back,abha_front,abha_back,eshram_front,eshram_back,mahasarathi_front,mahasarathi_back,ayushman_front,ayushman_back',
             'x_percent' => 'required|numeric|min:0|max:100',
             'y_percent' => 'required|numeric|min:0|max:100',
             'width_percent' => 'required|numeric|min:0|max:100',
