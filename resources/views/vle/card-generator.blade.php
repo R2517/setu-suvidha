@@ -77,6 +77,7 @@
                     <option value="eshram">E-Shram Card</option>
                     <option value="mahasarathi">Mahasarathi Card</option>
                     <option value="ayushman">Ayushman Bharat Card</option>
+                    <option value="voter">Voter ID Card</option>
                 </select>
             </div>
             
@@ -157,6 +158,7 @@
                             <option value="eshram">E-Shram</option>
                             <option value="mahasarathi">Mahasarathi</option>
                             <option value="ayushman">Ayushman Bharat</option>
+                            <option value="voter">Voter ID</option>
                         </select>
                         
                         <button @click="printSelected" x-show="selectedIds.length > 0" class="px-5 py-2 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md rounded-lg transition flex items-center gap-2">

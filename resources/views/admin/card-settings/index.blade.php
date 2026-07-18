@@ -170,7 +170,9 @@
                 { id: 'mahasarathi_front', name: 'Mahasarathi (Front)' },
                 { id: 'mahasarathi_back', name: 'Mahasarathi (Back)' },
                 { id: 'ayushman_front', name: 'Ayushman Bharat (Front)' },
-                { id: 'ayushman_back', name: 'Ayushman Bharat (Back)' }
+                { id: 'ayushman_back', name: 'Ayushman Bharat (Back)' },
+                { id: 'voter_front', name: 'Voter ID Card (Front)' },
+                { id: 'voter_back', name: 'Voter ID Card (Back)' }
             ],
             cardType: 'aadhaar_front',
             currentFile: null,
