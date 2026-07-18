@@ -100,7 +100,7 @@
                 <button @click="processNextLockedFile" class="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 rounded-lg transition">Unlock File</button>
             </div>
             
-            <button @click="startProcessing" x-show="files.length > 0 && !isProcessing && !showPasswordInput" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-4 rounded-xl shadow-sm transition flex items-center justify-center gap-2">
+            <button @click="startProcessing" x-show="files.length > 0 && !isProcessing && !showPasswordInput && cardType !== 'custom'" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-4 rounded-xl shadow-sm transition flex items-center justify-center gap-2">
                 <i data-lucide="zap" class="w-5 h-5"></i>
                 Auto-Crop <span x-text="files.length"></span> File(s)
             </button>
@@ -255,5 +255,5 @@
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
     window.CropSettings = @json($settings);
 </script>
-<script src="{{ asset('js/vle-bulk-cropper.js') }}"></script>
+<script src="{{ asset('js/vle-bulk-cropper.js') }}?v={{ time() }}"></script>
 @endpush
