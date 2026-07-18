@@ -103,6 +103,8 @@ Route::prefix('card-generator')->name('card-generator.')->group(function () {
     Route::get('/abha', [CardGeneratorController::class, 'abha'])->name('abha');
     Route::get('/eshram', [CardGeneratorController::class, 'eshram'])->name('eshram');
     Route::get('/mahasarathi', [CardGeneratorController::class, 'mahasarathi'])->name('mahasarathi');
+    Route::get('/ayushman', [CardGeneratorController::class, 'ayushman'])->name('ayushman');
+    Route::get('/voter', [CardGeneratorController::class, 'voter'])->name('voter');
 });
 
 // ─── Public: Farmer ID Card Online (Self-Service) ───

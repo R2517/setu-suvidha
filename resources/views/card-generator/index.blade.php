@@ -31,18 +31,18 @@
     </div>
 
     {{-- Promotional Banner --}}
-    <div class="bg-gradient-to-r from-amber-600 to-amber-500 rounded-2xl p-6 md:p-8 text-white shadow-lg relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 mb-8 max-w-4xl mx-auto">
+    <div class="bg-gradient-to-r from-amber-600 to-amber-500 rounded-2xl p-6 md:p-8 text-white shadow-lg relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 mb-8 w-full max-w-4xl mx-auto">
         <div class="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full -mr-16 -mt-16 transform rotate-45"></div>
-        <div class="relative z-10">
+        <div class="relative z-10 w-full md:w-2/3">
             <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/20 rounded-full text-xs font-bold uppercase tracking-wider mb-3">
                 <i data-lucide="star" class="w-3 h-3 text-amber-200"></i> For VLEs & Shop Owners
             </div>
             <h2 class="text-2xl md:text-3xl font-bold mb-2">Printing 10+ Cards Daily?</h2>
-            <p class="text-amber-100 max-w-xl">
+            <p class="text-amber-100 max-w-xl text-sm md:text-base">
                 Unlock our <strong>PRO Bulk Card Generator</strong>. Upload 20+ PDFs at once, auto-crop, save them in your 48-hour queue, and print multiple cards on a single A4 sheet perfectly!
             </p>
         </div>
-        <div class="relative z-10 flex-shrink-0 flex flex-col gap-3 w-full md:w-auto">
+        <div class="relative z-10 flex-shrink-0 flex flex-col gap-3 w-full md:w-1/3 md:items-end">
             <a href="{{ route('register') }}" class="px-6 py-3 bg-white text-amber-700 hover:bg-gray-50 font-bold rounded-xl shadow-md transition text-center whitespace-nowrap">
                 Create Free Account
             </a>
@@ -136,6 +136,40 @@
             </p>
             <div class="flex items-center gap-2 text-amber-600 dark:text-amber-500 font-semibold text-sm group-hover:gap-3 transition-all">
                 Try Mahasarathi Crop <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </div>
+        </a>
+
+        {{-- Ayushman Bharat Card --}}
+        <a href="{{ route('card-generator.ayushman') }}" class="glass-card p-6 rounded-2xl group hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden">
+            <div class="absolute top-4 right-4 bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm animate-pulse">
+                NEW
+            </div>
+            <div class="w-14 h-14 rounded-xl bg-teal-100 dark:bg-teal-900/40 text-teal-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <i data-lucide="heart" class="w-8 h-8"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Ayushman Bharat Crop</h3>
+            <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
+                Crop Ayushman Bharat card PDF instantly to standard CR-80 dimensions. Free and secure.
+            </p>
+            <div class="flex items-center gap-2 text-amber-600 dark:text-amber-500 font-semibold text-sm group-hover:gap-3 transition-all">
+                Try Ayushman Crop <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </div>
+        </a>
+
+        {{-- Voter ID Card --}}
+        <a href="{{ route('card-generator.voter') }}" class="glass-card p-6 rounded-2xl group hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden">
+            <div class="absolute top-4 right-4 bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm animate-pulse">
+                NEW
+            </div>
+            <div class="w-14 h-14 rounded-xl bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <i data-lucide="contact-2" class="w-8 h-8"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Voter ID Crop</h3>
+            <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
+                Upload Voter ID PDF. Auto-detects and crops perfectly for A4 printing.
+            </p>
+            <div class="flex items-center gap-2 text-amber-600 dark:text-amber-500 font-semibold text-sm group-hover:gap-3 transition-all">
+                Try Voter ID Crop <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </div>
         </a>
     </div>

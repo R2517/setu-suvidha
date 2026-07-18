@@ -50,4 +50,15 @@ class CardGeneratorController extends Controller
         $settings = CardCropSetting::getSettingsForJs();
         return view('card-generator.mahasarathi', compact('settings'));
     }
+    public function ayushman()
+    {
+        $settings = CardCropSetting::getSettingsForJs();
+        return view('card-generator.ayushman', compact('settings'));
+    }
+
+    public function voter()
+    {
+        $settings = CardCropSetting::getSettingsForJs();
+        return view('card-generator.voter', compact('settings'));
+    }
 }
