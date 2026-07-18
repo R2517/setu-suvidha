@@ -22,6 +22,12 @@ document.addEventListener('alpine:init', () => {
         
         // Canvas for hidden processing
         processCanvas: null,
+
+        // Manual Cropping State
+        showManualModal: false,
+        manualCropStep: 'front', // 'front' or 'back'
+        manualCropper: null,
+        tempManualFrontDataUrl: null,
         
         init() {
             this.processCanvas = document.createElement('canvas');
@@ -53,10 +59,18 @@ document.addEventListener('alpine:init', () => {
             }
         },
         
-        handleFilesSelect(e) {
+        async handleFilesSelect(e) {
             if (e.target.files && e.target.files.length > 0) {
-                // DO NOT CLEAR processedPairs, so they can add more!
                 this.files = Array.from(e.target.files);
+                
+                if (this.cardType === 'custom') {
+                    // Start manual process immediately for the first file
+                    const file = this.files[0];
+                    await this.initManualCropper(file);
+                    // Clear file input so they can select same file again if needed
+                    if (this.$refs.fileInput) this.$refs.fileInput.value = '';
+                    this.files = []; 
+                }
             }
         },
         
@@ -73,7 +87,7 @@ document.addEventListener('alpine:init', () => {
         },
         
         async startProcessing() {
-            if (this.files.length === 0) return;
+            if (this.files.length === 0 || this.cardType === 'custom') return;
             
             this.isProcessing = true;
             this.processedCount = 0;
@@ -114,7 +128,7 @@ document.addEventListener('alpine:init', () => {
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                         },
                         body: JSON.stringify({
-                            card_type: this.cardType,
+                            card_type: pair.custom ? 'custom' : this.cardType,
                             front_image: pair.front,
                             back_image: pair.back
                         })
@@ -149,7 +163,104 @@ document.addEventListener('alpine:init', () => {
                 console.error("Failed to delete card");
             }
         },
+
+        // MANUAL CROP LOGIC
+        async initManualCropper(file) {
+            let dataUrl = null;
+            
+            if (file.type === 'application/pdf') {
+                try {
+                    const arrayBuffer = await file.arrayBuffer();
+                    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                    const page = await pdf.getPage(1);
+                    const scale = 3.0; // High res for manual crop
+                    const viewport = page.getViewport({ scale: scale });
+                    
+                    this.processCanvas.width = viewport.width;
+                    this.processCanvas.height = viewport.height;
+                    const ctx = this.processCanvas.getContext('2d');
+                    
+                    await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+                    dataUrl = this.processCanvas.toDataURL('image/jpeg', 1.0);
+                } catch (e) {
+                    console.error("Could not read PDF for manual crop", e);
+                    alert("Failed to read PDF. Try an image instead or check if it's password protected.");
+                    return;
+                }
+            } else if (file.type.startsWith('image/')) {
+                dataUrl = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => resolve(e.target.result);
+                    reader.readAsDataURL(file);
+                });
+            } else {
+                alert("Unsupported file format for custom crop.");
+                return;
+            }
+
+            if (!dataUrl) return;
+
+            this.manualCropStep = 'front';
+            this.tempManualFrontDataUrl = null;
+            this.showManualModal = true;
+            
+            // Wait for alpine x-show to render
+            setTimeout(() => {
+                const imgElement = document.getElementById('manualCropImage');
+                imgElement.src = dataUrl;
+                
+                if (this.manualCropper) {
+                    this.manualCropper.destroy();
+                }
+                
+                this.manualCropper = new Cropper(imgElement, {
+                    aspectRatio: 90 / 60, // Standard CR-80 card ratio
+                    viewMode: 1,
+                    autoCropArea: 0.8,
+                    background: false,
+                });
+            }, 100);
+        },
+
+        confirmManualCrop() {
+            if (!this.manualCropper) return;
+
+            // Extract the cropped canvas and resize to standard 1012x638
+            const croppedCanvas = this.manualCropper.getCroppedCanvas({
+                width: 1012,
+                height: 638,
+                fillColor: '#fff',
+                imageSmoothingEnabled: true,
+                imageSmoothingQuality: 'high',
+            });
+
+            const dataUrl = croppedCanvas.toDataURL('image/jpeg', 1.0);
+
+            if (this.manualCropStep === 'front') {
+                this.tempManualFrontDataUrl = dataUrl;
+                this.manualCropStep = 'back';
+            } else {
+                // Back step complete
+                this.processedPairs.push({
+                    front: this.tempManualFrontDataUrl,
+                    back: dataUrl,
+                    custom: true
+                });
+                this.closeManualModal();
+            }
+        },
+
+        closeManualModal() {
+            this.showManualModal = false;
+            this.manualCropStep = 'front';
+            this.tempManualFrontDataUrl = null;
+            if (this.manualCropper) {
+                this.manualCropper.destroy();
+                this.manualCropper = null;
+            }
+        },
         
+        // AUTO CROP LOGIC
         async processFile(file, password = '') {
             return new Promise(async (resolve, reject) => {
                 try {

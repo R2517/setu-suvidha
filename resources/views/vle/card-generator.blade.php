@@ -2,6 +2,7 @@
 @section('title', 'Bulk Card Generator | SETU Suvidha')
 
 @push('styles')
+<link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
 <style>
     /* Print optimizations */
     @media screen {
@@ -78,12 +79,13 @@
                     <option value="mahasarathi">Mahasarathi Card</option>
                     <option value="ayushman">Ayushman Bharat Card</option>
                     <option value="voter">Voter ID Card</option>
+                    <option value="custom">Custom Scan (Manual Crop)</option>
                 </select>
             </div>
             
             <div>
-                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">2. Upload PDFs (Select Multiple)</label>
-                <input type="file" multiple accept="application/pdf" @change="handleFilesSelect" x-ref="fileInput" class="block w-full text-sm text-gray-500 dark:text-gray-400
+                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2" x-text="cardType === 'custom' ? '2. Upload Image or PDF (One at a time)' : '2. Upload PDFs (Select Multiple)'"></label>
+                <input type="file" :multiple="cardType !== 'custom'" :accept="cardType === 'custom' ? 'image/*,application/pdf' : 'application/pdf'" @change="handleFilesSelect" x-ref="fileInput" class="block w-full text-sm text-gray-500 dark:text-gray-400
                     file:mr-3 file:py-2 file:px-4
                     file:rounded-xl file:border-0
                     file:text-sm file:font-semibold
@@ -159,6 +161,7 @@
                             <option value="mahasarathi">Mahasarathi</option>
                             <option value="ayushman">Ayushman Bharat</option>
                             <option value="voter">Voter ID</option>
+                            <option value="custom">Custom Card</option>
                         </select>
                         
                         <button @click="printSelected" x-show="selectedIds.length > 0" class="px-5 py-2 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md rounded-lg transition flex items-center gap-2">
@@ -208,6 +211,34 @@
         </div>
 
     </div>
+
+    {{-- Manual Crop Modal --}}
+    <div x-show="showManualModal" style="display: none;" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="closeManualModal()"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
+                <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4" id="modal-title" x-text="manualCropStep === 'front' ? 'Crop Front Side' : 'Crop Back Side'"></h3>
+                            <div class="w-full bg-gray-100 dark:bg-gray-900 min-h-[400px] max-h-[60vh] flex items-center justify-center relative overflow-hidden rounded border border-gray-300 dark:border-gray-700">
+                                <img id="manualCropImage" class="max-w-full block" style="max-height: 60vh;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" @click="confirmManualCrop" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-amber-600 text-base font-medium text-white hover:bg-amber-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
+                        <span x-text="manualCropStep === 'front' ? 'Crop Front & Next' : 'Crop Back & Finish'"></span>
+                    </button>
+                    <button type="button" @click="closeManualModal()" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 {{-- Print Layout Area (Hidden on screen) --}}
@@ -218,6 +249,7 @@
 @endsection
 
 @push('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
