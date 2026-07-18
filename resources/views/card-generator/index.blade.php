@@ -31,24 +31,26 @@
     </div>
 
     {{-- Promotional Banner --}}
-    <div class="bg-gradient-to-r from-amber-600 to-amber-500 rounded-2xl p-6 md:p-8 text-white shadow-lg relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 mb-8 w-full max-w-4xl mx-auto">
-        <div class="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full -mr-16 -mt-16 transform rotate-45"></div>
-        <div class="relative z-10 w-full md:w-2/3">
-            <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/20 rounded-full text-xs font-bold uppercase tracking-wider mb-3">
-                <i data-lucide="star" class="w-3 h-3 text-amber-200"></i> For VLEs & Shop Owners
+    <div class="bg-gradient-to-r from-amber-600 to-amber-500 rounded-2xl p-6 md:p-8 text-white shadow-lg relative overflow-hidden mb-8 max-w-4xl mx-auto">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full -mr-16 -mt-16 transform rotate-45 pointer-events-none"></div>
+        <div class="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-center text-left">
+            <div class="md:col-span-2">
+                <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/20 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-wider mb-3">
+                    <i data-lucide="star" class="w-3 h-3 text-amber-200"></i> For VLEs & Shop Owners
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold mb-2">Printing 10+ Cards Daily?</h2>
+                <p class="text-amber-100 text-sm md:text-base leading-relaxed">
+                    Unlock our <strong>PRO Bulk Card Generator</strong>. Upload 20+ PDFs at once, auto-crop, save them in your 48-hour queue, and print multiple cards on a single A4 sheet perfectly!
+                </p>
             </div>
-            <h2 class="text-2xl md:text-3xl font-bold mb-2">Printing 10+ Cards Daily?</h2>
-            <p class="text-amber-100 max-w-xl text-sm md:text-base">
-                Unlock our <strong>PRO Bulk Card Generator</strong>. Upload 20+ PDFs at once, auto-crop, save them in your 48-hour queue, and print multiple cards on a single A4 sheet perfectly!
-            </p>
-        </div>
-        <div class="relative z-10 flex-shrink-0 flex flex-col gap-3 w-full md:w-1/3 md:items-end">
-            <a href="{{ route('register') }}" class="px-6 py-3 bg-white text-amber-700 hover:bg-gray-50 font-bold rounded-xl shadow-md transition text-center whitespace-nowrap">
-                Create Free Account
-            </a>
-            <a href="{{ route('login') }}" class="text-sm font-medium text-amber-100 hover:text-white text-center underline">
-                Already have an account? Login
-            </a>
+            <div class="flex flex-col gap-3 items-center md:items-end w-full">
+                <a href="{{ route('register') }}" class="px-6 py-3 w-full md:w-auto bg-white text-amber-700 hover:bg-amber-50 font-bold rounded-xl shadow-md transition text-center whitespace-nowrap">
+                    Create Free Account
+                </a>
+                <a href="{{ route('login') }}" class="text-sm font-medium text-amber-100 hover:text-white text-center underline">
+                    Already have an account? Login
+                </a>
+            </div>
         </div>
     </div>
 
