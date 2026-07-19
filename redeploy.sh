@@ -19,6 +19,7 @@ cd "$APP_DIR"
 git pull origin main
 
 echo ">>> Installing dependencies..."
+export COMPOSER_HOME="$HOME/.composer"
 if [ ! -f composer.phar ]; then
     wget -q -O composer.phar https://getcomposer.org/download/latest-stable/composer.phar
 fi
