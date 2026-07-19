@@ -30,27 +30,28 @@
         </div>
     </div>
 
-    {{-- Promotional Banner --}}
-    <div class="bg-gradient-to-r from-amber-600 to-amber-500 rounded-2xl p-6 md:p-8 text-white shadow-lg relative overflow-hidden mb-8 max-w-4xl mx-auto">
+    {{-- Sleek Promotional Banner --}}
+    <div class="bg-gradient-to-r from-amber-600 to-amber-500 rounded-2xl p-4 md:p-6 text-white shadow-lg relative overflow-hidden mb-8 max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         <div class="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full -mr-16 -mt-16 transform rotate-45 pointer-events-none"></div>
-        <div class="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-center text-left">
-            <div class="md:col-span-2">
-                <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/20 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-wider mb-3">
-                    <i data-lucide="star" class="w-3 h-3 text-amber-200"></i> For VLEs & Shop Owners
-                </div>
-                <h2 class="text-2xl md:text-3xl font-bold mb-2">Printing 10+ Cards Daily?</h2>
-                <p class="text-amber-100 text-sm md:text-base leading-relaxed">
-                    Unlock our <strong>PRO Bulk Card Generator</strong>. Upload 20+ PDFs at once, auto-crop, save them in your 48-hour queue, and print multiple cards on a single A4 sheet perfectly!
+        
+        <div class="relative z-10 flex items-center gap-4 w-full md:w-auto">
+            <div class="hidden sm:flex w-12 h-12 bg-white/20 rounded-full items-center justify-center shrink-0">
+                <i data-lucide="zap" class="w-6 h-6 text-amber-200"></i>
+            </div>
+            <div>
+                <h2 class="text-lg md:text-xl font-bold flex items-center gap-2">
+                    Printing 10+ Cards Daily? Use PRO Bulk Generator!
+                </h2>
+                <p class="text-amber-100 text-sm mt-0.5">
+                    Upload 20+ PDFs, auto-crop, and print multiple cards perfectly on A4 sheets.
                 </p>
             </div>
-            <div class="flex flex-col gap-3 items-center md:items-end w-full">
-                <a href="{{ route('register') }}" class="px-6 py-3 w-full md:w-auto bg-white text-amber-700 hover:bg-amber-50 font-bold rounded-xl shadow-md transition text-center whitespace-nowrap">
-                    Create Free Account
-                </a>
-                <a href="{{ route('login') }}" class="text-sm font-medium text-amber-100 hover:text-white text-center underline">
-                    Already have an account? Login
-                </a>
-            </div>
+        </div>
+        
+        <div class="relative z-10 flex shrink-0 w-full md:w-auto items-center gap-3">
+            <a href="{{ route('register') }}" class="px-5 py-2.5 bg-white text-amber-700 hover:bg-amber-50 font-bold rounded-lg shadow-sm transition text-sm text-center w-full md:w-auto whitespace-nowrap">
+                Create Free Account
+            </a>
         </div>
     </div>
 
