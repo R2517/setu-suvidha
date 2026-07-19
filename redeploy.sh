@@ -26,10 +26,6 @@ if [ ! -f composer.phar ]; then
 fi
 $PHP_BIN composer.phar install --no-dev --optimize-autoloader --no-interaction
 
-echo ">>> Building frontend..."
-npm ci
-npm run build
-
 echo ">>> Running migrations..."
 $PHP_BIN artisan migrate --force
 
@@ -37,6 +33,10 @@ echo ">>> Clearing caches..."
 $PHP_BIN artisan config:cache
 $PHP_BIN artisan route:cache
 $PHP_BIN artisan view:cache
+
+echo ">>> Building frontend..."
+npm ci
+npm run build
 
 echo ">>> Setting permissions..."
 chmod -R 775 "$APP_DIR/storage" "$APP_DIR/bootstrap/cache"
